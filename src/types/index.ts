@@ -51,3 +51,50 @@ export interface HowItWorksStep {
   description: string;
   icon: string;
 }
+
+export type OrderStatus = 'PENDING' | 'PAID' | 'DELIVERED' | 'APPROVED' | 'DISPUTED' | 'REFUNDED' | 'CANCELLED';
+
+export type OrderType = 'SERVICE' | 'AI_INSTANT';
+
+export interface Order {
+  id: string;
+  serviceId: string;
+  serviceTitle: string;
+  buyerWallet: string;
+  sellerWallet: string;
+  amount: number;
+  currency: 'ETH' | 'USDC';
+  status: OrderStatus;
+  type: OrderType;
+  deliveryData?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deliveredAt?: Date;
+  approvedAt?: Date;
+  disputedAt?: Date;
+  disputeReason?: string;
+  disputeResolution?: 'REFUND' | 'RELEASE' | 'PENDING';
+}
+
+export interface CreateOrderRequest {
+  serviceId: string;
+  buyerWallet: string;
+  sellerWallet: string;
+  amount: number;
+  currency: 'ETH' | 'USDC';
+  type: OrderType;
+}
+
+export interface DisputeRequest {
+  reason: string;
+}
+
+export interface OrderApiResponse<T = Order> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, string>;
+  };
+}
