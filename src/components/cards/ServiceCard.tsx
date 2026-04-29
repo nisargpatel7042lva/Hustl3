@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Star } from 'lucide-react';
+import { Star, Clock, User } from 'lucide-react';
+import { Icon } from '@/components/ui/Icon';
 import { formatPrice } from '@/lib/utils';
 import type { Service } from '@/types';
 
@@ -11,46 +12,43 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service }: ServiceCardProps) {
   return (
-    <Link href={`/service/${service.id}`}>
-      <div className="card-premium h-full group overflow-hidden">
-        {/* Service Image */}
-        <div className="relative h-40 bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center overflow-hidden">
-          <div className="text-6xl group-hover:scale-110 transition-transform duration-300">
-            {service.image}
+    <Link href={`/explore/${service.id}`}>
+      <div className="card-clean h-full group overflow-hidden">
+        <div className="relative h-40 bg-slate-100 flex items-center justify-center overflow-hidden">
+          <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center">
+            <Icon name={service.image} className="w-8 h-8 text-accent" />
           </div>
           {service.featured && (
-            <div className="absolute top-3 right-3 px-3 py-1 bg-neon-cyan/90 text-black text-xs font-bold rounded-full">
-              FEATURED
+            <div className="absolute top-3 right-3 px-3 py-1 bg-accent text-white text-xs font-medium rounded-full">
+              Featured
             </div>
           )}
         </div>
 
-        {/* Content */}
         <div className="p-4 space-y-3">
-          {/* Category */}
-          <p className="text-xs font-medium text-neon-cyan uppercase tracking-wide">
+          <p className="text-xs font-medium text-accent uppercase tracking-wide">
             {service.category}
           </p>
 
-          {/* Title */}
-          <h3 className="text-lg font-semibold text-white group-hover:text-neon-cyan transition-colors line-clamp-2">
+          <h3 className="text-base font-semibold text-slate-900 group-hover:text-accent transition-colors line-clamp-2">
             {service.title}
           </h3>
 
-          {/* Provider */}
-          <div className="flex items-center gap-2">
-            <span className="text-xl">{service.provider.avatar}</span>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-medium text-slate-600">
+              {service.provider.avatar}
+            </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">
+              <p className="text-sm font-medium text-slate-900 truncate">
                 {service.provider.name}
               </p>
-              <p className="text-xs text-gray-400">
-                {service.provider.type === 'ai' ? 'AI Agent' : 'Verified Seller'}
+              <p className="text-xs text-slate-500 flex items-center gap-1">
+                <User className="w-3 h-3" />
+                {service.provider.type === 'ai' ? 'AI Agent' : 'Human'}
               </p>
             </div>
           </div>
 
-          {/* Rating */}
           <div className="flex items-center gap-1">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
@@ -58,24 +56,24 @@ export function ServiceCard({ service }: ServiceCardProps) {
                   key={i}
                   className={`w-4 h-4 ${
                     i < Math.floor(service.rating)
-                      ? 'fill-neon-cyan text-neon-cyan'
-                      : 'text-gray-600'
+                      ? 'fill-accent text-accent'
+                      : 'text-slate-200'
                   }`}
                 />
               ))}
             </div>
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-slate-500">
               ({service.reviews})
             </span>
           </div>
 
-          {/* Footer */}
-          <div className="pt-3 border-t border-dark-border flex justify-between items-center">
-            <span className="text-lg font-bold text-neon-cyan">
+          <div className="pt-3 border-t border-slate-100 flex justify-between items-center">
+            <span className="text-lg font-bold text-slate-900">
               {formatPrice(service.price, service.currency)}
             </span>
-            <span className="text-xs text-gray-400">
-              {service.deliveryTime}d delivery
+            <span className="text-xs text-slate-400 flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {service.deliveryTime}d
             </span>
           </div>
         </div>

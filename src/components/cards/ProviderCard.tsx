@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Star, Badge } from 'lucide-react';
-import { formatNumber } from '@/lib/utils';
+import { Star, BadgeCheck, Bot, User } from 'lucide-react';
 import type { ServiceProvider } from '@/types';
 
 interface ProviderCardProps {
@@ -11,34 +10,42 @@ interface ProviderCardProps {
 
 export function ProviderCard({ provider }: ProviderCardProps) {
   return (
-    <Link href={`/provider/${provider.id}`}>
-      <div className="card-premium h-full group text-center space-y-4 p-6">
-        {/* Avatar */}
-        <div className="text-6xl group-hover:scale-110 transition-transform duration-300">
-          {provider.avatar}
+    <Link href={`/seller/${provider.id}`}>
+      <div className="card-clean h-full group text-center space-y-4 p-6">
+        <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
+          {provider.type === 'ai' ? (
+            <Bot className="w-10 h-10 text-accent" />
+          ) : (
+            <User className="w-10 h-10 text-accent" />
+          )}
         </div>
 
-        {/* Name and Type */}
         <div className="space-y-1">
           <div className="flex items-center justify-center gap-2">
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-slate-900">
               {provider.name}
             </h3>
             {provider.verified && (
-              <Badge className="w-4 h-4 fill-neon-cyan text-neon-cyan" />
+              <BadgeCheck className="w-5 h-5 text-accent" />
             )}
           </div>
-          <p className="text-sm text-gray-400">
-            {provider.type === 'ai' ? '🤖 AI Agent' : '👤 Human Freelancer'}
+          <p className="text-sm text-slate-500 flex items-center justify-center gap-1">
+            {provider.type === 'ai' ? (
+              <>
+                <Bot className="w-4 h-4" /> AI Agent
+              </>
+            ) : (
+              <>
+                <User className="w-4 h-4" /> Human Freelancer
+              </>
+            )}
           </p>
         </div>
 
-        {/* Description */}
-        <p className="text-sm text-gray-400 line-clamp-2">
+        <p className="text-sm text-slate-600 line-clamp-2">
           {provider.description}
         </p>
 
-        {/* Rating */}
         <div className="flex items-center justify-center gap-1">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
@@ -46,51 +53,20 @@ export function ProviderCard({ provider }: ProviderCardProps) {
                 key={i}
                 className={`w-4 h-4 ${
                   i < Math.floor(provider.avgRating)
-                    ? 'fill-neon-cyan text-neon-cyan'
-                    : 'text-gray-600'
+                    ? 'fill-accent text-accent'
+                    : 'text-slate-200'
                 }`}
               />
             ))}
           </div>
-          <span className="text-sm font-semibold text-neon-cyan">
-            {provider.avgRating.toFixed(2)}
+          <span className="text-sm font-semibold text-slate-700">
+            {provider.avgRating.toFixed(1)}
           </span>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3 py-3 border-y border-dark-border">
-          <div>
-            <p className="text-lg font-bold text-neon-cyan">
-              {formatNumber(provider.completedGigs)}
-            </p>
-            <p className="text-xs text-gray-400">Completed</p>
-          </div>
-          <div>
-            <p className="text-lg font-bold text-neon-cyan">
-              {provider.type === 'ai' ? '24/7' : '4h avg'}
-            </p>
-            <p className="text-xs text-gray-400">Response</p>
-          </div>
+        <div className="text-sm text-slate-500">
+          {provider.completedGigs.toLocaleString()} completed
         </div>
-
-        {/* Badges */}
-        {provider.badges && provider.badges.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center">
-            {provider.badges.slice(0, 2).map((badge, i) => (
-              <span
-                key={i}
-                className="px-2 py-1 bg-neon-cyan/10 text-neon-cyan text-xs font-medium rounded-full border border-neon-cyan/30"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* CTA */}
-        <button className="w-full btn-primary text-sm mt-2">
-          View Profile
-        </button>
       </div>
     </Link>
   );
