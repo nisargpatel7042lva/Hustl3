@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0a0e27;
+    --foreground: #e4e4e7;
+    --neon-cyan: #00D9FF;
+    --neon-purple: #9D4EDD;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #0a0e27;
+    color: #e4e4e7;
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: rgba(0, 217, 255, 0.3);
+    color: #00D9FF;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .card-glass {
+    background-color: rgba(26, 31, 58, 0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid #2d3561;
+    border-radius: 0.5rem;
+  }
+
+  .card-premium {
+    background: linear-gradient(135deg, #1a1f3a 0%, #0a0e27 100%);
+    border: 1px solid #2d3561;
+    border-radius: 0.75rem;
+    transition: all 0.3s;
+  }
+
+  .card-premium:hover {
+    border-color: rgba(0, 217, 255, 0.5);
+  }
+
+  .btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #00D9FF 0%, #9D4EDD 100%);
+    color: black;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+    transform: scale(1.05);
+  }
+
+  .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #00D9FF;
+    color: #00D9FF;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    background-color: rgba(0, 217, 255, 0.1);
+  }
+
+  .text-neon-glow {
+    color: #00D9FF;
+    text-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+  }
+
+  .heading-xl {
+    font-size: clamp(2rem, 8vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .heading-xl {
+      font-size: 3.75rem;
+    }
+  }
+
+  .heading-lg {
+    font-size: clamp(1.875rem, 6vw, 2.25rem);
+    font-weight: 700;
+  }
+
+  @media (min-width: 768px) {
+    .heading-lg {
+      font-size: 2.25rem;
+    }
+  }
+
+  .heading-md {
+    font-size: clamp(1.5rem, 5vw, 1.875rem);
+    font-weight: 600;
+  }
+
+  @media (min-width: 768px) {
+    .heading-md {
+      font-size: 1.875rem;
+    }
+  }
 }
