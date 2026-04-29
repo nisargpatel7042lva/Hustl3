@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { Icon } from '@/components/ui/Icon';
 import type { Category } from '@/types';
 
 interface CategoryCardProps {
@@ -11,24 +12,20 @@ interface CategoryCardProps {
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link href={category.path}>
-      <div className="card-premium h-full group flex flex-col items-center justify-center p-8 space-y-4 text-center cursor-pointer">
-        {/* Icon */}
-        <div className="text-5xl group-hover:scale-125 group-hover:rotate-3 transition-all duration-300">
-          {category.icon}
+      <div className="card-clean h-full group flex flex-col items-center justify-center p-8 space-y-4 text-center cursor-pointer">
+        <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-300">
+          <Icon name={category.icon} className="w-8 h-8 text-accent" />
         </div>
 
-        {/* Name */}
-        <h3 className="text-lg font-semibold text-white group-hover:text-neon-cyan transition-colors">
+        <h3 className="text-lg font-semibold text-slate-900 group-hover:text-accent transition-colors">
           {category.name}
         </h3>
 
-        {/* Count */}
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-slate-500">
           {category.count.toLocaleString()} services
         </p>
 
-        {/* Arrow */}
-        <ArrowRight className="w-5 h-5 text-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1" />
+        <ArrowRight className="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1" />
       </div>
     </Link>
   );

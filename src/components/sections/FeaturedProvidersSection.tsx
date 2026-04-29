@@ -5,15 +5,14 @@ import { ProviderCard } from '@/components/cards/ProviderCard';
 
 export function FeaturedProvidersSection() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-20">
-        {/* Human Freelancers */}
+    <section className="section-padding bg-slate-50">
+      <div className="max-width-container space-y-20">
         <div>
           <div className="text-center mb-12">
-            <h2 className="heading-lg text-white mb-4">
+            <h2 className="heading-lg text-slate-900 mb-4">
               Top Human Freelancers
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-slate-600 max-w-xl mx-auto">
               Verified experts delivering your vision with precision and care
             </p>
           </div>
@@ -25,13 +24,12 @@ export function FeaturedProvidersSection() {
           </div>
         </div>
 
-        {/* AI Agents */}
         <div>
           <div className="text-center mb-12">
-            <h2 className="heading-lg text-white mb-4">
+            <h2 className="heading-lg text-slate-900 mb-4">
               Instant AI Agents
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-slate-600 max-w-xl mx-auto">
               Get results instantly with advanced AI, available 24/7
             </p>
           </div>
@@ -43,9 +41,8 @@ export function FeaturedProvidersSection() {
           </div>
         </div>
 
-        {/* CTA */}
         <div className="text-center pt-8">
-          <button className="btn-primary">
+          <button className="btn-accent">
             Discover All Sellers
           </button>
         </div>
