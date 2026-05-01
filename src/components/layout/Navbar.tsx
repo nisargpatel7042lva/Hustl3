@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, Search } from 'lucide-react';
 import { WalletConnectButton } from '@/components/web3/WalletConnectButton';
+import { EnsLookupPanel } from '@/components/web3/EnsLookupPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isEnsLookupOpen, setIsEnsLookupOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +56,11 @@ export function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <button className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-all duration-300">
+            <button
+              onClick={() => setIsEnsLookupOpen((prev) => !prev)}
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-all duration-300"
+              aria-label="Toggle ENS lookup"
+            >
               <Search className="w-4 h-4" />
             </button>
             <WalletConnectButton />
@@ -79,6 +85,20 @@ export function Navbar() {
         </div>
 
         <AnimatePresence>
+          {isEnsLookupOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="hidden md:block mt-4 max-w-md ml-auto"
+            >
+              <EnsLookupPanel />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -92,6 +112,7 @@ export function Navbar() {
                 <Link href="/agents" className="text-base font-medium text-text-muted hover:text-white">Agents</Link>
                 <Link href="/swarm" className="text-base font-medium text-text-muted hover:text-white">Swarm</Link>
                 <Link href="/agent-builder" className="text-base font-medium text-text-muted hover:text-white">Builder</Link>
+                <EnsLookupPanel compact />
                 <div className="pt-4 border-t border-white/5 flex justify-center">
                   <WalletConnectButton />
                 </div>

@@ -1,92 +1,129 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Bot, User, Star, Zap, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Search, Bot, Zap } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { motion } from 'framer-motion';
+import { AgentMarketGig, GigTier } from '@/types';
+import { payWithX402 } from '@/lib/agents/api';
 
-interface AgentListing {
-  id: string;
-  name: string;
-  description: string;
-  type: 'ai' | 'human';
-  skills: string[];
-  price: number;
-  currency: 'USDC' | 'ETH';
-  rating: number;
-  reviews: number;
-  completedTasks: number;
-  responseTime: string;
-}
-
-const mockAgents: AgentListing[] = [
+const mockAgentMarketGigs: AgentMarketGig[] = [
   {
-    id: '1',
-    name: 'DataCollector Pro',
-    description: 'AI agent specialized in collecting and analyzing data from multiple sources',
-    type: 'ai',
-    skills: ['Data Collection', 'API Integration', 'Python'],
-    price: 0.05,
-    currency: 'ETH',
-    rating: 4.9,
-    reviews: 234,
-    completedTasks: 1542,
-    responseTime: '< 1 min',
+    agentEns: 'datacollector.agentforge.eth',
+    skillName: 'Data Collection + API Aggregation',
+    tier: 'Verified',
+    priceUsdc: 0.04,
+    estSeconds: 80,
+    cid: '0g://gig_datacollector_v1',
+    description: 'Collects and consolidates structured data from multi-source APIs.',
+    tags: ['Data', 'APIs', 'Analytics'],
+    updatedAt: '2026-05-01T09:00:00.000Z',
   },
   {
-    id: '2',
-    name: 'Sarah Chen',
-    description: 'Expert smart contract developer with 5+ years experience',
-    type: 'human',
-    skills: ['Solidity', 'Security Audit', 'DeFi'],
-    price: 150,
-    currency: 'USDC',
-    rating: 4.95,
-    reviews: 89,
-    completedTasks: 312,
-    responseTime: '< 2 hours',
+    agentEns: 'auditor.agentforge.eth',
+    skillName: 'Smart Contract Security Review',
+    tier: 'Expert',
+    priceUsdc: 0.09,
+    estSeconds: 240,
+    cid: '0g://gig_auditor_v3',
+    description: 'Performs rapid static and semantic contract checks for common vulnerabilities.',
+    tags: ['Solidity', 'Security', 'DeFi'],
+    updatedAt: '2026-05-01T09:05:00.000Z',
   },
   {
-    id: '3',
-    name: 'ContentBot AI',
-    description: 'Generates high-quality content for blogs, social media, and marketing',
-    type: 'ai',
-    skills: ['Content Writing', 'SEO', 'Copywriting'],
-    price: 0.02,
-    currency: 'ETH',
-    rating: 4.85,
-    reviews: 567,
-    completedTasks: 3201,
-    responseTime: '< 30 sec',
+    agentEns: 'writer.agentforge.eth',
+    skillName: 'SEO Content Drafting',
+    tier: 'Junior',
+    priceUsdc: 0.015,
+    estSeconds: 45,
+    cid: '0g://gig_writer_v1',
+    description: 'Generates first-draft social and blog content optimized for SEO structure.',
+    tags: ['Content', 'SEO', 'Marketing'],
+    updatedAt: '2026-05-01T09:08:00.000Z',
   },
   {
-    id: '4',
-    name: 'CodeMaster',
-    description: 'Full-stack developer specializing in web3 and blockchain applications',
-    type: 'human',
-    skills: ['React', 'Node.js', 'Smart Contracts', 'GraphQL'],
-    price: 200,
-    currency: 'USDC',
-    rating: 4.92,
-    reviews: 156,
-    completedTasks: 423,
-    responseTime: '< 4 hours',
+    agentEns: 'fullstack.agentforge.eth',
+    skillName: 'Web3 Frontend Integration',
+    tier: 'Verified',
+    priceUsdc: 0.05,
+    estSeconds: 140,
+    cid: '0g://gig_fullstack_v2',
+    description: 'Builds and integrates wallet-aware UI modules for web3 dapps.',
+    tags: ['React', 'Next.js', 'Wagmi'],
+    updatedAt: '2026-05-01T09:12:00.000Z',
   },
 ];
 
+const tierFilters: Array<'all' | GigTier> = ['all', 'Junior', 'Verified', 'Expert'];
+
+interface TickerEvent {
+  id: string;
+  text: string;
+}
+
+function formatTickerEvent(gig: AgentMarketGig, prefix: string): TickerEvent {
+  return {
+    id: `${prefix}_${gig.cid}_${Date.now()}`,
+    text: `${prefix} • ${gig.skillName} • ${gig.tier} • ${gig.priceUsdc} USDC • ${gig.agentEns}`,
+  };
+}
+
 export default function AgentMarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState<'all' | 'ai' | 'human'>('all');
+  const [filter, setFilter] = useState<'all' | GigTier>('all');
+  const [activePaymentCid, setActivePaymentCid] = useState<string | null>(null);
+  const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
+  const [tickerEvents, setTickerEvents] = useState<TickerEvent[]>(() =>
+    mockAgentMarketGigs.map((gig) => formatTickerEvent(gig, 'LISTED'))
+  );
 
-  const filteredAgents = mockAgents.filter((agent) => {
+  useEffect(() => {
+    let tickerIndex = 0;
+    const tickerInterval = setInterval(() => {
+      const gig = mockAgentMarketGigs[tickerIndex % mockAgentMarketGigs.length];
+      tickerIndex += 1;
+
+      setTickerEvents((previous) => [
+        formatTickerEvent(gig, 'UPDATED'),
+        ...previous,
+      ].slice(0, 12));
+    }, 12000);
+
+    return () => clearInterval(tickerInterval);
+  }, []);
+
+  const filteredAgents = mockAgentMarketGigs.filter((agent) => {
     const matchesSearch =
-      agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      agent.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      agent.skills.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesFilter = filter === 'all' || agent.type === filter;
+      agent.agentEns.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      agent.skillName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (agent.description ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (agent.tags ?? []).some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesFilter = filter === 'all' || agent.tier === filter;
     return matchesSearch && matchesFilter;
   });
+
+  const handleHire = async (gig: AgentMarketGig) => {
+    setActivePaymentCid(gig.cid);
+    setPaymentMessage(null);
+
+    try {
+      const result = await payWithX402(
+        gig.agentEns,
+        gig.priceUsdc,
+        `HIRE:${gig.skillName}`
+      );
+      setPaymentMessage(`Payment settled (${result.status}) · ${result.txHash.slice(0, 10)}...`);
+      setTickerEvents((previous) => [
+        formatTickerEvent(gig, 'HIRED'),
+        ...previous,
+      ].slice(0, 12));
+    } catch {
+      setPaymentMessage('Payment handoff failed. Retry to trigger x402 flow again.');
+    } finally {
+      setActivePaymentCid(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-bg-dark text-text-main selection:bg-accent selection:text-white">
@@ -117,14 +154,14 @@ export default function AgentMarketplacePage() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted group-focus-within:text-accent transition-colors" />
               <input
                 type="text"
-                placeholder="Search by name, skill, or description..."
+                placeholder="Search by ENS, skill, tag, or description..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-accent/50 focus:bg-white/10 transition-all text-white placeholder:text-text-muted/50"
               />
             </div>
             <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/10">
-              {(['all', 'ai', 'human'] as const).map((f) => (
+              {tierFilters.map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
@@ -134,16 +171,43 @@ export default function AgentMarketplacePage() {
                       : 'text-text-muted hover:text-white'
                   }`}
                 >
-                  {f === 'all' ? 'All' : f === 'ai' ? 'AI Agents' : 'Human'}
+                  {f}
                 </button>
               ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8 border border-white/10 rounded-2xl bg-white/5 overflow-hidden"
+          >
+            <div className="px-4 py-2 text-xs uppercase tracking-widest text-text-muted border-b border-white/10">
+              Skill Evolution Ticker
+            </div>
+            <div className="overflow-hidden">
+              <motion.div
+                animate={{ x: ['0%', '-50%'] }}
+                transition={{ duration: 32, ease: 'linear', repeat: Infinity }}
+                className="flex w-max gap-3 py-3 px-4"
+              >
+                {[...tickerEvents, ...tickerEvents].map((event, index) => (
+                  <span
+                    key={`${event.id}-${index}`}
+                    className="whitespace-nowrap rounded-full border border-white/10 bg-bg-card px-3 py-1 text-xs text-white"
+                  >
+                    {event.text}
+                  </span>
+                ))}
+              </motion.div>
             </div>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {filteredAgents.map((agent, i) => (
               <motion.div 
-                key={agent.id}
+                key={`${agent.agentEns}-${agent.cid}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
@@ -152,32 +216,29 @@ export default function AgentMarketplacePage() {
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-4">
                     <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${
-                      agent.type === 'ai' ? 'bg-gradient-to-br from-accent to-purple-900' : 'bg-gradient-to-br from-accent-blue to-blue-900'
+                      agent.tier === 'Expert'
+                        ? 'bg-linear-to-br from-accent-teal to-teal-900'
+                        : agent.tier === 'Verified'
+                          ? 'bg-linear-to-br from-accent-blue to-blue-900'
+                          : 'bg-linear-to-br from-accent to-purple-900'
                     }`}>
-                      {agent.type === 'ai' ? (
-                        <Bot className="w-7 h-7 text-white" />
-                      ) : (
-                        <User className="w-7 h-7 text-white" />
-                      )}
+                      <Bot className="w-7 h-7 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-lg tracking-tight group-hover:text-accent transition-colors">{agent.name}</h3>
-                      <p className="text-sm text-text-muted">
-                        {agent.type === 'ai' ? 'AI Agent' : 'Human Freelancer'}
-                      </p>
+                      <h3 className="font-bold text-white text-lg tracking-tight group-hover:text-accent transition-colors">{agent.skillName}</h3>
+                      <p className="text-sm text-text-muted font-mono">{agent.agentEns}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
-                    <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                    <span className="text-sm font-medium text-white">{agent.rating}</span>
-                    <span className="text-sm text-text-muted">({agent.reviews})</span>
+                    <span className="text-xs uppercase tracking-wide text-text-muted">Tier</span>
+                    <span className="text-sm font-medium text-white">{agent.tier}</span>
                   </div>
                 </div>
 
                 <p className="text-text-muted text-sm mb-6 leading-relaxed">{agent.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
-                  {agent.skills.map((skill) => (
+                  {(agent.tags ?? []).map((skill) => (
                     <span
                       key={skill}
                       className="px-3 py-1 bg-white/5 border border-white/10 text-white text-xs rounded-full"
@@ -189,37 +250,42 @@ export default function AgentMarketplacePage() {
 
                 <div className="grid grid-cols-3 gap-4 mb-6 text-sm p-4 bg-white/5 rounded-xl border border-white/5">
                   <div>
-                    <div className="text-text-muted mb-1 text-xs">Completed</div>
-                    <div className="font-medium text-white">{agent.completedTasks.toLocaleString()}</div>
+                    <div className="text-text-muted mb-1 text-xs">ETA</div>
+                    <div className="font-medium text-white">{agent.estSeconds}s</div>
                   </div>
                   <div>
-                    <div className="text-text-muted mb-1 text-xs">Response</div>
-                    <div className="font-medium text-white flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-accent" />
-                      {agent.responseTime}
-                    </div>
+                    <div className="text-text-muted mb-1 text-xs">CID</div>
+                    <div className="font-medium text-white">{agent.cid.slice(0, 12)}...</div>
                   </div>
                   <div>
                     <div className="text-text-muted mb-1 text-xs">Price</div>
-                    <div className="font-medium text-accent-teal font-mono">
-                      {agent.currency === 'ETH' ? `${agent.price} ETH` : `${agent.price} USDC`}
-                    </div>
+                    <div className="font-medium text-accent-teal font-mono">{agent.priceUsdc} USDC</div>
                   </div>
                 </div>
 
-                <button className="w-full btn-primary flex items-center justify-center gap-2 py-4">
-                  {agent.type === 'ai' ? (
-                    <>
-                      <Zap className="w-4 h-4" />
-                      Hire Instantly
-                    </>
-                  ) : (
-                    'Hire Now'
-                  )}
+                <button
+                  onClick={() => handleHire(agent)}
+                  disabled={activePaymentCid === agent.cid}
+                  className="w-full btn-primary flex items-center justify-center gap-2 py-4 disabled:opacity-70"
+                >
+                  <>
+                    <Zap className="w-4 h-4" />
+                    {activePaymentCid === agent.cid ? 'PROCESSING X402...' : 'HIRE VIA X402'}
+                  </>
                 </button>
               </motion.div>
             ))}
           </div>
+
+          {paymentMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 text-sm text-white bg-white/5 border border-white/10 rounded-xl px-4 py-3"
+            >
+              {paymentMessage}
+            </motion.div>
+          )}
 
           {filteredAgents.length === 0 && (
             <motion.div 
