@@ -1,6 +1,24 @@
 'use client';
 
 import Link from 'next/link';
+import { Icon } from '@/components/ui/Icon';
+
+export function CategoryCard({ category }: { category: any }) {
+  return (
+    <Link href={`/explore?category=${category.id}`} className="card p-6 flex items-center gap-4">
+      <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center">
+        <Icon name={category.icon} className="w-6 h-6 text-slate-700" />
+      </div>
+      <div>
+        <h3 className="font-semibold text-slate-900">{category.name}</h3>
+        <p className="text-slate-500 text-sm">Popular services & agents</p>
+      </div>
+    </Link>
+  );
+}
+'use client';
+
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Icon } from '@/components/ui/Icon';
 import type { Category } from '@/types';

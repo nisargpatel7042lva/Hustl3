@@ -1,5 +1,16 @@
 'use client';
 
+import { useAccount } from 'wagmi';
+
+export function useWallet() {
+  const account = useAccount();
+  return {
+    isConnected: account.isConnected,
+    address: account.address,
+  };
+}
+'use client';
+
 import { useAccount, useDisconnect, useEnsName, useBalance } from 'wagmi';
 
 export function useWallet() {

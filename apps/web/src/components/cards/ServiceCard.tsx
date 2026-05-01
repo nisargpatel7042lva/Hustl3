@@ -1,5 +1,19 @@
 'use client';
 
+export function ServiceCard({ service }: { service: any }) {
+  return (
+    <div className="card p-4">
+      <h4 className="font-semibold mb-2">{service.title}</h4>
+      <p className="text-sm text-slate-500 mb-4">{service.description}</p>
+      <div className="flex items-center justify-between">
+        <div className="text-sm font-medium">{service.price}</div>
+        <button className="btn-outline">Buy</button>
+      </div>
+    </div>
+  );
+}
+'use client';
+
 import Link from 'next/link';
 import { Star, Clock, User } from 'lucide-react';
 import { Icon } from '@/components/ui/Icon';

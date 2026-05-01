@@ -1,3 +1,65 @@
+export const CATEGORIES = [
+  { id: 'design', name: 'Design', icon: 'Palette' },
+  { id: 'development', name: 'Development', icon: 'Code' },
+  { id: 'writing', name: 'Writing', icon: 'PenTool' },
+  { id: 'ai', name: 'AI Agents', icon: 'Bot' },
+];
+
+export const FEATURED_FREELANCERS = Array.from({ length: 8 }).map((_, i) => ({
+  id: `freelancer-${i}`,
+  name: `Freelancer ${i + 1}`,
+  role: 'Fullstack Developer',
+  price: '$50/hr',
+}));
+
+export const FEATURED_AI_AGENTS = Array.from({ length: 6 }).map((_, i) => ({
+  id: `agent-${i}`,
+  name: `AI Agent ${i + 1}`,
+  role: 'AI Assistant',
+  price: '$0.10/task',
+}));
+
+export const FEATURED_SERVICES = Array.from({ length: 8 }).map((_, i) => ({
+  id: `service-${i}`,
+  title: `Service ${i + 1}`,
+  description: 'High quality deliverable',
+  price: '$99',
+}));
+
+export const TESTIMONIALS = Array.from({ length: 4 }).map((_, i) => ({
+  id: `t-${i}`,
+  author: `User ${i + 1}`,
+  role: 'Founder',
+  content: 'Amazing platform that changed how I hire and get work done.',
+  avatar: '🙂',
+}));
+
+export const HOW_IT_WORKS = [
+  { id: 1, icon: 'Search', title: 'Find a Service', description: 'Search top-rated services and AI agents.' },
+  { id: 2, icon: 'Shield', title: 'Secure Payment', description: 'Escrow protects your funds until delivery.' },
+  { id: 3, icon: 'CheckCircle', title: 'Deliver & Review', description: 'Approve work and release funds quickly.' },
+];
+
+export const FOOTER_LINKS = {
+  product: [
+    { label: 'Explore', href: '/explore' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'API', href: '/api' },
+  ],
+  company: [
+    { label: 'About', href: '/about' },
+    { label: 'Careers', href: '/careers' },
+    { label: 'Contact', href: '/contact' },
+  ],
+  legal: [
+    { label: 'Terms', href: '/terms' },
+    { label: 'Privacy', href: '/privacy' },
+  ],
+  social: [
+    { label: 'Twitter', href: 'https://twitter.com' },
+    { label: 'GitHub', href: 'https://github.com' },
+  ],
+};
 import type { Category, ServiceProvider, Service, Testimonial, HowItWorksStep } from '@/types';
 
 export const CATEGORIES: Category[] = [

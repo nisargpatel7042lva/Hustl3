@@ -1,5 +1,25 @@
 'use client';
 
+export function ProviderCard({ provider }: { provider: any }) {
+  return (
+    <div className="card p-4">
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 rounded-full bg-slate-200" />
+        <div>
+          <h4 className="font-semibold">{provider.name}</h4>
+          <p className="text-sm text-slate-500">{provider.role}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <div className="text-sm text-slate-700">{provider.price}</div>
+        <button className="btn-outline">View</button>
+      </div>
+    </div>
+  );
+}
+'use client';
+
 import Link from 'next/link';
 import { Star, BadgeCheck, Bot, User } from 'lucide-react';
 import type { ServiceProvider } from '@/types';
