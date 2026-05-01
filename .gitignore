@@ -64,3 +64,10 @@ contracts/cache
 contracts/artifacts
 contracts/node_modules
 contracts/dist
+
+# Monorepo
+pnpm-lock.yaml
+packages/*/node_modules
+apps/*/node_modules
+/.turbo
+.turbo
