@@ -52,6 +52,48 @@ export interface HowItWorksStep {
   icon: string;
 }
 
+export type GigTier = 'Junior' | 'Verified' | 'Expert';
+
+export type AgentMarketSort = 'relevance' | 'price_asc' | 'price_desc' | 'newest';
+
+export interface AgentMarketGig {
+  agentEns: string;
+  skillName: string;
+  tier: GigTier;
+  priceUsdc: number;
+  estSeconds: number;
+  cid: string;
+  description?: string;
+  tags?: string[];
+  updatedAt?: string;
+}
+
+export interface AgentMarketQuery {
+  tier?: GigTier;
+  priceMax?: number;
+  skillName?: string;
+  agentEns?: string;
+  sort?: AgentMarketSort;
+}
+
+export interface AgentMarketQueryResult {
+  total: number;
+  gigs: AgentMarketGig[];
+}
+
+export interface AxlMessageEnvelope {
+  id: string;
+  from: string;
+  to: string;
+  payload: string;
+  timestamp: string;
+}
+
+export interface AxlSendResult {
+  messageId: string;
+  status: 'queued' | 'sent';
+}
+
 export type OrderStatus = 'PENDING' | 'PAID' | 'DELIVERED' | 'APPROVED' | 'DISPUTED' | 'REFUNDED' | 'CANCELLED';
 
 export type OrderType = 'SERVICE' | 'AI_INSTANT';

@@ -1,15 +1,11 @@
-export interface MarketplaceListing {
-  id: string;
-  agentId: string;
-  name: string;
-  description: string;
-  skills: string[];
-  price: number;
-  currency: 'USDC' | 'ETH';
-  rating: number;
-  completedTasks: number;
-  isAI: boolean;
-}
+import {
+  AxlMessageEnvelope,
+  AxlSendResult,
+  AgentMarketGig,
+  AgentMarketQuery,
+  AgentMarketQueryResult,
+} from '@/types';
+import { axl } from './axl';
 
 export interface HireAgentRequest {
   listingId: string;
@@ -25,19 +21,28 @@ export interface HireAgentResponse {
   estimatedCompletion?: Date;
 }
 
-export async function queryMarketplace(filters?: {
-  skills?: string[];
-  minRating?: number;
-  isAI?: boolean;
-}): Promise<MarketplaceListing[]> {
+export async function queryMarketplace(
+  filters?: AgentMarketQuery
+): Promise<AgentMarketQueryResult> {
   const params = new URLSearchParams();
-  if (filters?.skills) params.set('skills', filters.skills.join(','));
-  if (filters?.minRating) params.set('minRating', String(filters.minRating));
-  if (filters?.isAI !== undefined) params.set('isAI', String(filters.isAI));
+  if (filters?.tier) params.set('tier', filters.tier);
+  if (filters?.priceMax !== undefined) params.set('price_max', String(filters.priceMax));
+  if (filters?.skillName) params.set('skill_name', filters.skillName);
+  if (filters?.agentEns) params.set('agent_ens', filters.agentEns);
+  if (filters?.sort) params.set('sort', filters.sort);
 
   const response = await fetch(`/api/agents/marketplace?${params}`);
   if (!response.ok) throw new Error('Failed to query marketplace');
-  return response.json();
+  const data = (await response.json()) as AgentMarketQueryResult | AgentMarketGig[];
+
+  if (Array.isArray(data)) {
+    return {
+      total: data.length,
+      gigs: data,
+    };
+  }
+
+  return data;
 }
 
 export async function hireAgent(request: HireAgentRequest): Promise<HireAgentResponse> {
@@ -79,14 +84,12 @@ export async function executeKeeperTask(
 
 export async function sendViaAXL(
   to: string,
-  amount: number,
-  asset: string
-): Promise<{ txHash: string; confirmationTime: number }> {
-  const response = await fetch('/api/axl/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ to, amount, asset }),
-  });
-  if (!response.ok) throw new Error('AXL transfer failed');
-  return response.json();
+  payload: string,
+  from: string
+): Promise<AxlSendResult> {
+  return axl.send(to, payload, from);
+}
+
+export function onAxlMessage(handler: (message: AxlMessageEnvelope) => void | Promise<void>): () => void {
+  return axl.onMessage(handler);
 }
