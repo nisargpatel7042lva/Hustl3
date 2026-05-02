@@ -1,136 +1,123 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { ArrowRight, Star, Bot, User, Clock } from 'lucide-react';
 
-const gigs = [
+const PREVIEW_SERVICES = [
   {
-    title: 'Twitter Growth Agent',
-    type: 'AI',
-    price: '0.02 ETH',
-    rating: '4.9',
-    ens: 'growthbot.eth',
-    avatar: 'bg-accent',
+    id: '1',
+    title: 'NFT Smart Contract Development',
+    category: 'Development',
+    price: '5.5 ETH',
+    rating: 4.95,
+    reviews: 156,
+    delivery: '5 days',
+    provider: { name: 'Marcus W.', type: 'human' as const, initials: 'MW' },
+    featured: true,
   },
   {
-    title: 'Smart Contract Auditor',
-    type: 'Human',
-    price: '150 USDC',
-    rating: '5.0',
-    ens: 'alexaudit.eth',
-    avatar: 'bg-accent-blue',
+    id: '2',
+    title: 'AI-Generated Product Image Pack (100 imgs)',
+    category: 'AI Services',
+    price: '0.8 ETH',
+    rating: 4.88,
+    reviews: 423,
+    delivery: '1 hour',
+    provider: { name: 'DesignMaster AI', type: 'ai' as const, initials: 'AI' },
+    featured: true,
   },
   {
-    title: 'Premium UI Designer',
-    type: 'Human',
-    price: '200 USDC',
-    rating: '4.8',
-    ens: 'designpro.eth',
-    avatar: 'bg-accent-teal',
+    id: '3',
+    title: 'Full Website Redesign (Web3 UI)',
+    category: 'Design',
+    price: '3.2 ETH',
+    rating: 4.92,
+    reviews: 89,
+    delivery: '7 days',
+    provider: { name: 'Sarah C.', type: 'human' as const, initials: 'SC' },
+    featured: false,
   },
   {
-    title: 'PDF Summarizer AI',
-    type: 'AI',
-    price: '0.005 ETH',
-    rating: '4.7',
-    ens: 'reader.eth',
-    avatar: 'bg-purple-500',
-  },
-  {
-    title: 'Meme Marketing Agent',
-    type: 'AI',
-    price: '0.01 ETH',
-    rating: '4.9',
-    ens: 'viral.eth',
-    avatar: 'bg-pink-500',
-  },
-  {
-    title: 'Full Stack Dev',
-    type: 'Human',
-    price: '300 USDC',
-    rating: '4.9',
-    ens: 'devmaster.eth',
-    avatar: 'bg-indigo-500',
+    id: '4',
+    title: 'SEO Content Strategy & Calendar',
+    category: 'Marketing',
+    price: '1,200 USDC',
+    rating: 4.85,
+    reviews: 234,
+    delivery: '3 days',
+    provider: { name: 'ContentFlow AI', type: 'ai' as const, initials: 'CF' },
+    featured: false,
   },
 ];
 
+function ServicePreviewCard({ service }: { service: typeof PREVIEW_SERVICES[0] }) {
+  const isAI = service.provider.type === 'ai';
+
+  return (
+    <div className="card" style={{ padding: '1.25rem', cursor: 'pointer' }}>
+      {/* Provider */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="avatar" style={{
+            width: '28px', height: '28px', fontSize: '11px',
+            background: isAI ? 'var(--color-accent-dim)' : 'var(--color-surface-raised)',
+            color: isAI ? 'var(--color-accent-hover)' : 'var(--color-ink-secondary)',
+            border: `1px solid ${isAI ? 'rgba(99,102,241,0.2)' : 'var(--color-border)'}`,
+          }}>
+            {isAI ? <Bot size={12} /> : service.provider.initials}
+          </div>
+          <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-ink-secondary)' }}>
+            {service.provider.name}
+          </span>
+        </div>
+        <span className="tag" style={{ fontSize: '11px' }}>{service.category}</span>
+      </div>
+
+      {/* Title */}
+      <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-ink-primary)', lineHeight: 1.4, marginBottom: '16px' }}>
+        {service.title}
+      </h3>
+
+      {/* Footer */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Star size={11} fill="var(--color-amber)" color="var(--color-amber)" />
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-ink-primary)' }}>{service.rating}</span>
+            <span style={{ fontSize: '12px', color: 'var(--color-ink-tertiary)' }}>({service.reviews})</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: 'var(--color-ink-tertiary)' }}>
+            <Clock size={11} />
+            <span style={{ fontSize: '12px' }}>{service.delivery}</span>
+          </div>
+        </div>
+        <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-ink-primary)' }}>
+          {service.price}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function MarketplacePreview() {
   return (
-    <section className="py-32 relative bg-bg-card">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-      
-      <div className="max-width-container">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+    <section className="section" style={{ paddingTop: 0 }}>
+      <div className="container-app">
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <motion.h2 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="heading-xl mb-4"
-            >
-              Elite Talent, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent-blue">Instantly Available</span>
-            </motion.h2>
-            <p className="text-text-muted max-w-lg">
-              Browse top-rated human freelancers and AI agents ready to execute your tasks autonomously.
-            </p>
+            <p className="text-label" style={{ marginBottom: '10px' }}>Marketplace</p>
+            <h2 className="text-heading">Top services right now</h2>
           </div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/explore" className="btn-secondary group">
-              View All Gigs
-              <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </motion.div>
+          <Link href="/explore" className="btn btn-ghost btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            View all <ArrowRight size={14} />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gigs.map((gig, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="glass-card p-6 group cursor-pointer"
-            >
-              <div className="flex justify-between items-start mb-6">
-                <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-xl ${gig.avatar} flex items-center justify-center shadow-lg`}>
-                    <span className="text-white font-bold text-lg">{gig.title.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold tracking-tight group-hover:text-accent transition-colors">{gig.title}</h3>
-                    <div className="flex items-center gap-2 text-xs text-text-muted mt-1">
-                      <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 font-medium">
-                        {gig.type}
-                      </span>
-                      <span>•</span>
-                      <span className="font-mono">{gig.ens}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-end pt-4 border-t border-white/5">
-                <div>
-                  <div className="text-xs text-text-muted mb-1">Starting at</div>
-                  <div className="text-white font-bold font-mono">{gig.price}</div>
-                </div>
-                <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-md">
-                  <svg className="w-3 h-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <span className="text-sm font-medium text-white">{gig.rating}</span>
-                </div>
-              </div>
-            </motion.div>
+        {/* Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+          {PREVIEW_SERVICES.map(s => (
+            <ServicePreviewCard key={s.id} service={s} />
           ))}
         </div>
       </div>
