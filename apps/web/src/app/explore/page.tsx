@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Search, SlidersHorizontal, Grid, List, Bot, User, Star, Clock } from 'lucide-react';
 import { Navbar }       from '@repo/ui/layout/Navbar';
 import { Footer }       from '@repo/ui/layout/Footer';
 import { CategoryCard } from '@repo/ui/cards/CategoryCard';
 import { ServiceCard }  from '@repo/ui/cards/ServiceCard';
-import { FEATURED_SERVICES, CATEGORIES } from '@repo/ui/lib/constants';
+import { CATEGORIES } from '@repo/ui/lib/constants';
+import type { Service } from '@repo/ui/types';
 
 const FILTERS = ['All', 'AI Agents', 'Humans', 'Development', 'Design', 'Marketing', 'AI Services'];
 
@@ -14,23 +15,44 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [viewMode, setViewMode]     = useState<'grid' | 'list'>('grid');
+  
+  const [gigs, setGigs] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchGigs() {
+      try {
+        const res = await fetch('/api/gigs');
+        if (res.ok) {
+          const data = await res.json();
+          // Transform API format to UI format if needed, or assume it matches
+          setGigs(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch gigs', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchGigs();
+  }, []);
 
   const filtered = useMemo(() => {
-    let results = [...FEATURED_SERVICES];
+    let results = [...gigs];
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       results = results.filter(s =>
-        s.title.toLowerCase().includes(q) ||
-        s.category.toLowerCase().includes(q)
+        s.title?.toLowerCase().includes(q) ||
+        s.category?.toLowerCase().includes(q)
       );
     }
     if (activeFilter !== 'All') {
-      if (activeFilter === 'AI Agents') results = results.filter(s => s.provider.type === 'ai');
-      else if (activeFilter === 'Humans')   results = results.filter(s => s.provider.type === 'human');
+      if (activeFilter === 'AI Agents') results = results.filter(s => s.provider?.type === 'ai');
+      else if (activeFilter === 'Humans')   results = results.filter(s => s.provider?.type === 'human');
       else results = results.filter(s => s.category === activeFilter);
     }
     return results;
-  }, [searchQuery, activeFilter]);
+  }, [searchQuery, activeFilter, gigs]);
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-canvas)', display: 'flex', flexDirection: 'column' }}>
@@ -42,7 +64,7 @@ export default function ExplorePage() {
           <div className="container-app">
             <h1 className="text-heading" style={{ marginBottom: '6px' }}>Marketplace</h1>
             <p style={{ fontSize: '14px', color: 'var(--color-ink-tertiary)' }}>
-              Browse {FEATURED_SERVICES.length}+ services from verified humans and autonomous AI agents.
+              Browse {loading ? '...' : gigs.length}+ services from verified humans and autonomous AI agents.
             </p>
           </div>
         </div>
@@ -133,7 +155,11 @@ export default function ExplorePage() {
               <span style={{ fontSize: '12px', color: 'var(--color-ink-tertiary)' }}>{filtered.length} results</span>
             </div>
 
-            {filtered.length === 0 ? (
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--color-ink-tertiary)' }}>
+                <p style={{ fontSize: '14px' }}>Loading services from 0G Storage...</p>
+              </div>
+            ) : filtered.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--color-ink-tertiary)' }}>
                 <p style={{ fontSize: '14px' }}>No services match your search.</p>
               </div>

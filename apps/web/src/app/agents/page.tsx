@@ -1,62 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Bot, Zap, Clock, Shield } from 'lucide-react';
 import { Navbar }  from '@repo/ui/layout/Navbar';
 import { Footer }  from '@repo/ui/layout/Footer';
 import type { AgentMarketGig, GigTier } from '@repo/ui/types';
 import { payWithX402 } from '@repo/ui/lib/agents/api';
 
-const AGENTS: AgentMarketGig[] = [
-  {
-    agentEns:    'datacollector.agentforge.eth',
-    skillName:   'Data Collection & API Aggregation',
-    tier:        'Verified',
-    priceUsdc:   0.04,
-    estSeconds:  80,
-    cid:         '0g://gig_datacollector_v1',
-    description: 'Collects and consolidates structured data from multi-source APIs. Returns clean JSON.',
-    tags:        ['Data', 'APIs', 'Analytics'],
-    updatedAt:   '2026-05-01T09:00:00.000Z',
-  },
-  {
-    agentEns:    'auditor.agentforge.eth',
-    skillName:   'Smart Contract Security Review',
-    tier:        'Expert',
-    priceUsdc:   0.09,
-    estSeconds:  240,
-    cid:         '0g://gig_auditor_v3',
-    description: 'Static and semantic contract checks for common vulnerabilities — reentrancy, overflows, access control.',
-    tags:        ['Solidity', 'Security', 'DeFi'],
-    updatedAt:   '2026-05-01T09:05:00.000Z',
-  },
-  {
-    agentEns:    'writer.agentforge.eth',
-    skillName:   'SEO Content Drafting',
-    tier:        'Junior',
-    priceUsdc:   0.015,
-    estSeconds:  45,
-    cid:         '0g://gig_writer_v1',
-    description: 'Generates first-draft blog and social content optimized for SEO structure.',
-    tags:        ['Content', 'SEO', 'Marketing'],
-    updatedAt:   '2026-05-01T09:08:00.000Z',
-  },
-  {
-    agentEns:    'fullstack.agentforge.eth',
-    skillName:   'Web3 Frontend Integration',
-    tier:        'Verified',
-    priceUsdc:   0.05,
-    estSeconds:  140,
-    cid:         '0g://gig_fullstack_v2',
-    description: 'Builds and integrates wallet-aware UI modules for web3 dapps using Next.js and Wagmi.',
-    tags:        ['React', 'Next.js', 'Wagmi'],
-    updatedAt:   '2026-05-01T09:12:00.000Z',
-  },
-];
-
 const TIER_FILTERS: Array<'All' | GigTier> = ['All', 'Junior', 'Verified', 'Expert'];
 
-const TIER_COLORS: Record<GigTier, string> = {
+const TIER_COLORS: Record<string, string> = {
   Junior:   'var(--color-ink-tertiary)',
   Verified: 'var(--color-accent-hover)',
   Expert:   'var(--color-green)',
@@ -67,8 +20,40 @@ export default function AgentsPage() {
   const [tierFilter, setTierFilter]   = useState<'All' | GigTier>('All');
   const [hiring, setHiring]           = useState<string | null>(null);
   const [lastMessage, setLastMessage] = useState<string | null>(null);
+  
+  const [agents, setAgents] = useState<AgentMarketGig[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = AGENTS.filter(a => {
+  useEffect(() => {
+    async function fetchAgents() {
+      try {
+        const res = await fetch('/api/gigs?sellerType=agent');
+        if (res.ok) {
+          const data = await res.json();
+          // Map to AgentMarketGig format expected by UI
+          const mapped = data.map((gig: any) => ({
+            agentEns: gig.sellerEns || gig.sellerWallet || 'unknown.eth',
+            skillName: gig.title || 'Unknown Skill',
+            tier: gig.tier || 'Verified',
+            priceUsdc: gig.price || 0,
+            estSeconds: (gig.deliveryTimeHours || 1) * 3600,
+            cid: gig.gigId || gig.cid || 'unknown',
+            description: gig.description || '',
+            tags: gig.tags || [],
+            updatedAt: gig.createdAt ? new Date(gig.createdAt).toISOString() : new Date().toISOString()
+          }));
+          setAgents(mapped);
+        }
+      } catch (err) {
+        console.error('Failed to fetch agents', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchAgents();
+  }, []);
+
+  const filtered = agents.filter(a => {
     const q = search.toLowerCase();
     const matchQ = !q || a.skillName.toLowerCase().includes(q) || a.agentEns.toLowerCase().includes(q) || (a.tags ?? []).some(t => t.toLowerCase().includes(q));
     const matchT = tierFilter === 'All' || a.tier === tierFilter;
@@ -147,7 +132,12 @@ export default function AgentsPage() {
           )}
 
           {/* Agents grid */}
-          {filtered.length === 0 ? (
+          {loading ? (
+             <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-ink-tertiary)' }}>
+               <Bot size={32} style={{ marginBottom: '12px', opacity: 0.4 }} />
+               <p>Loading agents from 0G Storage...</p>
+             </div>
+          ) : filtered.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-ink-tertiary)' }}>
               <Bot size={32} style={{ marginBottom: '12px', opacity: 0.4 }} />
               <p>No agents match your search.</p>
@@ -169,7 +159,7 @@ export default function AgentsPage() {
                     </div>
                     <span
                       className="badge"
-                      style={{ color: TIER_COLORS[agent.tier], borderColor: 'transparent', background: 'var(--color-surface-raised)', flexShrink: 0, fontSize: '11px' }}
+                      style={{ color: TIER_COLORS[agent.tier] || TIER_COLORS.Verified, borderColor: 'transparent', background: 'var(--color-surface-raised)', flexShrink: 0, fontSize: '11px' }}
                     >
                       {agent.tier}
                     </span>
