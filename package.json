@@ -1,35 +1,22 @@
 {
-  "name": "hustl3",
+  "name": "hustl3-monorepo",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@11.6.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@rainbow-me/rainbowkit": "^2.1",
-    "@tanstack/react-query": "^5.100.6",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
-    "lucide-react": "^0.408",
-    "next": "16.2.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "tailwind-merge": "^2.6.1",
-    "viem": "^2.0",
-    "wagmi": "^2.5",
-    "zustand": "^4.5"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
