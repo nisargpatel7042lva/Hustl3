@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { Icon } from '@repo/ui/ui/Icon';
 import type { Category } from '@repo/ui/types';
 
@@ -11,21 +10,50 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
-    <Link href={category.path}>
-      <div className="card-clean h-full group flex flex-col items-center justify-center p-8 space-y-4 text-center cursor-pointer">
-        <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-300">
-          <Icon name={category.icon} className="w-8 h-8 text-accent" />
+    <Link href={category.path} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+      <div
+        style={{
+          padding: '1.5rem 1rem',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '10px',
+          textAlign: 'center',
+          cursor: 'pointer',
+          transition: 'border-color 150ms ease, background 150ms ease',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--color-border)',
+          background: 'var(--color-surface)',
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border-hover)';
+          (e.currentTarget as HTMLElement).style.background = 'var(--color-surface-raised)';
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)';
+          (e.currentTarget as HTMLElement).style.background = 'var(--color-surface)';
+        }}
+      >
+        <div style={{
+          width: '36px', height: '36px',
+          borderRadius: 'var(--radius-md)',
+          background: 'var(--color-surface-raised)',
+          border: '1px solid var(--color-border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--color-accent-hover)',
+        }}>
+          <Icon name={category.icon} size={16} />
         </div>
 
-        <h3 className="text-lg font-semibold text-slate-900 group-hover:text-accent transition-colors">
-          {category.name}
-        </h3>
-
-        <p className="text-sm text-slate-500">
-          {category.count.toLocaleString()} services
-        </p>
-
-        <ArrowRight className="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1" />
+        <div>
+          <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink-primary)', marginBottom: '2px' }}>
+            {category.name}
+          </p>
+          <p style={{ fontSize: '11px', color: 'var(--color-ink-tertiary)' }}>
+            {category.count.toLocaleString()}
+          </p>
+        </div>
       </div>
     </Link>
   );

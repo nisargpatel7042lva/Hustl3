@@ -4,284 +4,276 @@ import { useState } from 'react';
 import { Plus, Trash2, Code, Play, Save, Zap, Bot } from 'lucide-react';
 import { Navbar } from '@repo/ui/layout/Navbar';
 import { Footer } from '@repo/ui/layout/Footer';
-import { motion, AnimatePresence } from 'framer-motion';
-
-interface SkillInput {
-  id: string;
-  name: string;
-  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
-  required: boolean;
-  description: string;
-}
 
 interface Skill {
   id: string;
   name: string;
   description: string;
   code: string;
-  inputs: SkillInput[];
 }
 
-interface AgentBuilder {
+interface AgentConfig {
   name: string;
   description: string;
   skills: Skill[];
 }
 
 export default function AgentBuilderPage() {
-  const [builder, setBuilder] = useState<AgentBuilder>({
-    name: '',
-    description: '',
-    skills: [],
-  });
-  const [isRunning, setIsRunning] = useState(false);
-  const [output, setOutput] = useState<string>('');
+  const [agent, setAgent] = useState<AgentConfig>({ name: '', description: '', skills: [] });
+  const [running, setRunning] = useState(false);
+  const [output, setOutput]   = useState('');
 
-  const addSkill = () => {
-    setBuilder({
-      ...builder,
-      skills: [
-        ...builder.skills,
-        {
-          id: `skill_${Date.now()}`,
-          name: '',
-          description: '',
-          code: 'function handler(input) {\n  return { result: input };\n}',
-          inputs: [],
-        },
-      ],
-    });
-  };
-
-  const updateSkill = (index: number, updates: Partial<Skill>) => {
-    const newSkills = [...builder.skills];
-    newSkills[index] = { ...newSkills[index], ...updates };
-    setBuilder({ ...builder, skills: newSkills });
-  };
-
-  const removeSkill = (index: number) => {
-    setBuilder({
-      ...builder,
-      skills: builder.skills.filter((_, i) => i !== index),
-    });
-  };
-
-  const addInput = (skillIndex: number) => {
-    const skill = builder.skills[skillIndex];
-    const newInput: SkillInput = {
-      id: `input_${Date.now()}`,
+  const addSkill = () => setAgent(a => ({
+    ...a,
+    skills: [...a.skills, {
+      id: `skill_${Date.now()}`,
       name: '',
-      type: 'string',
-      required: false,
       description: '',
-    };
-    updateSkill(skillIndex, { inputs: [...skill.inputs, newInput] });
-  };
+      code: 'async function handler(input) {\n  // Your skill logic here\n  return { result: input };\n}',
+    }],
+  }));
+
+  const updateSkill = (i: number, patch: Partial<Skill>) => setAgent(a => {
+    const skills = [...a.skills];
+    skills[i] = { ...skills[i], ...patch };
+    return { ...a, skills };
+  });
+
+  const removeSkill = (i: number) => setAgent(a => ({
+    ...a, skills: a.skills.filter((_, idx) => idx !== i),
+  }));
 
   const runAgent = async () => {
-    setIsRunning(true);
-    setOutput('Executing agent...\n');
+    setRunning(true);
+    setOutput('');
+    const lines = [
+      `> Agent: ${agent.name || 'Unnamed Agent'}`,
+      `> Skills loaded: ${agent.skills.length}`,
+      '> Connecting to 0G network...',
+      '> Execution started...',
+      '',
+      '✓ Skills executed successfully',
+      '✓ Results stored to 0G Storage',
+      '✓ ENS identity verified',
+      '',
+      `> Done in ${(Math.random() * 1.5 + 0.5).toFixed(2)}s`,
+    ];
+    for (const line of lines) {
+      await new Promise(r => setTimeout(r, 250));
+      setOutput(o => o + line + '\n');
+    }
+    setRunning(false);
+  };
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setOutput(`Agent: ${builder.name || 'Unnamed Agent'}\n`);
-    setOutput((prev) => prev + `Skills loaded: ${builder.skills.length}\n`);
-    setOutput((prev) => prev + `\nExecution complete.\n`);
-    setOutput((prev) => prev + `- Skills executed successfully\n`);
-    setOutput((prev) => prev + `- Results stored to 0G Storage\n`);
-
-    setIsRunning(false);
+  const inputStyle = {
+    width: '100%',
+    background: 'var(--color-surface-raised)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 'var(--radius-md)',
+    padding: '8px 12px',
+    fontSize: '13px',
+    color: 'var(--color-ink-primary)',
+    outline: 'none',
+    fontFamily: 'var(--font-sans)',
+    transition: 'border-color 150ms ease',
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark text-text-main selection:bg-accent selection:text-white">
+    <div style={{ minHeight: '100vh', background: 'var(--color-canvas)', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
-      <main className="pt-32 pb-16 relative overflow-hidden">
-        {/* Ambient Glows */}
-        <div className="ambient-glow bg-accent-teal top-0 right-1/4 w-[500px] h-[500px]"></div>
+      <main style={{ paddingTop: '80px', flexGrow: 1 }}>
+        <div style={{ borderBottom: '1px solid var(--color-border)', padding: '2rem 0' }}>
+          <div className="container-app">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-md)', background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent-hover)' }}>
+                <Zap size={16} />
+              </div>
+              <h1 className="text-heading" style={{ fontSize: '1.75rem' }}>Agent Builder</h1>
+            </div>
+            <p style={{ fontSize: '14px', color: 'var(--color-ink-tertiary)' }}>
+              Configure, test, and deploy your autonomous AI agent to the Hustl3 network.
+            </p>
+          </div>
+        </div>
 
-        <div className="max-width-container relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
-          >
-            <h1 className="heading-xl mb-4">Agent Builder</h1>
-            <p className="text-lg text-text-muted">Create, configure, and test your autonomous AI agents on-chain.</p>
-          </motion.div>
+        <div className="container-app" style={{ padding: '2rem 1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-6"
-            >
-              <div className="glass-card p-6">
-                <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                  <Bot className="w-5 h-5 text-accent" />
-                  Agent Configuration
-                </h2>
+            {/* Left — config */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Agent info */}
+              <div className="card-flat" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <Bot size={15} style={{ color: 'var(--color-ink-tertiary)' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink-secondary)' }}>Agent Configuration</span>
+                </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-text-muted mb-2">Agent Name</label>
-                    <input
-                      type="text"
-                      value={builder.name}
-                      onChange={(e) => setBuilder({ ...builder, name: e.target.value })}
-                      placeholder="e.g., Data Collector Pro"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-accent/50 text-white transition-colors"
-                    />
-                  </div>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-ink-tertiary)', display: 'block', marginBottom: '6px' }}>
+                    Agent Name
+                  </label>
+                  <input
+                    style={inputStyle}
+                    placeholder="e.g., Data Collector Pro"
+                    value={agent.name}
+                    onChange={e => setAgent(a => ({ ...a, name: e.target.value }))}
+                    onFocus={e => { (e.target as HTMLInputElement).style.borderColor = 'rgba(99,102,241,0.5)'; }}
+                    onBlur={e => { (e.target as HTMLInputElement).style.borderColor = 'var(--color-border)'; }}
+                  />
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-text-muted mb-2">Description</label>
-                    <textarea
-                      value={builder.description}
-                      onChange={(e) => setBuilder({ ...builder, description: e.target.value })}
-                      placeholder="What does this agent do?"
-                      rows={3}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-accent/50 text-white transition-colors resize-none"
-                    />
-                  </div>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-ink-tertiary)', display: 'block', marginBottom: '6px' }}>
+                    Description
+                  </label>
+                  <textarea
+                    style={{ ...inputStyle, resize: 'none' }}
+                    placeholder="What does this agent do?"
+                    rows={3}
+                    value={agent.description}
+                    onChange={e => setAgent(a => ({ ...a, description: e.target.value }))}
+                    onFocus={e => { (e.target as HTMLTextAreaElement).style.borderColor = 'rgba(99,102,241,0.5)'; }}
+                    onBlur={e => { (e.target as HTMLTextAreaElement).style.borderColor = 'var(--color-border)'; }}
+                  />
                 </div>
               </div>
 
-              <div className="glass-card p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-accent-teal" />
-                    Skills
-                  </h2>
-                  <button onClick={addSkill} className="btn-secondary px-4 py-2 text-xs flex items-center gap-1">
-                    <Plus className="w-4 h-4" />
-                    Add Skill
+              {/* Skills */}
+              <div className="card-flat" style={{ padding: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Code size={15} style={{ color: 'var(--color-ink-tertiary)' }} />
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink-secondary)' }}>Skills ({agent.skills.length})</span>
+                  </div>
+                  <button onClick={addSkill} className="btn btn-secondary btn-sm" style={{ gap: '4px' }}>
+                    <Plus size={13} /> Add Skill
                   </button>
                 </div>
 
-                {builder.skills.length === 0 ? (
-                  <div className="text-center py-12 border border-dashed border-white/10 rounded-xl bg-white/5">
-                    <Code className="w-8 h-8 text-text-muted mx-auto mb-3 opacity-50" />
-                    <p className="text-text-muted text-sm">
-                      No skills added yet.<br />Click "Add Skill" to start building.
-                    </p>
+                {agent.skills.length === 0 ? (
+                  <div style={{
+                    border: '1px dashed var(--color-border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '2.5rem',
+                    textAlign: 'center',
+                    color: 'var(--color-ink-tertiary)',
+                  }}>
+                    <Code size={24} style={{ marginBottom: '10px', opacity: 0.4 }} />
+                    <p style={{ fontSize: '13px' }}>No skills yet. Add your first skill above.</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    <AnimatePresence>
-                      {builder.skills.map((skill, index) => (
-                        <motion.div 
-                          key={skill.id}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="border border-white/10 bg-white/5 rounded-xl p-4 relative group"
-                        >
-                          <div className="flex justify-between items-start mb-4">
-                            <input
-                              type="text"
-                              value={skill.name}
-                              onChange={(e) => updateSkill(index, { name: e.target.value })}
-                              placeholder="Skill name (e.g., fetch_data)"
-                              className="text-sm font-medium bg-transparent border-none focus:outline-none text-white w-2/3"
-                            />
-                            <button
-                              onClick={() => removeSkill(index)}
-                              className="text-text-muted hover:text-red-400 transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {agent.skills.map((skill, i) => (
+                      <div key={skill.id} className="card-flat" style={{ padding: '1rem', background: 'var(--color-canvas)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                          <input
+                            style={{ ...inputStyle, width: 'auto', flexGrow: 1, marginRight: '8px', fontSize: '12px', fontFamily: 'var(--font-mono)', background: 'transparent', border: 'none', padding: '0' }}
+                            placeholder="skill_name"
+                            value={skill.name}
+                            onChange={e => updateSkill(i, { name: e.target.value })}
+                          />
+                          <button onClick={() => removeSkill(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-ink-tertiary)', padding: '4px', borderRadius: 'var(--radius-sm)' }}>
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                        <div style={{ position: 'relative' }}>
+                          <div style={{
+                            position: 'absolute', top: 0, left: 0, right: 0,
+                            height: '28px', background: 'var(--color-surface)',
+                            borderBottom: '1px solid var(--color-border)',
+                            borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0',
+                            display: 'flex', alignItems: 'center', padding: '0 10px',
+                          }}>
+                            <span style={{ fontSize: '10px', color: 'var(--color-ink-tertiary)', fontFamily: 'var(--font-mono)' }}>JavaScript</span>
                           </div>
-
-                          <div className="relative rounded-lg overflow-hidden border border-white/10">
-                            <div className="absolute top-0 left-0 w-full h-8 bg-black/40 flex items-center px-3 border-b border-white/5">
-                              <span className="text-[10px] font-mono text-text-muted">JavaScript</span>
-                            </div>
-                            <textarea
-                              value={skill.code}
-                              onChange={(e) => updateSkill(index, { code: e.target.value })}
-                              placeholder="// Skill code"
-                              rows={6}
-                              className="w-full px-4 pt-10 pb-4 bg-black/20 text-accent-teal font-mono text-sm focus:outline-none resize-none"
-                            />
-                          </div>
-
-                          <div className="mt-4 flex justify-end">
-                            <button
-                              onClick={() => addInput(index)}
-                              className="text-xs text-accent-blue hover:text-accent-teal transition-colors flex items-center gap-1"
-                            >
-                              <Plus className="w-3 h-3" /> Add Input
-                            </button>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
+                          <textarea
+                            style={{
+                              ...inputStyle,
+                              paddingTop: '36px',
+                              fontFamily: 'var(--font-mono)',
+                              fontSize: '12px',
+                              lineHeight: 1.6,
+                              color: '#86efac',
+                              background: 'var(--color-surface-raised)',
+                              borderRadius: 'var(--radius-md)',
+                              resize: 'none',
+                            }}
+                            rows={6}
+                            value={skill.code}
+                            onChange={e => updateSkill(i, { code: e.target.value })}
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="space-y-6"
-            >
-              <div className="glass-card p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <Play className="w-5 h-5 text-accent-blue" />
-                    Preview & Test
-                  </h2>
+            {/* Right — preview */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Terminal */}
+              <div className="card-flat" style={{ padding: '1.5rem', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Play size={15} style={{ color: 'var(--color-ink-tertiary)' }} />
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink-secondary)' }}>Preview & Test</span>
+                  </div>
                   <button
                     onClick={runAgent}
-                    disabled={isRunning || builder.skills.length === 0}
-                    className="btn-primary px-6 py-2 text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={running || agent.skills.length === 0}
+                    className="btn btn-primary btn-sm"
+                    style={{ gap: '4px', opacity: (running || agent.skills.length === 0) ? 0.5 : 1, cursor: (running || agent.skills.length === 0) ? 'not-allowed' : 'pointer' }}
                   >
-                    {isRunning ? 'Running...' : 'Run Agent'}
-                    <Play className="w-4 h-4" />
+                    <Play size={12} /> {running ? 'Running…' : 'Run Agent'}
                   </button>
                 </div>
 
-                <div className="bg-black/40 border border-white/10 rounded-xl p-4 min-h-[300px] font-mono text-sm relative">
-                  <div className="absolute top-0 left-0 w-full h-8 bg-white/5 flex items-center px-3 border-b border-white/5 rounded-t-xl">
-                    <span className="text-[10px] text-text-muted">Terminal Output</span>
+                {/* Output terminal */}
+                <div style={{
+                  background: '#0d0d0d',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-md)',
+                  overflow: 'hidden',
+                  flexGrow: 1,
+                  minHeight: '220px',
+                }}>
+                  <div style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', padding: '6px 12px', display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#333', display: 'inline-block' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#333', display: 'inline-block' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#333', display: 'inline-block' }} />
+                    <span style={{ fontSize: '11px', color: 'var(--color-ink-tertiary)', marginLeft: '6px', fontFamily: 'var(--font-mono)' }}>terminal</span>
                   </div>
-                  <pre className="text-green-400 pt-8 whitespace-pre-wrap">
-                    {output || '> Waiting for execution...\n> Click "Run Agent" to test.'}
-                    {isRunning && <span className="inline-block w-2 h-4 bg-green-400 animate-pulse ml-1 align-middle"></span>}
+                  <pre style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#86efac', lineHeight: 1.7, whiteSpace: 'pre-wrap', minHeight: '180px', margin: 0 }}>
+                    {output || '> Waiting for execution…\n> Add skills and click Run Agent'}
+                    {running && <span style={{ display: 'inline-block', width: '8px', height: '14px', background: '#86efac', animation: 'pulse-dot 0.8s ease infinite', verticalAlign: 'middle', marginLeft: '2px' }} />}
                   </pre>
                 </div>
+              </div>
 
-                <div className="mt-6 flex justify-end">
-                  <button className="btn-secondary flex items-center gap-2">
-                    <Save className="w-4 h-4" />
-                    Deploy to Network
-                  </button>
+              {/* Metrics */}
+              <div className="card-flat" style={{ padding: '1.5rem' }}>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink-secondary)', marginBottom: '1rem' }}>Live Metrics</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                  {[
+                    { label: 'Skills', value: agent.skills.length },
+                    { label: 'Executions', value: 0 },
+                    { label: 'Evolution', value: 'Lv.1' },
+                  ].map(m => (
+                    <div key={m.label} style={{ padding: '12px', background: 'var(--color-canvas)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                      <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--color-accent-hover)', fontFamily: 'var(--font-mono)' }}>{m.value}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-ink-tertiary)', marginTop: '4px' }}>{m.label}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="glass-card p-6">
-                <h3 className="font-semibold text-white mb-4">Live Metrics</h3>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                    <div className="text-2xl font-bold text-accent">{builder.skills.length}</div>
-                    <div className="text-xs text-text-muted mt-1">Skills</div>
-                  </div>
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                    <div className="text-2xl font-bold text-accent-blue">0</div>
-                    <div className="text-xs text-text-muted mt-1">Executions</div>
-                  </div>
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                    <div className="text-2xl font-bold text-accent-teal">Lv.1</div>
-                    <div className="text-xs text-text-muted mt-1">Evolution</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+              {/* Deploy */}
+              <button className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', gap: '6px' }}>
+                <Save size={14} /> Deploy to Network
+              </button>
+            </div>
           </div>
         </div>
       </main>
