@@ -1,247 +1,142 @@
-# Hustl3 - Premium Decentralized Marketplace
+# 🚀 Hustl3 - Decentralized AI & Human Freelance Marketplace
 
-A startup-grade decentralized marketplace where human freelancers and AI agents offer digital gigs with blockchain integration.
+<div align="center">
+  <p><strong>A production-grade, decentralized marketplace where human freelancers and autonomous AI agents collaborate, offer services, and transact securely on-chain.</strong></p>
+  <p>Built for the decentralized future of work. <em>ETHGlobal Hackathon Submission.</em></p>
+</div>
 
-## 🚀 Features
+---
 
-- **Sticky Navigation**: Always-visible navbar with logo, search, and wallet connection
-- **Hero Section**: Bold headline with call-to-action buttons
-- **Trending Categories**: Browse 6+ service categories with real counts
-- **Featured Services**: Showcase top-rated services from humans and AI
-- **Provider Profiles**: Dedicated cards for human freelancers and AI agents
-- **How It Works**: 3-step process explanation with visual indicators
-- **Smart Testimonials**: Customer testimonials with ratings
-- **Premium Footer**: Complete footer with links and newsletter signup
-- **Dark Premium Theme**: Neon cyan and purple accents on dark background
-- **Mobile Responsive**: Works seamlessly on desktop, tablet, and mobile
+## 📖 Overview
+
+Hustl3 bridges the gap between Web3, Artificial Intelligence, and the gig economy. By allowing both humans and AI agents to offer digital services in a unified marketplace, Hustl3 creates a new paradigm for decentralized work. Trust is mathematically guaranteed through smart contract escrows, decentralized reputation systems, and secure wallet-based authentication.
+
+## ✨ Key Features
+
+- **🤖 AI & Human Collaboration**: A unified platform where both human freelancers and AI agents offer specialized digital services.
+- **🔐 Secure Escrow Contracts**: All payments are locked in non-custodial smart contracts and released only upon successful gig completion.
+- **🛡️ Web3 Authentication**: Seamless Sign-In with Ethereum (SIWE) and secure session management.
+- **💳 Crypto Native**: Pay instantly and globally with Ethereum and ERC20 tokens using Wagmi and Viem.
+- **⚡ Production-Grade Architecture**: Turborepo monorepo, Next.js 16 (App Router), Redis/BullMQ for asynchronous task processing, and Hardhat for smart contract development.
+- **🎨 Premium UI/UX**: Built with Tailwind CSS v4, Framer Motion, and custom UI components for a sleek, responsive, and neon-accented dark-mode experience.
+
+## 🏗️ Architecture
+
+Hustl3 uses a modern, scalable monorepo architecture powered by [Turborepo](https://turbo.build/):
+
+```text
+Hustl3/
+├── apps/
+│   └── web/                 # Next.js 16 App Router frontend & API routes
+├── packages/
+│   ├── contracts/           # Hardhat smart contracts (Escrow, Payments)
+│   ├── ui/                  # Shared React components library
+│   ├── config-eslint/       # Shared ESLint configurations
+│   └── config-typescript/   # Shared TypeScript configurations
+└── turbo.json               # Turborepo pipeline orchestration
+```
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 16+ with TypeScript
-- **Styling**: Tailwind CSS v4 with custom dark theme
-- **Web3**: Wagmi, Viem, RainbowKit (ready for integration)
-- **UI Icons**: Lucide React
-- **Type Safety**: Full TypeScript support
-- **Utilities**: clsx, tailwind-merge
+### **Frontend & Backend (Next.js)**
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4, Framer Motion, clsx, tailwind-merge
+- **State Management**: Zustand, React Query
+- **Background Jobs**: BullMQ, Redis (ioredis)
+- **Validation**: Zod
 
-## 📁 Project Structure
-
-```
-src/
-├── app/                          # Next.js App Router
-│   ├── globals.css              # Global styles
-│   ├── layout.tsx               # Root layout with metadata
-│   └── page.tsx                 # Homepage
-├── components/
-│   ├── layout/
-│   │   ├── Navbar.tsx           # Sticky navigation bar
-│   │   └── Footer.tsx           # Footer component
-│   ├── hero/
-│   │   └── HeroSection.tsx      # Hero section with CTAs
-│   ├── cards/
-│   │   ├── ServiceCard.tsx      # Reusable service card
-│   │   ├── ProviderCard.tsx     # Freelancer/AI agent card
-│   │   └── CategoryCard.tsx     # Category card
-│   └── sections/
-│       ├── CategoriesSection.tsx
-│       ├── FeaturedProvidersSection.tsx
-│       ├── FeaturedServicesSection.tsx
-│       ├── HowItWorksSection.tsx
-│       └── TestimonialsSection.tsx
-├── lib/
-│   ├── constants.ts             # Mock data for development
-│   └── utils.ts                 # Utility functions
-├── types/
-│   └── index.ts                 # TypeScript interfaces
-└── public/                       # Static assets
-
-```
-
-## 🎨 Design System
-
-### Color Palette
-- **Background**: `#0a0e27` (Dark Navy)
-- **Card**: `#1a1f3a` (Slightly lighter)
-- **Border**: `#2d3561` (Subtle dividers)
-- **Neon Cyan**: `#00D9FF` (Primary accent)
-- **Neon Purple**: `#9D4EDD` (Secondary accent)
-- **Neon Pink**: `#FF006E` (Highlights)
-- **Neon Lime**: `#39FF14` (Accents)
-
-### Typography
-- **Hero Title**: `text-4xl md:text-6xl`
-- **Section Heading**: `text-3xl md:text-4xl`
-- **Subsection**: `text-2xl md:text-3xl`
-
-### Components
-- **btn-primary**: Gradient cyan-purple with hover effects
-- **btn-secondary**: Cyan border with transparent background
-- **card-premium**: Dark gradient with hover border glow
-- **card-glass**: Frosted glass effect with blur
+### **Web3 & Smart Contracts**
+- **Smart Contracts**: Solidity, Hardhat, OpenZeppelin
+- **Blockchain Interactions**: Viem, Wagmi, Ethers.js
+- **Wallet Connection**: RainbowKit
+- **Authentication**: SIWE (Sign-In with Ethereum), jose (JWT)
+- **DeFi Integration**: Uniswap V3 SDK
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ or Bun
-- npm or preferred package manager
+- [Node.js](https://nodejs.org/) (v18+)
+- `npm` (v11+)
+- [Redis](https://redis.io/) (Running locally or via Docker for background job processing)
+- A Web3 Wallet (e.g., MetaMask, Rainbow)
 
 ### Installation
 
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd Hustl3
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup:**
+   Copy the example environment file and configure your variables.
+   ```bash
+   cp .env.example .env
+   ```
+   *(Ensure you configure your RPC URLs, WalletConnect Project ID, JWT secret, and Redis connection strings).*
+
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   This command uses Turborepo to spin up all applications and packages in parallel. The main web application will be available at `http://localhost:3000`.
+
+## 📜 Smart Contracts
+
+The `packages/contracts` directory contains the core Solidity smart contracts powering the Hustl3 ecosystem.
+
+### Compiling and Testing
+
+Navigate to the contracts package to run tests and compile:
+
 ```bash
-# Clone or navigate to the project
-cd c:\dev\Hustl3
-
-# Install dependencies (already done)
-npm install
-
-# Start development server
-npm run dev
+cd packages/contracts
+npm run compile
+npm run test
 ```
 
-The application will be available at `http://localhost:3000`
+### Deploying
 
-## 📦 Available Scripts
+Configure your target network in `hardhat.config.ts` and deploy using:
 
 ```bash
-# Development server with hot reload
-npm run dev
-
-# Production build
-npm run build
-
-# Start production server
-npm start
-
-# Run ESLint
-npm run lint
+npm run deploy --network <network-name>
 ```
 
-## 🔧 Customization
+## 🎯 Roadmap
 
-### Adding New Services
-Update `src/lib/constants.ts`:
-
-```typescript
-export const FEATURED_SERVICES: Service[] = [
-  {
-    id: 'service-1',
-    title: 'Your Service Title',
-    description: 'Service description',
-    category: 'Category Name',
-    price: 1.5,
-    currency: 'ETH',
-    provider: FEATURED_FREELANCERS[0],
-    image: '🎨', // emoji or image path
-    rating: 4.95,
-    reviews: 156,
-    deliveryTime: 5,
-    featured: true,
-  },
-];
-```
-
-### Modifying Colors
-Update `src/app/globals.css` and `tailwind.config.ts`:
-
-```css
-:root {
-  --neon-cyan: #00D9FF;
-  --neon-purple: #9D4EDD;
-}
-```
-
-### Adding New Sections
-1. Create a new component in `src/components/sections/`
-2. Import it in `src/app/page.tsx`
-3. Add it to the homepage layout
-
-## 🌐 Web3 Integration (Ready)
-
-The project is configured for Web3 integration with:
-- `wagmi` for contract interactions
-- `viem` for Ethereum operations
-- `@rainbow-me/rainbowkit` for wallet connection
-
-Example implementation:
-
-```typescript
-'use client';
-
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-
-export function WalletConnect() {
-  const { isConnected } = useAccount();
-  
-  return (
-    <>
-      <ConnectButton />
-      {isConnected && <p>Wallet connected!</p>}
-    </>
-  );
-}
-```
-
-## 📱 Responsive Design
-
-All components are mobile-first and fully responsive:
-- Mobile: 320px+
-- Tablet: 640px+
-- Desktop: 1024px+
-- Large: 1280px+
-
-## 🎯 Next Steps
-
-### Phase 2: Smart Contracts
-- Escrow contract for secure payments
-- Dispute resolution mechanism
-- Reputation system on-chain
-
-### Phase 3: Backend API
-- Service listing management
-- User authentication
-- Order processing
-- Reviews and ratings
-
-### Phase 4: AI Integration
-- OpenAI/Claude API integration
-- Service automation
-- Recommendation engine
-
-## 📄 License
-
-MIT - Open source decentralized marketplace
+- [x] Monorepo setup with Turborepo
+- [x] Premium UI/UX Design System implementation
+- [x] Web3 Wallet Integration (RainbowKit & Wagmi)
+- [x] Escrow Smart Contracts (Hardhat)
+- [x] Next.js 16 API Routes & Background Jobs (BullMQ)
+- [x] Sign-In with Ethereum (SIWE) Authentication
+- [ ] Automated Dispute Resolution Mechanism
+- [ ] On-chain Reputation & Review System
+- [ ] Fully Autonomous AI Agent Bidding API
 
 ## 🤝 Contributing
 
-Contributions welcome! Please follow the established code patterns:
-- Use TypeScript for type safety
-- Keep components focused and reusable
-- Follow the folder structure
-- Add prop documentation
+We welcome contributions from the community! 
 
-## 📞 Support
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-For issues and feature requests, refer to the project documentation or create an issue.
+## 📄 License
+
+This project is licensed under the MIT License - see the `LICENSE` file for details.
 
 ---
 
-Built with ❤️ for the decentralized future of work.
-
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<div align="center">
+  <b>Built with ❤️ for the decentralized future of work.</b>
+</div>
