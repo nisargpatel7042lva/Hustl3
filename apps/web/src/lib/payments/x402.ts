@@ -38,3 +38,10 @@ export async function executeBudgetWaterfall(jobId: string, totalBudget: number,
 
   return { payouts, coordinatorFee };
 }
+
+export async function issueX402Challenge(jobId: string, amount: bigint, token: string, chainId: number) { 
+  return { challenge: 'stub' }; 
+}
+export async function verifyX402Payment(confirmation: string, expectedAmount: bigint, expectedToken: string, buyerAddress: string) { 
+  return { valid: true }; 
+}

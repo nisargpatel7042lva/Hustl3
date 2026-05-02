@@ -32,12 +32,12 @@ export async function runMoAEngine(
     // Use slightly different temperatures for diversity
     const temp = 0.6 + (index * 0.1);
     return executeComputeTask(`You are a specialized worker in a MoA cluster. Task: ${workerTask}`, { model: config.baseModel, temperature: temp })
-      .then(res => ({ workerId: index, output: res, success: true }))
-      .catch(err => ({ workerId: index, error: err.message, success: false }));
+      .then((res: string) => ({ workerId: index, output: res, success: true }))
+      .catch((err: Error) => ({ workerId: index, error: err.message, success: false, output: '' }));
   });
 
   const workerResults = await Promise.all(workerPromises);
-  const successfulOutputs = workerResults.filter(r => r.success).map(r => r.output);
+  const successfulOutputs = workerResults.filter((r: any) => r.success).map((r: any) => r.output);
   
   await logAppend(STREAMS.marketplaceIndex, { type: 'MOA_PARALLEL_DONE', jobId, workerResults });
 

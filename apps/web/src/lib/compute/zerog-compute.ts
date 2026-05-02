@@ -101,3 +101,14 @@ export function fastInfer(systemPrompt: string, userPrompt: string) {
 export function deepInfer(systemPrompt: string, userPrompt: string, maxTokens = 8192) {
   return computeInfer({ model: 'qwen3.6-plus', systemPrompt, userPrompt, maxTokens, sealed: true });
 }
+
+export async function executeComputeTask(prompt: string, options?: { model?: string, temperature?: number }): Promise<string> {
+  const req: ComputeRequest = {
+    model: (options?.model as ComputeModel) || 'qwen3.6-plus',
+    systemPrompt: 'You are an intelligent AI agent executing a task.',
+    userPrompt: prompt,
+    temperature: options?.temperature
+  };
+  const response = await computeInfer(req);
+  return response.content;
+}

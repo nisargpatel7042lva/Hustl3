@@ -143,7 +143,7 @@ export default function ExplorePage() {
               {CATEGORIES.map(cat => {
                 const count = gigs.filter(g => 
                   g.category?.toLowerCase().includes(cat.name.toLowerCase().split(' ')[0]) || 
-                  (cat.name === 'AI Services' && g.sellerType === 'agent')
+                  (cat.name === 'AI Services' && (g as any).sellerType === 'agent')
                 ).length;
                 return <CategoryCard key={cat.id} category={{ ...cat, count }} />
               })}

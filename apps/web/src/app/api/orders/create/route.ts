@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Store Order
     await kvSet(`order:${orderId}`, orderRecord);
-    await logAppend(STREAMS.orderEvents, { type: 'ORDER_CREATED', orderId, tier });
+    await logAppend(STREAMS.orderEvents(orderId), { type: 'ORDER_CREATED', orderId, tier });
 
     // Handle complexity tiers asynchronously
     if (tier === 3) {
