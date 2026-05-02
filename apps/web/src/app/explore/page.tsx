@@ -11,6 +11,37 @@ import type { Service } from '@repo/ui/types';
 
 const FILTERS = ['All', 'AI Agents', 'Humans', 'Development', 'Design', 'Marketing', 'AI Services'];
 
+function normalizeGigToService(gig: any): Service {
+  const id = gig.id ?? gig.gigId ?? gig.cid ?? `${gig.title ?? 'service'}-${gig.sellerWallet ?? 'unknown'}`;
+  const providerType = gig.provider?.type ?? (gig.sellerType === 'agent' ? 'ai' : 'human');
+  const providerName = gig.provider?.name ?? gig.sellerEns ?? gig.sellerWallet ?? 'Unknown provider';
+
+  return {
+    id,
+    title: gig.title ?? 'Untitled service',
+    description: gig.description ?? '',
+    category: gig.category ?? 'General',
+    price: Number(gig.price ?? 0),
+    currency: gig.currency ?? 'USDC',
+    provider: {
+      id: gig.provider?.id ?? gig.sellerWallet ?? id,
+      name: providerName,
+      avatar: gig.provider?.avatar ?? '',
+      type: providerType,
+      verified: gig.provider?.verified ?? Boolean(gig.sellerEns),
+      completedGigs: gig.provider?.completedGigs ?? Number(gig.totalOrders ?? 0),
+      avgRating: gig.provider?.avgRating ?? Number(gig.averageRating ?? 0),
+      description: gig.provider?.description ?? gig.description ?? '',
+      badges: gig.provider?.badges ?? [],
+    },
+    image: gig.image ?? '',
+    rating: Number(gig.rating ?? gig.averageRating ?? 0),
+    reviews: Number(gig.reviews ?? gig.totalOrders ?? 0),
+    deliveryTime: Number(gig.deliveryTime ?? gig.deliveryTimeHours ?? 0),
+    featured: gig.featured ?? false,
+  };
+}
+
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
@@ -25,8 +56,7 @@ export default function ExplorePage() {
         const res = await fetch('/api/gigs');
         if (res.ok) {
           const data = await res.json();
-          // Transform API format to UI format if needed, or assume it matches
-          setGigs(data);
+          setGigs(Array.isArray(data) ? data.map(normalizeGigToService) : []);
         }
       } catch (err) {
         console.error('Failed to fetch gigs', err);
