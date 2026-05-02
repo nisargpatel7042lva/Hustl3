@@ -221,7 +221,7 @@ contract HustlEscrow is Ownable, ReentrancyGuard, Pausable {
 
         bool isArbitratorOrBackend = (msg.sender == arbitrator || authorizedBackends[msg.sender]);
         bool isExpired = (block.timestamp >= e.expiresAt);
-        bool isBuyerRefund = (msg.sender == e.buyer && e.deliveredAt == 0 && block.timestamp < e.expiresAt);
+        bool isBuyerRefund = (msg.sender == e.buyer && e.deliveredAt == 0 && block.timestamp >= e.expiresAt);
 
         if (!isArbitratorOrBackend && !isExpired && !isBuyerRefund) {
             revert Escrow__Unauthorized();

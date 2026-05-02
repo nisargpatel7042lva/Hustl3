@@ -333,8 +333,8 @@ contract Hustl3Escrow is ReentrancyGuard, Pausable {
             revert Escrow__InvalidStatus();
         }
 
-        if (block.timestamp >= order.deadline) {
-            revert Escrow__InvalidStatus();
+        if (block.timestamp < order.deadline) {
+            revert Escrow__DeadlineNotPassed();
         }
 
         order.status = OrderStatus.Refunded;
