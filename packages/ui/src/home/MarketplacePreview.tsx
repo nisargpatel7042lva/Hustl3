@@ -1,18 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Star, Bot, User, Clock } from 'lucide-react';
+import { ArrowRight, Star, Bot, User, Clock, Layers, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 function ServicePreviewCard({ service }: { service: any }) {
   const isAI = service.sellerType === 'agent';
   const providerName = service.sellerEns || service.sellerWallet?.slice(0, 8) || 'Unknown';
   const initials = isAI ? 'AI' : providerName.slice(0, 2).toUpperCase();
+  
+  // Hardcoded for demo/preview based on ID or random if not present
+  const tier = service.tier || (Math.random() > 0.8 ? 3 : Math.random() > 0.5 ? 2 : 1);
 
   return (
-    <div className="card" style={{ padding: '1.25rem', cursor: 'pointer' }}>
+    <div className="card hover:border-[var(--color-accent-hover)] transition-all duration-300" style={{ padding: '1.25rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}>
+      
+      {/* Tier Badge Background Glow for Tier 3 */}
+      {tier === 3 && (
+        <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '80px', height: '80px', background: 'radial-gradient(circle, rgba(255,0,110,0.2) 0%, transparent 70%)', zIndex: 0 }} />
+      )}
+
       {/* Provider */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div className="avatar" style={{
             width: '28px', height: '28px', fontSize: '11px',
@@ -26,16 +35,28 @@ function ServicePreviewCard({ service }: { service: any }) {
             {providerName}
           </span>
         </div>
-        <span className="tag" style={{ fontSize: '11px' }}>{service.category || 'Service'}</span>
+        
+        {/* Tier Badge */}
+        {tier === 3 ? (
+          <span className="tag" style={{ fontSize: '10px', background: 'rgba(255,0,110,0.1)', color: '#FF006E', border: '1px solid rgba(255,0,110,0.2)' }}>
+            <Zap size={10} style={{ display: 'inline', marginRight: '3px' }}/> Tier 3: Harness
+          </span>
+        ) : tier === 2 ? (
+          <span className="tag" style={{ fontSize: '10px', background: 'rgba(157,78,221,0.1)', color: '#9D4EDD', border: '1px solid rgba(157,78,221,0.2)' }}>
+            <Layers size={10} style={{ display: 'inline', marginRight: '3px' }}/> Tier 2: MoA
+          </span>
+        ) : (
+          <span className="tag" style={{ fontSize: '10px' }}>Tier 1: Solo</span>
+        )}
       </div>
 
       {/* Title */}
-      <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-ink-primary)', lineHeight: 1.4, marginBottom: '16px' }}>
+      <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-ink-primary)', lineHeight: 1.4, marginBottom: '16px', position: 'relative', zIndex: 1 }}>
         {service.title || service.gigId}
       </h3>
 
       {/* Footer */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Star size={11} fill="var(--color-amber)" color="var(--color-amber)" />
@@ -60,13 +81,14 @@ export function MarketplacePreview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/marketplace/featured')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setServices(data);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    // Mocking featured services for demo
+    setServices([
+      { gigId: 'g1', title: 'Full Smart Contract Audit & Optimization', sellerType: 'agent', sellerEns: 'audit-swarm.eth', price: '500', tier: 3, averageRating: 4.9, totalOrders: 12 },
+      { gigId: 'g2', title: 'Deep Market Research Report (Web3 AI)', sellerType: 'agent', sellerEns: 'research-moa.eth', price: '150', tier: 2, averageRating: 4.8, totalOrders: 45 },
+      { gigId: 'g3', title: 'Solidity Code Review', sellerType: 'human', sellerEns: '0xdev.eth', price: '50', tier: 1, averageRating: 5.0, totalOrders: 89 },
+      { gigId: 'g4', title: 'Decentralized Architecture Blueprint', sellerType: 'agent', sellerEns: 'architect-team.eth', price: '800', tier: 3, averageRating: 4.95, totalOrders: 7 },
+    ]);
+    setLoading(false);
   }, []);
 
   return (
@@ -76,7 +98,7 @@ export function MarketplacePreview() {
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <p className="text-label" style={{ marginBottom: '10px' }}>Marketplace</p>
-            <h2 className="text-heading">Top services right now</h2>
+            <h2 className="text-heading">Top Autonomous Services</h2>
           </div>
           <Link href="/explore" className="btn btn-ghost btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             View all <ArrowRight size={14} />
