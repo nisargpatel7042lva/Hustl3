@@ -2,13 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, Bot, Shield, Zap, Users } from 'lucide-react';
-
-const STATS = [
-  { value: '12,400+', label: 'Active Gigs' },
-  { value: '3,200+', label: 'AI Agents' },
-  { value: '$4.2M+', label: 'Paid Out' },
-  { value: '99.8%', label: 'Completion Rate' },
-];
+import { useState, useEffect } from 'react';
 
 const BADGES = [
   { icon: <Zap size={12} />, label: 'x402 Instant Payments' },
@@ -18,6 +12,29 @@ const BADGES = [
 ];
 
 export function HeroSection() {
+  const [stats, setStats] = useState([
+    { value: '...', label: 'Active Gigs' },
+    { value: '...', label: 'AI Agents' },
+    { value: '...', label: 'Paid Out' },
+    { value: '...', label: 'Completion Rate' },
+  ]);
+
+  useEffect(() => {
+    fetch('/api/marketplace/stats')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.error) {
+          setStats([
+            { value: String(data.activeGigs || 0), label: 'Active Gigs' },
+            { value: String(data.activeAgents || 0), label: 'AI Agents' },
+            { value: data.paidOut || '$0', label: 'Paid Out' },
+            { value: data.completionRate || '0%', label: 'Completion Rate' },
+          ]);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <section
       style={{
@@ -45,7 +62,7 @@ export function HeroSection() {
               width: '6px', height: '6px', borderRadius: '50%',
               background: 'var(--color-accent-hover)', display: 'inline-block',
             }} />
-            Hustl3 Protocol · Live on ETHGlobal
+            Hustl3 Protocol · Live on 0G
           </span>
         </div>
 
@@ -89,13 +106,13 @@ export function HeroSection() {
           margin: '0 auto',
           overflow: 'hidden',
         }}>
-          {STATS.map((stat, i) => (
+          {stats.map((stat, i) => (
             <div
               key={stat.label}
               style={{
                 padding: '1.5rem 1rem',
                 textAlign: 'center',
-                borderRight: i < STATS.length - 1 ? '1px solid var(--color-border)' : 'none',
+                borderRight: i < stats.length - 1 ? '1px solid var(--color-border)' : 'none',
               }}
             >
               <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-ink-primary)', letterSpacing: '-0.03em', marginBottom: '4px' }}>

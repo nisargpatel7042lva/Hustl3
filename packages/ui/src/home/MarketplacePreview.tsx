@@ -2,56 +2,12 @@
 
 import Link from 'next/link';
 import { ArrowRight, Star, Bot, User, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-const PREVIEW_SERVICES = [
-  {
-    id: '1',
-    title: 'NFT Smart Contract Development',
-    category: 'Development',
-    price: '5.5 ETH',
-    rating: 4.95,
-    reviews: 156,
-    delivery: '5 days',
-    provider: { name: 'Marcus W.', type: 'human' as const, initials: 'MW' },
-    featured: true,
-  },
-  {
-    id: '2',
-    title: 'AI-Generated Product Image Pack (100 imgs)',
-    category: 'AI Services',
-    price: '0.8 ETH',
-    rating: 4.88,
-    reviews: 423,
-    delivery: '1 hour',
-    provider: { name: 'DesignMaster AI', type: 'ai' as const, initials: 'AI' },
-    featured: true,
-  },
-  {
-    id: '3',
-    title: 'Full Website Redesign (Web3 UI)',
-    category: 'Design',
-    price: '3.2 ETH',
-    rating: 4.92,
-    reviews: 89,
-    delivery: '7 days',
-    provider: { name: 'Sarah C.', type: 'human' as const, initials: 'SC' },
-    featured: false,
-  },
-  {
-    id: '4',
-    title: 'SEO Content Strategy & Calendar',
-    category: 'Marketing',
-    price: '1,200 USDC',
-    rating: 4.85,
-    reviews: 234,
-    delivery: '3 days',
-    provider: { name: 'ContentFlow AI', type: 'ai' as const, initials: 'CF' },
-    featured: false,
-  },
-];
-
-function ServicePreviewCard({ service }: { service: typeof PREVIEW_SERVICES[0] }) {
-  const isAI = service.provider.type === 'ai';
+function ServicePreviewCard({ service }: { service: any }) {
+  const isAI = service.sellerType === 'agent';
+  const providerName = service.sellerEns || service.sellerWallet?.slice(0, 8) || 'Unknown';
+  const initials = isAI ? 'AI' : providerName.slice(0, 2).toUpperCase();
 
   return (
     <div className="card" style={{ padding: '1.25rem', cursor: 'pointer' }}>
@@ -64,18 +20,18 @@ function ServicePreviewCard({ service }: { service: typeof PREVIEW_SERVICES[0] }
             color: isAI ? 'var(--color-accent-hover)' : 'var(--color-ink-secondary)',
             border: `1px solid ${isAI ? 'rgba(99,102,241,0.2)' : 'var(--color-border)'}`,
           }}>
-            {isAI ? <Bot size={12} /> : service.provider.initials}
+            {isAI ? <Bot size={12} /> : initials}
           </div>
           <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-ink-secondary)' }}>
-            {service.provider.name}
+            {providerName}
           </span>
         </div>
-        <span className="tag" style={{ fontSize: '11px' }}>{service.category}</span>
+        <span className="tag" style={{ fontSize: '11px' }}>{service.category || 'Service'}</span>
       </div>
 
       {/* Title */}
       <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-ink-primary)', lineHeight: 1.4, marginBottom: '16px' }}>
-        {service.title}
+        {service.title || service.gigId}
       </h3>
 
       {/* Footer */}
@@ -83,16 +39,16 @@ function ServicePreviewCard({ service }: { service: typeof PREVIEW_SERVICES[0] }
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Star size={11} fill="var(--color-amber)" color="var(--color-amber)" />
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-ink-primary)' }}>{service.rating}</span>
-            <span style={{ fontSize: '12px', color: 'var(--color-ink-tertiary)' }}>({service.reviews})</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-ink-primary)' }}>{service.averageRating || 0}</span>
+            <span style={{ fontSize: '12px', color: 'var(--color-ink-tertiary)' }}>({service.totalOrders || 0})</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: 'var(--color-ink-tertiary)' }}>
             <Clock size={11} />
-            <span style={{ fontSize: '12px' }}>{service.delivery}</span>
+            <span style={{ fontSize: '12px' }}>{service.deliveryTimeHours || 24}h</span>
           </div>
         </div>
         <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-ink-primary)' }}>
-          {service.price}
+          {service.price || '0.00'} USDC
         </span>
       </div>
     </div>
@@ -100,6 +56,19 @@ function ServicePreviewCard({ service }: { service: typeof PREVIEW_SERVICES[0] }
 }
 
 export function MarketplacePreview() {
+  const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/marketplace/featured')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setServices(data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <section className="section" style={{ paddingTop: 0 }}>
       <div className="container-app">
@@ -115,11 +84,17 @@ export function MarketplacePreview() {
         </div>
 
         {/* Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
-          {PREVIEW_SERVICES.map(s => (
-            <ServicePreviewCard key={s.id} service={s} />
-          ))}
-        </div>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-ink-tertiary)' }}>Loading featured services from 0G Storage...</div>
+        ) : services.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-ink-tertiary)' }}>No services found. Check back later!</div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+            {services.map(s => (
+              <ServicePreviewCard key={s.gigId} service={s} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
