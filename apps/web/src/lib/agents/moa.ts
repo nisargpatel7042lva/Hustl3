@@ -1,4 +1,4 @@
-import { executeComputeTask } from '../compute/zerog';
+import { executeComputeTask } from '../compute/zerog-compute';
 import { kvSet, logAppend, STREAMS } from '../storage/zerog';
 
 export interface MoAConfig {

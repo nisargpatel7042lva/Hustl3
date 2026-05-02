@@ -1,6 +1,6 @@
 import { kvSet, kvGet, logAppend, STREAMS } from '../storage/zerog';
 import { runMoAEngine } from './moa';
-import { executeComputeTask } from '../compute/zerog';
+import { executeComputeTask } from '../compute/zerog-compute';
 
 export type HarnessState = 'INITIALIZING' | 'DECOMPOSING' | 'RECRUITING' | 'EXECUTING' | 'AGGREGATING' | 'VALIDATING' | 'SYNTHESIZING' | 'DELIVERING' | 'COMPLETED';
 

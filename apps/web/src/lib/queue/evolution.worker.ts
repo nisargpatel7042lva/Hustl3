@@ -1,4 +1,4 @@
-import { executeComputeTask } from '../compute/zerog';
+import { executeComputeTask } from '../compute/zerog-compute';
 import { kvGet, kvSet } from '../storage/zerog';
 
 /**
