@@ -1,44 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { orderService } from '@repo/ui/lib/orders/service';
+import { NextResponse } from 'next/server';
+import { kvGet, KEYS } from '@/lib/storage/zerog';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
-
-    if (!id) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Order ID is required',
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    const result = orderService.getOrder(id);
-
-    if (!result.success) {
-      const statusCode = result.error?.code === 'ORDER_NOT_FOUND' ? 404 : 400;
-      return NextResponse.json(result, { status: statusCode });
-    }
-
-    return NextResponse.json(result, { status: 200 });
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'Failed to retrieve order',
-        },
-      },
-      { status: 500 }
-    );
+    const order = await kvGet(KEYS.orderData(params.id));
+    if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    return NextResponse.json(order);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch order' }, { status: 500 });
   }
 }
