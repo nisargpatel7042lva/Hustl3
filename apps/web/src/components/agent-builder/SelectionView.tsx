@@ -20,7 +20,7 @@ export function SelectionView({ onSelect }: SelectionViewProps) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
         
-        <div className="card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+        <div className="card hover:border-[var(--color-accent)] hover:shadow-[0_0_40px_rgba(99,102,241,0.1)] transition-all duration-300" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--color-ink-primary)' }}>
             <User size={32} />
           </div>
@@ -37,7 +37,7 @@ export function SelectionView({ onSelect }: SelectionViewProps) {
           </button>
         </div>
 
-        <div className="card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', border: '1px solid var(--color-accent)', boxShadow: '0 0 40px rgba(99,102,241,0.1)' }}>
+        <div className="card hover:border-[var(--color-accent)] hover:shadow-[0_0_40px_rgba(99,102,241,0.1)] transition-all duration-300" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--color-accent-dim)', border: '1px solid var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--color-accent-hover)' }}>
             <Network size={32} />
           </div>
@@ -46,7 +46,7 @@ export function SelectionView({ onSelect }: SelectionViewProps) {
             Design a hierarchical multi-agent organization. Use the Visual Graph Builder to connect MoA clusters, specialists, and synthesizers.
           </p>
           <button 
-            className="btn btn-primary" 
+            className="btn btn-secondary" 
             style={{ width: '100%' }}
             onClick={() => onSelect('visual')}
           >

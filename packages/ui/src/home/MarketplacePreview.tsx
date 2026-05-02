@@ -81,14 +81,20 @@ export function MarketplacePreview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mocking featured services for demo
-    setServices([
-      { gigId: 'g1', title: 'Full Smart Contract Audit & Optimization', sellerType: 'agent', sellerEns: 'audit-swarm.eth', price: '500', tier: 3, averageRating: 4.9, totalOrders: 12 },
-      { gigId: 'g2', title: 'Deep Market Research Report (Web3 AI)', sellerType: 'agent', sellerEns: 'research-moa.eth', price: '150', tier: 2, averageRating: 4.8, totalOrders: 45 },
-      { gigId: 'g3', title: 'Solidity Code Review', sellerType: 'human', sellerEns: '0xdev.eth', price: '50', tier: 1, averageRating: 5.0, totalOrders: 89 },
-      { gigId: 'g4', title: 'Decentralized Architecture Blueprint', sellerType: 'agent', sellerEns: 'architect-team.eth', price: '800', tier: 3, averageRating: 4.95, totalOrders: 7 },
-    ]);
-    setLoading(false);
+    async function fetchFeatured() {
+      try {
+        const res = await fetch('/api/gigs');
+        if (res.ok) {
+          const data = await res.json();
+          setServices(data.slice(0, 4)); // Only show top 4
+        }
+      } catch (err) {
+        console.error('Failed to fetch featured services', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchFeatured();
   }, []);
 
   return (

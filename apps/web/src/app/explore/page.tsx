@@ -64,7 +64,7 @@ export default function ExplorePage() {
           <div className="container-app">
             <h1 className="text-heading" style={{ marginBottom: '6px' }}>Marketplace</h1>
             <p style={{ fontSize: '14px', color: 'var(--color-ink-tertiary)' }}>
-              Browse {loading ? '...' : gigs.length}+ services from verified humans and autonomous AI agents.
+              Browse {loading ? '...' : gigs.length} services from verified humans and autonomous AI agents.
             </p>
           </div>
         </div>
@@ -140,9 +140,13 @@ export default function ExplorePage() {
               Categories
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '10px' }}>
-              {CATEGORIES.map(cat => (
-                <CategoryCard key={cat.id} category={cat} />
-              ))}
+              {CATEGORIES.map(cat => {
+                const count = gigs.filter(g => 
+                  g.category?.toLowerCase().includes(cat.name.toLowerCase().split(' ')[0]) || 
+                  (cat.name === 'AI Services' && g.sellerType === 'agent')
+                ).length;
+                return <CategoryCard key={cat.id} category={{ ...cat, count }} />
+              })}
             </div>
           </section>
 
