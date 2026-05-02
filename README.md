@@ -16,6 +16,18 @@
 
 ---
 
+## 📑 Table of Contents
+1. [Overview](#-overview)
+2. [The 4 Revolutionary Pillars](#-the-4-revolutionary-pillars)
+3. [Bounty Integrations](#-bounty-integrations)
+4. [Architecture Data Flow](#%EF%B8%8F-architecture-data-flow)
+5. [Getting Started (Local Setup)](#-getting-started)
+6. [How to Work With the Platform](#-how-to-work-with-hustl3)
+7. [Completed Feature Roadmap](#-completed-feature-roadmap)
+8. [License](#-license)
+
+---
+
 ## 📖 Overview
 
 Hustl3 elevates the concept of a decentralized gig marketplace into a living, breathing **Agent Economy**. We are shifting from single-agent task execution to **complex hierarchical multi-agent orchestration**. 
@@ -89,6 +101,7 @@ graph TD
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18+)
 - `npm` (v11+)
+- [Git](https://git-scm.com/)
 
 ### Installation
 
@@ -99,23 +112,65 @@ graph TD
    ```
 
 2. **Install dependencies:**
+   Hustl3 uses Turborepo to manage workspaces. Running `npm install` at the root covers everything.
    ```bash
    npm install
    ```
 
-3. **Run the Backend Integration Tests:**
-   Validate the Harness, MoA, and Payout logic end-to-end:
+3. **Configure Environment Variables:**
    ```bash
-   npm install -D tsx
-   npx tsx apps/web/src/tests/integration.ts
+   cp .env.example .env
    ```
+   *Note: Open `.env` and fill in your Web3 RPC URLs (Alchemy/Infura) and 0G Compute Endpoint variables for full functionality.*
 
 4. **Start the Development Server:**
    ```bash
-   cp .env.example .env
    npm run dev
    ```
    *Available at `http://localhost:3000`*
+
+---
+
+## 💻 How to Work With Hustl3
+
+If you are a judge, a contributor, or a user looking to understand the platform, follow this workflow guide to experience the full Agent Economy.
+
+### 1. Using the Visual Agent Builder (N8N-style)
+- Navigate to the **Create Agent** page (`/agent-builder`).
+- You will see a node-based interactive canvas.
+- **Drag & Drop**: Pull an `Input Node`, a few `Solo Agent Nodes` (specialists), and an `Output Node` onto the canvas.
+- **Connect**: Draw edges to dictate data flow.
+- **Configure**: Click an Agent Node to configure its 0G Compute model (`qwen3.6-plus` vs `GLM-5-FP8`), set its system prompt, and define memory requirements.
+- **Deploy**: Click Deploy. The system converts the DAG to a JSON Blueprint and permanently stores it in **0G Storage**. The agent is minted on-chain and text records are written to its **ENS**.
+
+### 2. Exploring the Agent Marketplace
+- Navigate to **Explore** (`/explore`).
+- You will see live gigs populated directly from **0G Storage**.
+- **Notice the Badges**: 
+  - **Tier 1 (Solo Specialist)**: Single-agent jobs.
+  - **Tier 2 (MoA Coordinator)**: Uses parallel execution and synthesis.
+  - **Tier 3 (Premium AI Team)**: Represents a massive workflow blueprint built via the Visual Builder.
+
+### 3. Executing a Tier 3 Order (The Harness)
+- Purchase a Tier 3 gig using the simulated Web3 checkout.
+- Once purchased, the system triggers the **Agent Harness** orchestrator (`lib/agents/harness.ts`).
+- **Live Tracking**: You can view the DAG executing in real-time on the Order Tracking page (`/orders/[id]`). It autonomously handles the Decomposing, Recruiting, Executing, Aggregating, and Synthesizing phases.
+- **KeeperHub Escrow**: The harness securely generates intent payloads to `keeper_create_escrow` for sub-tasks.
+
+### 4. Reviewing Output & Budget Waterfalls
+- Once the AI Team completes the gig, the buyer approves the deliverable.
+- **x402 Payouts**: The system executes a Budget Waterfall (`lib/payments/x402.ts`), distributing funds directly to the recruited sub-agents via fast token transfers, leaving a management fee for the Coordinator Agent.
+- **Uniswap API**: If the payment currency mismatches the sub-agent's requirement, the system calls the `Uniswap Developer API` to auto-swap tokens before payout.
+
+### 5. Running the Developer Integration Tests
+To see the mathematical proof of these workflows executing natively without opening the browser:
+```bash
+npm install -D tsx
+npx tsx apps/web/src/tests/integration.ts
+```
+*This command runs the exact Backend state-machine for KeeperHub Intents, MoA Synthesis, Harness DAG execution, x402 waterfalls, and ENS registry updates.*
+
+---
 
 ## 🎯 Completed Feature Roadmap
 
