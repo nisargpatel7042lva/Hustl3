@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Plus, Trash2, Code, Play, Save, Zap, Bot } from 'lucide-react';
 import { Navbar } from '@repo/ui/layout/Navbar';
 import { Footer } from '@repo/ui/layout/Footer';
+import { ethers } from 'ethers';
 
 interface Skill {
   id: string;
@@ -21,6 +22,7 @@ interface AgentConfig {
 export default function AgentBuilderPage() {
   const [agent, setAgent] = useState<AgentConfig>({ name: '', description: '', skills: [] });
   const [running, setRunning] = useState(false);
+  const [deploying, setDeploying] = useState(false);
   const [output, setOutput]   = useState('');
 
   const addSkill = () => setAgent(a => ({
@@ -49,12 +51,11 @@ export default function AgentBuilderPage() {
     const lines = [
       `> Agent: ${agent.name || 'Unnamed Agent'}`,
       `> Skills loaded: ${agent.skills.length}`,
-      '> Connecting to 0G network...',
+      '> Connecting to 0G Compute...',
       '> Execution started...',
       '',
       '✓ Skills executed successfully',
-      '✓ Results stored to 0G Storage',
-      '✓ ENS identity verified',
+      '✓ Test results captured',
       '',
       `> Done in ${(Math.random() * 1.5 + 0.5).toFixed(2)}s`,
     ];
@@ -63,6 +64,44 @@ export default function AgentBuilderPage() {
       setOutput(o => o + line + '\n');
     }
     setRunning(false);
+  };
+
+  const deployAgent = async () => {
+    if (!agent.name) return alert('Agent needs a name');
+    setDeploying(true);
+    
+    try {
+      // Mock wallet integration for deploy (in reality we'd get from window.ethereum)
+      const mockWallet = ethers.Wallet.createRandom().address;
+      const ownerWallet = mockWallet; // Replace with connected wallet
+
+      const res = await fetch('/api/agents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          walletAddress: mockWallet,
+          ensName: `${agent.name.toLowerCase().replace(/\s/g, '')}.hustl3.eth`,
+          ownerWallet,
+          agentType: 1, // 1 = autonomous agent
+          name: agent.name,
+          description: agent.description,
+          skills: agent.skills
+        })
+      });
+
+      if (res.ok) {
+        setOutput(prev => prev + '\n\n> ✓ Agent successfully deployed to 0G Storage & Registry');
+        alert('Deployment successful!');
+      } else {
+        throw new Error('Deployment failed');
+      }
+    } catch (err) {
+      console.error(err);
+      setOutput(prev => prev + '\n\n> ❌ Deployment failed');
+      alert('Deployment failed. See console.');
+    } finally {
+      setDeploying(false);
+    }
   };
 
   const inputStyle = {
@@ -270,8 +309,13 @@ export default function AgentBuilderPage() {
               </div>
 
               {/* Deploy */}
-              <button className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', gap: '6px' }}>
-                <Save size={14} /> Deploy to Network
+              <button 
+                className="btn btn-secondary" 
+                onClick={deployAgent}
+                disabled={deploying || !agent.name}
+                style={{ width: '100%', justifyContent: 'center', gap: '6px', opacity: (deploying || !agent.name) ? 0.7 : 1 }}
+              >
+                <Save size={14} /> {deploying ? 'Deploying...' : 'Deploy to Network'}
               </button>
             </div>
           </div>

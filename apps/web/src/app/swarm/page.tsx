@@ -1,16 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Bot, Activity, TrendingUp, Zap } from 'lucide-react';
 import { Navbar } from '@repo/ui/layout/Navbar';
 import { Footer } from '@repo/ui/layout/Footer';
-
-const AGENTS = [
-  { id: '1', name: 'DataCollector', status: 'running' as const,   tasks: 12, earnings: 250, evolution: 3 },
-  { id: '2', name: 'ContentWriter', status: 'idle' as const,      tasks: 8,  earnings: 180, evolution: 2 },
-  { id: '3', name: 'ImageGen',      status: 'running' as const,   tasks: 24, earnings: 520, evolution: 4 },
-  { id: '4', name: 'CodeAssistant', status: 'idle' as const,      tasks: 15, earnings: 340, evolution: 3 },
-];
 
 const TASKS = [
   { id: 't1', agentId: '1', description: 'Collect trending topics from Twitter API', status: 'running' as const, progress: 65 },
@@ -23,13 +16,34 @@ const STATUS_BG: Record<string, string>    = { running: 'rgba(34,197,94,0.1)', i
 
 export default function SwarmPage() {
   const [tab, setTab] = useState<'agents' | 'tasks' | 'analytics'>('agents');
+  const [agents, setAgents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const totalEarnings = AGENTS.reduce((s, a) => s + a.earnings, 0);
-  const activeCount   = AGENTS.filter(a => a.status === 'running').length;
-  const avgEvo        = Math.round(AGENTS.reduce((s, a) => s + a.evolution, 0) / AGENTS.length);
+  useEffect(() => {
+    fetch('/api/agents')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setAgents(data.map(a => ({
+            id: a.walletAddress || a.id || 'unknown',
+            name: a.ensName || a.name || 'Unnamed Agent',
+            status: a.status || 'idle',
+            tasks: a.totalOrders || 0,
+            earnings: a.totalEarnings || 0,
+            evolution: 1 // Default
+          })));
+        }
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const totalEarnings = agents.reduce((s, a) => s + (a.earnings || 0), 0);
+  const activeCount   = agents.filter(a => a.status === 'running').length;
+  const avgEvo        = agents.length > 0 ? Math.round(agents.reduce((s, a) => s + (a.evolution || 1), 0) / agents.length) : 1;
 
   const SUMMARY = [
-    { icon: <Bot size={15} />,        label: 'Total Agents',  value: AGENTS.length },
+    { icon: <Bot size={15} />,        label: 'Total Agents',  value: agents.length },
     { icon: <Activity size={15} />,   label: 'Active Now',    value: activeCount },
     { icon: <TrendingUp size={15} />, label: 'Earnings',      value: `$${totalEarnings}` },
     { icon: <Zap size={15} />,        label: 'Avg Evolution', value: `Lv.${avgEvo}` },
@@ -87,7 +101,11 @@ export default function SwarmPage() {
           {/* Tab: Agents */}
           {tab === 'agents' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
-              {AGENTS.map(agent => (
+              {loading ? (
+                <div style={{ padding: '2rem', color: 'var(--color-ink-tertiary)' }}>Loading your swarm...</div>
+              ) : agents.length === 0 ? (
+                <div style={{ padding: '2rem', color: 'var(--color-ink-tertiary)' }}>No agents deployed yet. Build one in the Agent Builder!</div>
+              ) : agents.map(agent => (
                 <div key={agent.id} className="card" style={{ padding: '1.25rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -99,8 +117,8 @@ export default function SwarmPage() {
                     <span
                       style={{
                         width: '8px', height: '8px', borderRadius: '50%',
-                        background: STATUS_COLOR[agent.status],
-                        boxShadow: `0 0 0 2px ${STATUS_BG[agent.status]}`,
+                        background: STATUS_COLOR[agent.status] || STATUS_COLOR.idle,
+                        boxShadow: `0 0 0 2px ${STATUS_BG[agent.status] || STATUS_BG.idle}`,
                         display: 'inline-block',
                       }}
                     />
