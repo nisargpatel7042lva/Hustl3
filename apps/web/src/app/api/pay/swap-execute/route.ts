@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { executeSwap } from '@/lib/payments/uniswap';
+import { buildSwapTransaction } from '@/lib/payments/uniswap';
 
 export async function POST(req: Request) {
   try {
-    const { walletAddress, quoteData, signature } = await req.json();
+    const { walletAddress, quoteId, chainId } = await req.json();
     
-    // Verify signature in production before executing swap
+    // Build transaction payload for client to execute
+    const txPayload = await buildSwapTransaction(quoteId, chainId || 8453, walletAddress);
     
-    const txHash = await executeSwap(walletAddress, quoteData);
-    return NextResponse.json({ success: true, txHash });
+    return NextResponse.json({ success: true, txPayload });
   } catch (error) {
-    return NextResponse.json({ error: 'Swap execution failed' }, { status: 500 });
+    return NextResponse.json({ error: 'Swap building failed' }, { status: 500 });
   }
 }

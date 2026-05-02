@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 import { loadAgentKVMemory } from '@/lib/agents/memory';
 import { kvGet, KEYS } from '@/lib/storage/zerog';
 
-export async function GET(req: Request, { params }: { params: { address: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ address: string }> }) {
   try {
-    const memory = await loadAgentKVMemory(params.address);
+    const { address } = await params;
+    const memory = await loadAgentKVMemory(address);
     // Fetch full skill manifests if needed
     const skills = [];
     for (const skillId of Object.keys(memory.skills)) {
-      const manifest = await kvGet(KEYS.agentSkill(params.address, skillId));
+      const manifest = await kvGet(KEYS.agentSkill(address, skillId));
       if (manifest) skills.push({ id: skillId, ...manifest as any });
     }
     return NextResponse.json(skills);

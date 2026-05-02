@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { kvGet, KEYS } from '@/lib/storage/zerog';
 
-export async function GET(req: Request, { params }: { params: { address: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ address: string }> }) {
   try {
-    const profile = await kvGet(KEYS.agentProfile(params.address));
+    const { address } = await params;
+    const profile = await kvGet(KEYS.agentProfile(address));
     if (!profile) return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
     return NextResponse.json(profile);
   } catch (error) {

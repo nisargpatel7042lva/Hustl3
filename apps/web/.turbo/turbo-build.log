@@ -6,39 +6,23 @@
 [1G[0K[1m[38;2;173;127;168m▲ Next.js 16.2.4[39m[22m (Turbopack)
 
 [37m[1m [22m[39m Creating an optimized production build ...
-Found 1 warning while optimizing generated CSS:
+[32m[1m✓[22m[39m Compiled successfully in 4.9s
+[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[31mFailed to type check.
+[39m
+[31m[1mType error[22m[39m: Type 'typeof import("/Users/0xkartikvyas/project/Hustl3/apps/web/src/app/api/orders/[id]/rate/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/orders/[id]/rate">'.
+  Types of property 'POST' are incompatible.
+    Type '(req: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
 
-[2m│   }[22m
-[2m│ }[22m
-[2m│[22m @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
-[2m┆[22m        [33m[2m^--[22m @import rules must precede all rules aside from @charset and @layer statements[39m
-[2m┆[22m
-[2m│ @layer base {[22m
-[2m│   *, *::before, *::after {[22m
-
-[32m[1m✓[22m[39m Compiled successfully in 4.0s
-[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[?25h[?25l[37m[1m [22m[39m Finished TypeScript in 2.1s  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finished TypeScript in 2.1s    [32m[1m✓[22m[39m Finished TypeScript in 2.1s 
-[?25l[37m[1m [22m[39m Collecting page data using 9 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 9 workers  [36m..[39m[2K[1G[?25h[37m[1m [22m[39m Collecting page data using 9 workers in 248ms    [32m[1m✓[22m[39m Collecting page data using 9 workers in 248ms 
-[?25l[37m[1m [22m[39m Generating static pages using 9 workers (0/10)  [36m[    ][39m[2K[1G[37m[1m [22m[39m Generating static pages using 9 workers (2/10)  [36m[=   ][39m[2K[1G[?25h[32m[1m✓[22m[39m Generating static pages using 9 workers (10/10) in 241ms
-[?25l[37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finalizing page optimization in 6ms    [32m[1m✓[22m[39m Finalizing page optimization in 6ms 
-
-[4mRoute (app)[24m
-┌ ○ /
-├ ○ /_not-found
-├ ○ /agent-builder
-├ ○ /agents
-├ ƒ /api/orders/[id]
-├ ƒ /api/orders/[id]/approve
-├ ƒ /api/orders/[id]/dispute
-├ ƒ /api/orders/[id]/mark-delivered
-├ ƒ /api/orders/create
-├ ƒ /api/orders/user/[wallet]
-├ ƒ /api/pay/x402
-├ ○ /explore
-└ ○ /swarm
-
-
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
-
-[?25h[1G[0K⠙[1G[0K
+[2K[1G[?25hNext.js build worker exited with code: 1 and signal: null
+[?25l [36m.[39m [?25h[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /Users/0xkartikvyas/project/Hustl3/apps/web
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m web@0.1.0
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /Users/0xkartikvyas/project/Hustl3/apps/web
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m command failed
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c next build
+[1G[0K⠙[1G[0K

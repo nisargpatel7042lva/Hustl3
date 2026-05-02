@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { kvGet, KEYS } from '@/lib/storage/zerog';
 import { submitRating, ReputationDocument } from '@/lib/reputation/calculator';
 
-export async function GET(req: Request, { params }: { params: { address: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ address: string }> }) {
   try {
-    const address = params.address;
+    const { address } = await params;
     if (!address) {
       return NextResponse.json({ error: 'Address required' }, { status: 400 });
     }
@@ -28,9 +28,9 @@ export async function GET(req: Request, { params }: { params: { address: string 
   }
 }
 
-export async function POST(req: Request, { params }: { params: { address: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ address: string }> }) {
   try {
-    const subjectAddress = params.address;
+    const { address: subjectAddress } = await params;
     const { raterAddress, orderId, rating, reviewText } = await req.json();
 
     if (!subjectAddress || !raterAddress || !orderId || rating === undefined) {
