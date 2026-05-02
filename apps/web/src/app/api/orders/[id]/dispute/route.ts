@@ -1,51 +1,27 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { orderService } from '@repo/ui/lib/orders/service';
+import { NextResponse } from 'next/server';
+import { kvGet, kvSet, KEYS } from '@/lib/storage/zerog';
+import { submitKeeperJob } from '@/lib/payments/keeperhub';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
-    const body = await request.json();
-    const { wallet, reason } = body;
+    const order = await kvGet<any>(KEYS.orderData(params.id));
+    if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    
+    order.state = 'DISPUTED';
+    order.history.push({ state: 'DISPUTED', timestamp: Date.now() });
+    await kvSet(KEYS.orderData(params.id), order);
 
-    if (!id || !wallet) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Order ID and wallet are required',
-          },
-        },
-        { status: 400 }
-      );
-    }
+    await submitKeeperJob({
+      contractAddress: process.env.NEXT_PUBLIC_ESCROW_ADDRESS || '',
+      abi: [{"inputs":[{"internalType":"string","name":"orderId","type":"string"}],"name":"raiseDispute","outputs":[],"stateMutability":"nonpayable","type":"function"}],
+      functionName: 'raiseDispute',
+      args: [params.id],
+      chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16600'),
+      priority: 'high'
+    });
 
-    const result = orderService.disputeOrder(id, wallet, reason);
-
-    if (!result.success) {
-      const statusCode =
-        result.error?.code === 'ORDER_NOT_FOUND'
-          ? 404
-          : result.error?.code === 'UNAUTHORIZED'
-          ? 403
-          : 400;
-      return NextResponse.json(result, { status: statusCode });
-    }
-
-    return NextResponse.json(result, { status: 200 });
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'Failed to dispute order',
-        },
-      },
-      { status: 500 }
-    );
+    return NextResponse.json(order);
+  } catch (error) {
+    return NextResponse.json({ error: 'Dispute failed' }, { status: 500 });
   }
 }

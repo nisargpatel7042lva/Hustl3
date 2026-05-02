@@ -1,51 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { generateChallenge, verifySolution } from '@/lib/payments/x402';
 
-interface X402PaymentBody {
-  to?: string;
-  amount?: number;
-  description?: string;
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const amount = searchParams.get('amount') || '1';
+    
+    const challenge = await generateChallenge(amount);
+    return NextResponse.json({ challenge });
+  } catch (error) {
+    return NextResponse.json({ error: 'Challenge generation failed' }, { status: 500 });
+  }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body = (await request.json()) as X402PaymentBody;
-
-    if (!body.to || !body.amount || body.amount <= 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'Valid recipient and amount are required',
-          },
-        },
-        { status: 400 }
-      );
+    const { challenge, solution } = await req.json();
+    
+    const isValid = await verifySolution(challenge, solution);
+    if (!isValid) {
+      return NextResponse.json({ error: 'Invalid solution' }, { status: 402 });
     }
 
-    const txHash = `0x${Math.random().toString(16).slice(2).padEnd(64, '0').slice(0, 64)}`;
-
-    return NextResponse.json(
-      {
-        success: true,
-        txHash,
-        status: 'settled',
-        to: body.to,
-        amount: body.amount,
-        description: body.description ?? null,
-      },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'Failed to process x402 payment handoff',
-        },
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, message: 'Payment verified' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Verification failed' }, { status: 500 });
   }
 }
