@@ -2,125 +2,148 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Search } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Menu, X, Zap } from 'lucide-react';
 import { WalletConnectButton } from '@repo/ui/web3/WalletConnectButton';
-import { EnsLookupPanel } from '@repo/ui/web3/EnsLookupPanel';
-import { motion, AnimatePresence } from 'framer-motion';
+
+const NAV_LINKS = [
+  { label: 'Marketplace', href: '/explore' },
+  { label: 'Agents',      href: '/agents' },
+  { label: 'Swarm',       href: '/swarm' },
+  { label: 'Builder',     href: '/agent-builder' },
+];
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [isEnsLookupOpen, setIsEnsLookupOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
+  const pathname                     = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-bg-dark/80 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-6'
-      }`}
+    <header
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        zIndex: 100,
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
+        background: scrolled ? 'rgba(10,10,10,0.9)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        transition: 'background 200ms ease, border-color 200ms ease, backdrop-filter 200ms ease',
+      }}
     >
-      <div className="max-width-container">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-accent to-accent-blue flex items-center justify-center shadow-glow group-hover:shadow-glow-blue transition-all duration-300">
-              <span className="text-white font-bold text-lg leading-none">H</span>
+      <div className="container-app">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px' }}>
+          
+          {/* Logo */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+            <div style={{
+              width: '28px', height: '28px',
+              background: 'var(--color-accent)',
+              borderRadius: '7px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Zap size={14} color="#fff" strokeWidth={2.5} />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/70 transition-all duration-300">
+            <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--color-ink-primary)', letterSpacing: '-0.02em' }}>
               Hustl3
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/explore" className="text-sm font-medium text-text-muted hover:text-white transition-colors">
-              Marketplace
-            </Link>
-            <Link href="/agents" className="text-sm font-medium text-text-muted hover:text-white transition-colors">
-              Agents
-            </Link>
-            <Link href="/swarm" className="text-sm font-medium text-text-muted hover:text-white transition-colors">
-              Swarm
-            </Link>
-            <Link href="/agent-builder" className="text-sm font-medium text-text-muted hover:text-white transition-colors">
-              Builder
-            </Link>
-          </div>
+          {/* Desktop nav */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '4px' }} className="hidden-mobile">
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: pathname === link.href ? 'var(--color-ink-primary)' : 'var(--color-ink-secondary)',
+                  background: pathname === link.href ? 'var(--color-surface-raised)' : 'transparent',
+                  textDecoration: 'none',
+                  transition: 'color 150ms ease, background 150ms ease',
+                }}
+                onMouseEnter={e => { if (pathname !== link.href) { (e.target as HTMLElement).style.color = 'var(--color-ink-primary)'; } }}
+                onMouseLeave={e => { if (pathname !== link.href) { (e.target as HTMLElement).style.color = 'var(--color-ink-secondary)'; } }}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-          <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={() => setIsEnsLookupOpen((prev) => !prev)}
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-all duration-300"
-              aria-label="Toggle ENS lookup"
-            >
-              <Search className="w-4 h-4" />
-            </button>
+          {/* Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="hidden-mobile">
             <WalletConnectButton />
           </div>
 
+          {/* Mobile toggle */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white hover:bg-white/10 transition-all duration-300"
+            className="show-mobile"
+            onClick={() => setMobileOpen(v => !v)}
+            style={{
+              background: 'var(--color-surface-raised)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-md)',
+              padding: '6px',
+              color: 'var(--color-ink-secondary)',
+              cursor: 'pointer',
+              display: 'none',
+            }}
+            aria-label="Toggle menu"
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isOpen ? 'close' : 'menu'}
-                initial={{ opacity: 0, rotate: -90 }}
-                animate={{ opacity: 1, rotate: 0 }}
-                exit={{ opacity: 0, rotate: 90 }}
-                transition={{ duration: 0.2 }}
-              >
-                {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </motion.div>
-            </AnimatePresence>
+            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
 
-        <AnimatePresence>
-          {isEnsLookupOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="hidden md:block mt-4 max-w-md ml-auto"
-            >
-              <EnsLookupPanel />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden mt-4 pt-4 border-t border-white/5 overflow-hidden"
-            >
-              <div className="flex flex-col space-y-4 pb-4">
-                <Link href="/explore" className="text-base font-medium text-text-muted hover:text-white">Marketplace</Link>
-                <Link href="/agents" className="text-base font-medium text-text-muted hover:text-white">Agents</Link>
-                <Link href="/swarm" className="text-base font-medium text-text-muted hover:text-white">Swarm</Link>
-                <Link href="/agent-builder" className="text-base font-medium text-text-muted hover:text-white">Builder</Link>
-                <EnsLookupPanel compact />
-                <div className="pt-4 border-t border-white/5 flex justify-center">
-                  <WalletConnectButton />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div
+            style={{
+              borderTop: '1px solid var(--color-border)',
+              padding: '12px 0 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px',
+            }}
+          >
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: pathname === link.href ? 'var(--color-ink-primary)' : 'var(--color-ink-secondary)',
+                  background: pathname === link.href ? 'var(--color-surface-raised)' : 'transparent',
+                  textDecoration: 'none',
+                }}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--color-border)', marginTop: '8px' }}>
+              <WalletConnectButton />
+            </div>
+          </div>
+        )}
       </div>
-    </motion.nav>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .hidden-mobile { display: none !important; }
+          .show-mobile   { display: flex !important; }
+        }
+      `}</style>
+    </header>
   );
 }

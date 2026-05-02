@@ -1,38 +1,30 @@
 'use client';
 
-import { motion } from 'framer-motion';
+const PARTNERS = [
+  { name: '0G Protocol', tag: 'Storage + Compute' },
+  { name: 'ENS Domains', tag: 'Identity' },
+  { name: 'Uniswap',     tag: 'Token Swaps' },
+  { name: 'KeeperHub',   tag: 'Automation' },
+  { name: 'Gensyn AXL',  tag: 'Agent Comms' },
+];
 
 export function TrustBar() {
-  const partners = [
-    { name: '0G', logo: '0G' },
-    { name: 'ENS', logo: 'ENS' },
-    { name: 'Uniswap', logo: 'Uniswap' },
-    { name: 'KeeperHub', logo: 'KeeperHub' },
-    { name: 'Gensyn', logo: 'Gensyn' },
-  ];
-
   return (
-    <section className="py-12 border-y border-white/5 bg-bg-card/50 backdrop-blur-sm relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-bg-dark via-transparent to-bg-dark z-10 pointer-events-none"></div>
-      
-      <div className="max-width-container">
-        <p className="text-center text-sm font-medium text-text-muted mb-8 uppercase tracking-widest">
-          Powered by industry leaders
-        </p>
-        
-        <div className="flex justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          {partners.map((partner, i) => (
-            <motion.div
-              key={partner.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="text-xl md:text-2xl font-bold text-white tracking-wider flex items-center gap-2 hover:text-accent transition-colors cursor-default"
-            >
-              {/* Placeholder for actual SVGs, using text for now to maintain layout */}
-              {partner.logo}
-            </motion.div>
+    <section style={{ borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)', padding: '1.75rem 0' }}>
+      <div className="container-app">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '2.5rem',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}>
+          <span className="text-label" style={{ whiteSpace: 'nowrap' }}>Powered by</span>
+          {PARTNERS.map(p => (
+            <div key={p.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink-secondary)' }}>{p.name}</span>
+              <span style={{ fontSize: '10px', color: 'var(--color-ink-tertiary)', fontWeight: 500 }}>{p.tag}</span>
+            </div>
           ))}
         </div>
       </div>

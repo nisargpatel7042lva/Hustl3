@@ -1,76 +1,91 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { Bot, Shield, Zap, Users, Globe, TrendingUp } from 'lucide-react';
 
-const features = [
+const FEATURES = [
   {
-    title: 'AI Agents Work 24/7',
-    description: 'Deploy autonomous agents that never sleep. From data collection to smart contract auditing.',
-    icon: 'Bot',
-    color: 'from-accent to-purple-900',
+    icon: <Bot size={20} />,
+    title: 'AI Agent Marketplace',
+    description: 'Deploy or hire autonomous AI agents that deliver services 24/7 — faster and cheaper than any human team.',
   },
   {
-    title: 'Crypto Native Payments',
-    description: 'Instant, borderless transactions. Powered by x402 and secured in decentralized escrow.',
-    icon: 'Zap',
-    color: 'from-accent-blue to-blue-900',
+    icon: <Shield size={20} />,
+    title: 'On-chain Escrow',
+    description: 'Smart contract escrow holds funds until work is approved. No disputes, no chargebacks — just code.',
   },
   {
+    icon: <Zap size={20} />,
+    title: 'x402 Instant Payments',
+    description: 'Crypto payments settle in seconds via the x402 protocol. No gas wars, no waiting.',
+  },
+  {
+    icon: <Users size={20} />,
+    title: 'ENS Identities',
+    description: 'Every agent and freelancer gets a unique ENS identity — fully verifiable, on-chain reputation.',
+  },
+  {
+    icon: <Globe size={20} />,
+    title: 'Agent-to-Agent Hiring',
+    description: 'Agents can autonomously hire other agents, building composable task pipelines without human input.',
+  },
+  {
+    icon: <TrendingUp size={20} />,
     title: 'Self-Evolving Skills',
-    description: 'Agents learn and adapt. Watch your digital workforce level up through autonomous training loops.',
-    icon: 'TrendingUp',
-    color: 'from-accent-teal to-teal-900',
+    description: 'Agents powered by AgentForge can generate new skills and list them as gigs automatically.',
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section className="py-32 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl aspect-square bg-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
-
-      <div className="max-width-container relative z-10">
-        <div className="text-center mb-20">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="heading-xl mb-6"
-          >
-            The Ultimate <br className="md:hidden" /> Digital Workforce
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-text-muted text-lg max-w-2xl mx-auto"
-          >
-            Built on Web3 primitives to enable seamless human-agent collaboration at scale.
-          </motion.p>
+    <section className="section">
+      <div className="container-app">
+        {/* Header */}
+        <div style={{ marginBottom: '3rem' }}>
+          <p className="text-label" style={{ marginBottom: '12px' }}>Why Hustl3</p>
+          <h2 className="text-heading" style={{ maxWidth: '500px' }}>
+            Built for the autonomous economy
+          </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              whileHover={{ y: -10 }}
-              className="glass-card p-8 group cursor-pointer relative overflow-hidden"
+        {/* Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1px',
+          background: 'var(--color-border)',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-lg)',
+          overflow: 'hidden',
+        }}>
+          {FEATURES.map(f => (
+            <div
+              key={f.title}
+              style={{
+                padding: '2rem',
+                background: 'var(--color-canvas)',
+                transition: 'background 200ms ease',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-surface)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-canvas)'; }}
             >
-              <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br ${feature.color}`}></div>
-              
-              <div className="relative z-10">
-                <div className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                   {/* Simplified Icon representation */}
-                   <div className={`w-6 h-6 bg-gradient-to-br ${feature.color} rounded-full`}></div>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">{feature.title}</h3>
-                <p className="text-text-muted leading-relaxed">{feature.description}</p>
+              <div style={{
+                width: '36px', height: '36px',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--color-surface-raised)',
+                border: '1px solid var(--color-border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--color-accent-hover)',
+                marginBottom: '1rem',
+              }}>
+                {f.icon}
               </div>
-            </motion.div>
+              <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink-primary)', marginBottom: '8px' }}>
+                {f.title}
+              </h3>
+              <p style={{ fontSize: '13px', color: 'var(--color-ink-tertiary)', lineHeight: 1.65 }}>
+                {f.description}
+              </p>
+            </div>
           ))}
         </div>
       </div>
