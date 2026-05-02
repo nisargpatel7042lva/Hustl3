@@ -139,7 +139,7 @@ export class StorageService {
     this.appendLog({
       type: 'storage:clear',
       action: 'clear_storage',
-      entityType: 'system',
+      entityType: 'other',
       data: { action: 'clear_all' },
       status: 'success',
     });
@@ -307,7 +307,7 @@ export class StorageService {
     this.appendLog({
       type: 'storage:import',
       action: 'import_data',
-      entityType: 'system',
+      entityType: 'other',
       data: { entriesImported: data.entries.length },
       status: 'success',
     });
@@ -403,9 +403,18 @@ export class StorageService {
     return key;
   }
 
-  private inferEntityType(key: string): StorageNamespace {
+  private inferEntityType(key: string): 'agent' | 'skill' | 'gig' | 'task' | 'payment' | 'other' {
     const [namespace] = key.split(':');
-    return (namespace as StorageNamespace) || 'system';
+    const mappings: Record<string, 'agent' | 'skill' | 'gig' | 'task' | 'payment' | 'other'> = {
+      agent: 'agent',
+      skill: 'skill',
+      gig: 'gig',
+      task: 'task',
+      payment: 'payment',
+      user: 'other',
+      system: 'other',
+    };
+    return mappings[namespace] || 'other';
   }
 
   private estimateSize(value: unknown): number {

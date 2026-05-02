@@ -53,7 +53,7 @@ export function exampleAgentMemory() {
   console.log('✓ Stored agent memory (encrypted)');
 
   // Retrieve agent memory
-  const retrieved = storage.get(`${agentId}:memory`);
+  const retrieved = storage.get<{ name: string }>(`${agentId}:memory`);
   console.log(`✓ Retrieved agent memory: ${retrieved?.name}`);
 
   // Store conversation history separately
@@ -146,7 +146,7 @@ export function exampleSkillStorage() {
   console.log(`✓ Found ${blockchainSkills.length} production-ready skills`);
 
   // Get specific skill
-  const soliditySkill = storage.get('skill-solidity');
+  const soliditySkill = storage.get<{ name: string; version: string }>('skill-solidity');
   if (soliditySkill) {
     console.log(`✓ Retrieved skill: ${soliditySkill.name} v${soliditySkill.version}`);
   }
@@ -372,7 +372,7 @@ export function exampleBackup() {
   storage1.appendLog({
     type: 'backup:test',
     action: 'test_backup',
-    entityType: 'system',
+    entityType: 'other',
     data: { test: true },
     status: 'success',
   });
@@ -391,7 +391,7 @@ export function exampleBackup() {
   console.log(`✓ Restored from backup`);
 
   // Verify restored data
-  const restored = storage2.get('agent:luna');
+  const restored = storage2.get<{ name: string }>('agent:luna');
   console.log(`✓ Verified: ${restored?.name}`);
 
   // Export as JSON for storage/versioning

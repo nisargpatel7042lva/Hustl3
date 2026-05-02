@@ -1,147 +1,118 @@
-import { AgentRuntime } from './AgentRuntime';
-import { Skill, EvolutionEvent } from './types';
+/**
+ * Self-Evolution Loop - Agent Auto-Skill Generation
+ * Critic → Score → Skill Gap → Generate → Store → List
+ */
 
-export interface EvolutionCriteria {
-  minExecutions: number;
-  minSuccessRate: number;
-  minEarnings: number;
+import { getStorage } from '../storage';
+import { compute } from './compute';
+import type { Agent } from './core/Agent';
+
+export interface SkillTierRequest {
+  agentId: string;
+  skillCode: string;
+  skillGap: string;
+  score: number;
+  tier: AgentTier;
 }
 
-export interface EvolutionSuggestion {
-  type: 'new_skill' | 'skill_upgrade' | 'capability_enhancement';
-  priority: 'low' | 'medium' | 'high';
-  description: string;
-  estimatedImpact: number;
-  newCode?: string;
-}
+export type AgentTier = 'Junior' | 'Verified' | 'Expert';
+
+const TIERS: Record<string, { min: number; max: number; tier: AgentTier }> = {
+  Junior: { min: 0, max: 20, tier: 'Junior' },
+  Verified: { min: 21, max: 70, tier: 'Verified' },
+  Expert: { min: 71, max: 100, tier: 'Expert' },
+};
 
 export class SelfEvolutionLoop {
-  private criteria: EvolutionCriteria = {
-    minExecutions: 10,
-    minSuccessRate: 0.8,
-    minEarnings: 1000,
-  };
+  private storage = getStorage();
+  private threshold = 70;
 
-  constructor(private runtime: AgentRuntime) {}
+  constructor(private agent: Agent) {}
 
-  analyze(): EvolutionSuggestion[] {
-    const suggestions: EvolutionSuggestion[] = [];
-    const executions = this.runtime.getExecutionHistory();
-    const skills = this.runtime.getSkills();
+  async evolveFromResult(result: unknown): Promise<boolean> {
+    const evalResult = await compute.evaluate(result);
+    const score = evalResult.score ?? 50;
 
-    const successRate = this.calculateSuccessRate(executions);
-    const evolutionLevel = this.runtime.getEvolutionLevel();
+    this.log(`📊 Evaluated result: score=${score}`);
 
-    if (successRate > this.criteria.minSuccessRate && executions.length >= this.criteria.minExecutions) {
-      suggestions.push({
-        type: 'capability_enhancement',
-        priority: 'medium',
-        description: `Agent is performing well (${(successRate * 100).toFixed(0)}% success rate). Consider adding new capabilities.`,
-        estimatedImpact: 0.15,
-      });
+    if (score < this.threshold) {
+      return this.generateAndStoreSkill(score, result);
     }
 
-    for (const skill of skills) {
-      const skillExecutions = executions.filter(e => e.skillId === skill.id);
-      const skillSuccessRate = this.calculateSkillSuccessRate(skillExecutions);
+    this.log(`✓ Score ${score} >= threshold ${this.threshold}`);
+    return false;
+  }
 
-      if (skillSuccessRate > 0.95) {
-        suggestions.push({
-          type: 'skill_upgrade',
-          priority: 'low',
-          description: `${skill.name} has exceptional performance. Consider refining for edge cases.`,
-          estimatedImpact: 0.05,
-          newCode: this.generateImprovedCode(skill),
-        });
-      } else if (skillSuccessRate < 0.5 && skillExecutions.length >= 5) {
-        suggestions.push({
-          type: 'skill_upgrade',
-          priority: 'high',
-          description: `${skill.name} has low success rate (${(skillSuccessRate * 100).toFixed(0)}%). Needs improvement.`,
-          estimatedImpact: 0.3,
-          newCode: this.generateImprovedCode(skill),
-        });
-      }
+  private async generateAndStoreSkill(score: number, failureContext: unknown): Promise<boolean> {
+    const tier = this.getTierFromScore(score);
+    const skillGap = this.createSkillGap(score, failureContext);
+
+    this.log(`🔧 Tier: ${tier} | Gap: ${skillGap}`);
+
+    const genResult = await compute.generateSkill(skillGap);
+    if (!genResult.success || !genResult.skill) {
+      this.log(`❌ Generation failed (${genResult.attempts} attempts)`);
+      return false;
     }
 
-    if (evolutionLevel >= 3) {
-      suggestions.push({
-        type: 'new_skill',
-        priority: 'medium',
-        description: 'Agent has reached high evolution level. Ready to learn complex skills.',
-        estimatedImpact: 0.2,
-      });
-    }
+    this.log(`✓ Generated skill`);
 
-    return suggestions.sort((a, b) => {
-      const priorityOrder = { high: 0, medium: 1, low: 2 };
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    const skillId = `skill_${Date.now()}`;
+    this.storage.set(
+      `skill:${this.agent.id}:${skillId}`,
+      { code: genResult.skill, gap: skillGap, generatedAt: new Date().toISOString(), score, tier },
+      { encrypt: true, tags: ['auto-generated', tier.toLowerCase()] }
+    );
+
+    this.agent.addNewSkill({ id: skillId, name: skillId, description: skillGap, trained: true } as any);
+    this.log(`💾 Stored skill: ${skillId}`);
+
+    await this.listSkillOnMarketplace(skillId, tier, skillGap);
+    return true;
+  }
+
+  private createSkillGap(score: number, context: unknown): string {
+    if (typeof context === 'string') return context.substring(0, 50);
+    if (typeof context === 'object') return `Handle: ${Object.keys(context || {}).slice(0, 3).join(', ')}`;
+    return `General improvement needed`;
+  }
+
+  private getTierFromScore(score: number): AgentTier {
+    if (score <= 20) return 'Junior';
+    if (score <= 70) return 'Verified';
+    return 'Expert';
+  }
+
+  private async listSkillOnMarketplace(skillId: string, tier: AgentTier, description: string): Promise<void> {
+    this.storage.appendLog({
+      type: 'marketplace:list',
+      action: 'list_skill',
+      agentId: this.agent.id,
+      entityId: skillId,
+      entityType: 'skill',
+      data: { skillId, tier, description },
+      status: 'success',
     });
+    this.log(`→ Listed as ${tier}`);
   }
 
-  private calculateSuccessRate(executions: { status: string }[]): number {
-    if (executions.length === 0) return 0;
-    const successful = executions.filter(e => e.status === 'completed').length;
-    return successful / executions.length;
+  async upgradeSkill(skillId: string, newTier: AgentTier): Promise<boolean> {
+    const key = `skill:${this.agent.id}:${skillId}`;
+    const skill = this.storage.get<Record<string, unknown>>(key);
+    if (!skill) return false;
+    this.storage.set(key, { ...skill, tier: newTier, upgradedAt: new Date().toISOString() }, { encrypt: true });
+    this.log(`⬆️  Upgraded to ${newTier}`);
+    return true;
   }
 
-  private calculateSkillSuccessRate(executions: { status: string }[]): number {
-    if (executions.length === 0) return 1;
-    const successful = executions.filter(e => e.status === 'completed').length;
-    return successful / executions.length;
-  }
-
-  private generateImprovedCode(skill: Skill): string {
-    return `// Improved ${skill.name} v${skill.version}
-function handler(input) {
-  // Enhanced error handling and edge case coverage
-  try {
-    // Original logic with improvements
-    return { success: true, result: input };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}`;
-  }
-
-  async evolve(suggestion: EvolutionSuggestion): Promise<EvolutionEvent> {
-    if (!suggestion.newCode) {
-      throw new Error('No new code provided for evolution');
-    }
-
-    const beforeState = {
-      skills: this.runtime.getSkills().map(s => ({ id: s.id, version: s.version })),
-      evolutionLevel: this.runtime.getEvolutionLevel(),
-    };
-
-    if (suggestion.type === 'skill_upgrade') {
-      const skills = this.runtime.getSkills();
-      if (skills.length > 0) {
-        this.runtime.upgradeSkill(skills[0].id, suggestion.newCode);
-      }
-    }
-
-    const afterState = {
-      skills: this.runtime.getSkills().map(s => ({ id: s.id, version: s.version })),
-      evolutionLevel: this.runtime.getEvolutionLevel(),
-    };
-
-    return {
-      id: `evo_${Date.now()}`,
-      agentId: '',
-      type: suggestion.type === 'new_skill' ? 'skill_added' : suggestion.type === 'skill_upgrade' ? 'skill_upgraded' : 'capability_enhanced',
-      description: suggestion.description,
-      previousState: beforeState,
-      newState: afterState,
-      timestamp: new Date(),
-    };
-  }
-
-  setCriteria(criteria: Partial<EvolutionCriteria>): void {
-    this.criteria = { ...this.criteria, ...criteria };
-  }
-
-  getCriteria(): EvolutionCriteria {
-    return { ...this.criteria };
+  private log(message: string): void {
+    console.log(message);
+    this.storage.appendLog({
+      type: 'agent:evolution',
+      action: 'evolution_step',
+      agentId: this.agent.id,
+      data: { message },
+      status: 'success',
+    });
   }
 }
