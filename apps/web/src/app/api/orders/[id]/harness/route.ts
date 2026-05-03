@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { executeHarness } from '@/lib/agents/harness';
 import { kvGet } from '@/lib/storage/zerog';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const orderId = params.id;
+    const { id: orderId } = await params;
     const orderRecord = await kvGet<any>(`order:${orderId}`);
     
     if (!orderRecord) {

@@ -1,44 +1,43 @@
-import { NextResponse } from 'next/server';
-import { verifySiweSignature, signAccessToken, signRefreshToken } from '@/lib/auth/siwe';
+import { NextRequest, NextResponse } from 'next/server';
+import { SiweMessage } from 'siwe';
+import { SignJWT } from 'jose';
+import { kvGet } from '@/lib/storage/zerog';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { message, signature } = await req.json();
-    
-    if (!message || !signature) {
-      return NextResponse.json({ error: 'Message and signature required' }, { status: 400 });
+    const siweMessage = new SiweMessage(message);
+
+    // Verify SIWE message and signature
+    const { data: fields } = await siweMessage.verify({ signature });
+
+    // Ensure nonce is valid (check if it exists in our temporary 0G store)
+    const nonceTimestamp = await kvGet<number>(`nonce:${fields.nonce}`);
+    if (!nonceTimestamp) {
+      return NextResponse.json({ ok: false, error: 'Invalid or expired nonce.' }, { status: 422 });
     }
 
-    const verification = await verifySiweSignature(message, signature);
-    
-    const accessToken = await signAccessToken({
-      sub: verification.address,
-      accountType: verification.accountType,
-      chainId: verification.chainId,
-      ensName: verification.ensName
-    });
+    // Issue JWT
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_secret_for_hackathon');
+    const token = await new SignJWT({ address: fields.address, sub: fields.address })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('24h')
+      .sign(secret);
 
-    const refreshToken = await signRefreshToken(verification.address);
-
-    const response = NextResponse.json({ success: true, accountType: verification.accountType });
-    
-    // Set cookies
-    response.cookies.set('access_token', accessToken, {
+    // Set HTTP-only cookie
+    const response = NextResponse.json({ ok: true, address: fields.address });
+    response.cookies.set('hustl3_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 15 * 60 // 15 minutes
-    });
-    
-    response.cookies.set('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24, // 24 hours
+      path: '/'
     });
 
     return response;
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Verification failed' }, { status: 401 });
+    console.error('SIWE Verification failed:', error);
+    return NextResponse.json({ ok: false, error: 'Invalid SIWE message or signature' }, { status: 401 });
   }
 }

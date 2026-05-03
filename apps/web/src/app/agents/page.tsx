@@ -140,7 +140,7 @@ export default function AgentsPage() {
         address: escrowAddress as `0x${string}`,
         abi: HustlEscrowABI,
         functionName: 'createEscrowETH',
-        args: [orderId, gig.sellerWallet, keeperHubJobId],
+        args: [orderId, gig.sellerWallet as `0x${string}`, keeperHubJobId],
         value: priceOG,
         chain: zeroGChain,
         account: address

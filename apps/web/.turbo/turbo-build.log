@@ -3,27 +3,29 @@
 > web@0.1.0 build
 > next build
 
-▲ Next.js 16.2.4 (Turbopack)
+[1G[0K[1m[38;2;173;127;168m▲ Next.js 16.2.4[39m[22m (Turbopack)
+- Environments: .env.local
 
-  Creating an optimized production build ...
-✓ Compiled successfully in 5.2s
-Failed to type check.
+[37m[1m [22m[39m Creating an optimized production build ...
+[32m[1m✓[22m[39m Compiled successfully in 5.7s
+[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[31mFailed to type check.
+[39m
+[36m./src/app/agents/page.tsx[39m:[33m143[39m:[33m25[39m
+[31m[1mType error[22m[39m: Type 'string' is not assignable to type '`0x${string}`'.
 
-./src/lib/agents/harness.ts:49:28
-Type error: Cannot find name 'kvListByPrefix'.
-
-  [90m47 |[0m   [90m// 2. Recruiting[0m
-  [90m48 |[0m   [36mawait[0m advanceHarnessState(jobId, [32m'RECRUITING'[0m);
-[31m[1m>[0m [90m49 |[0m   [36mconst[0m agentItems = [36mawait[0m kvListByPrefix<any>([32m'agents:'[0m);
-  [90m   |[0m                            [31m[1m^[0m
-  [90m50 |[0m   [36mconst[0m availableAgents = agentItems.filter(item => item.key.endsWith([32m':profile'[0m)).map(ite...
-  [90m51 |[0m
-  [90m52 |[0m   [36mfor[0m ([36mlet[0m node [36mof[0m taskGraph) {
-Next.js build worker exited with code: 1 and signal: null
-[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
-[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
-[1mnpm[22m [31merror[39m [94mpath[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
-[1mnpm[22m [31merror[39m [94mworkspace[39m web@0.1.0
-[1mnpm[22m [31merror[39m [94mlocation[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
-[1mnpm[22m [31merror[39m command failed
-[1mnpm[22m [31merror[39m [94mcommand[39m sh -c next build
+  [90m141 |[0m         abi: [33mHustlEscrowABI[0m,
+  [90m142 |[0m         functionName: [32m'createEscrowETH'[0m,
+[31m[1m>[0m [90m143 |[0m         args: [orderId, gig.sellerWallet, keeperHubJobId],
+  [90m    |[0m                         [31m[1m^[0m
+  [90m144 |[0m         value: priceOG,
+  [90m145 |[0m         chain: zeroGChain,
+  [90m146 |[0m         account: address
+[2K[1G[?25hNext.js build worker exited with code: 1 and signal: null
+[?25l [36m.[39m [?25h[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m web@0.1.0
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m command failed
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c next build
+[1G[0K⠙[1G[0K

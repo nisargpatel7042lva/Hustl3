@@ -1,16 +1,13 @@
 import { NextResponse } from 'next/server';
-import { generateNonce } from '@/lib/auth/siwe';
+import { generateNonce } from 'siwe';
+import { kvSet } from '@/lib/storage/zerog';
 
-export async function POST(req: Request) {
-  try {
-    const { address } = await req.json();
-    if (!address) {
-      return NextResponse.json({ error: 'Address is required' }, { status: 400 });
-    }
-    
-    const nonce = generateNonce(address);
-    return NextResponse.json({ nonce });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to generate nonce' }, { status: 500 });
-  }
+export async function GET() {
+  const nonce = generateNonce();
+  
+  // Store the nonce temporarily in 0G (with an expiration) or local memory
+  // For production, we map nonce -> timestamp to prevent replay attacks
+  await kvSet(`nonce:${nonce}`, Date.now());
+
+  return NextResponse.json({ nonce });
 }

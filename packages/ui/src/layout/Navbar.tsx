@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Zap } from 'lucide-react';
 import { WalletConnectButton } from '@repo/ui/web3/WalletConnectButton';
+import { SIWEButton } from '@repo/ui/web3/SIWEButton';
 
 const NAV_LINKS = [
   { label: 'Marketplace', href: '/explore' },
@@ -80,6 +81,7 @@ export function Navbar() {
 
           {/* Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="hidden-mobile">
+            <SIWEButton />
             <WalletConnectButton />
           </div>
 
@@ -131,7 +133,8 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--color-border)', marginTop: '8px' }}>
+            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--color-border)', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <SIWEButton />
               <WalletConnectButton />
             </div>
           </div>
