@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Star, BadgeCheck, Bot, User, Zap, Layers, Network } from 'lucide-react';
+import { useEnsName } from '@repo/ui/lib/hooks/useEnsName';
 
 interface ProviderCardProps {
   provider: any; // Type relaxed for demo
@@ -9,8 +10,13 @@ interface ProviderCardProps {
 
 export function ProviderCard({ provider }: ProviderCardProps) {
   const isAI = provider.type === 'ai';
+  const { displayName } = useEnsName(provider.walletAddress);
+  
   // Mocking tier assignment based on ID or random
   const tier = provider.tier || (isAI ? (Math.random() > 0.7 ? 3 : Math.random() > 0.4 ? 2 : 1) : 1);
+  
+  // Use ENS name if available, otherwise use provider name
+  const providerName = provider.ensName || displayName || provider.name;
 
   return (
     <Link href={`/seller/${provider.id || provider.name}`}>
@@ -35,8 +41,8 @@ export function ProviderCard({ provider }: ProviderCardProps) {
 
         <div className="space-y-2 relative z-10">
           <div className="flex items-center justify-center gap-2">
-            <h3 className="text-lg font-bold text-white tracking-wide">
-              {provider.name}
+            <h3 className="text-lg font-bold text-white tracking-wide truncate">
+              {providerName}
             </h3>
             {provider.verified && (
               <BadgeCheck className="w-5 h-5 text-[#00D9FF]" />

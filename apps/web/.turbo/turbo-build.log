@@ -1,58 +1,54 @@
 
-
 > web@0.1.0 build
 > next build
 
 ▲ Next.js 16.2.4 (Turbopack)
 
   Creating an optimized production build ...
-✓ Compiled successfully in 4.7s
-  Finished TypeScript in 2.6s    ✓ Finished TypeScript in 2.6s 
-  Collecting page data using 9 workers in 295ms    ✓ Collecting page data using 9 workers in 295ms 
-✓ Generating static pages using 9 workers (26/26) in 282ms
-  Finalizing page optimization in 6ms    ✓ Finalizing page optimization in 6ms 
+✓ Compiled successfully in 4.5s
+  Running TypeScript ...
+  Finished TypeScript in 2.9s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/26) ...
+  Generating static pages using 9 workers (6/26) 
+  Generating static pages using 9 workers (12/26) 
+{"level":50,"time":1777801639123,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
 
-Route (app)
-┌ ○ /
-├ ○ /_not-found
-├ ○ /agent-builder
-├ ○ /agents
-├ ƒ /api/agents
-├ ƒ /api/agents/[address]
-├ ƒ /api/agents/[address]/evolve
-├ ƒ /api/agents/[address]/skills
-├ ƒ /api/agents/blueprint
-├ ƒ /api/auth/logout
-├ ƒ /api/auth/nonce
-├ ƒ /api/auth/refresh
-├ ƒ /api/auth/verify
-├ ƒ /api/ens/resolve
-├ ƒ /api/gigs
-├ ƒ /api/gigs/[id]
-├ ƒ /api/health
-├ ƒ /api/marketplace/featured
-├ ƒ /api/marketplace/stats
-├ ƒ /api/orders
-├ ƒ /api/orders/[id]
-├ ƒ /api/orders/[id]/approve
-├ ƒ /api/orders/[id]/deliver
-├ ƒ /api/orders/[id]/dispute
-├ ƒ /api/orders/[id]/mark-delivered
-├ ƒ /api/orders/[id]/rate
-├ ƒ /api/orders/create
-├ ƒ /api/orders/user/[wallet]
-├ ƒ /api/pay/swap-execute
-├ ƒ /api/pay/swap-quote
-├ ƒ /api/pay/x402
-├ ƒ /api/reputation/[address]
-├ ƒ /api/reputation/endorse
-├ ƒ /api/users/[address]
-├ ƒ /api/webhooks/keeperhub
-├ ○ /explore
-├ ƒ /orders/[id]
-└ ○ /swarm
+{"level":50,"time":1777801639124,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
 
+{"level":50,"time":1777801639124,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
+{"level":50,"time":1777801639124,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
+(node:13323) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+TypeError: this.localStorage.getItem is not a function
+    at j.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12253)
+    at Object.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13348)
+TypeError: this.localStorage.setItem is not a function
+    at j.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12342)
+    at Object.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13422)
+TypeError: this.localStorage.getItem is not a function
+    at j.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12253)
+    at Object.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13348)
+TypeError: this.localStorage.setItem is not a function
+    at j.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12342)
+    at Object.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13422)
+{"level":50,"time":1777801639175,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
 
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
+{"level":50,"time":1777801639176,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
 
+{"level":50,"time":1777801639176,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
+{"level":50,"time":1777801639176,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
+Error occurred prerendering page "/explore". Read more: https://nextjs.org/docs/messages/prerender-error
+TypeError: localStorage.getItem is not a function
+    at ignore-listed frames {
+  digest: '1960313688'
+}
+Export encountered an error on /explore/page: /explore, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /Users/siddharthpanchal/EthGlobal/openAgents/Hustl3/apps/web
+npm error workspace web@0.1.0
+npm error location /Users/siddharthpanchal/EthGlobal/openAgents/Hustl3/apps/web
+npm error command failed
+npm error command sh -c next build

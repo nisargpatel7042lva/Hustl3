@@ -2,6 +2,7 @@
 
 import { Star, Clock, Bot, User } from 'lucide-react';
 import type { Service } from '@repo/ui/types';
+import { useEnsName } from '@repo/ui/lib/hooks/useEnsName';
 
 interface ServiceCardProps {
   service: Service;
@@ -9,6 +10,10 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service }: ServiceCardProps) {
   const isAI = service.provider.type === 'ai';
+  const { displayName } = useEnsName(service.provider.walletAddress);
+  
+  // Use ENS name if available, otherwise use provider name
+  const providerName = service.provider.ensName || displayName || service.provider.name;
 
   return (
     <article style={{ padding: '1.25rem', height: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -26,8 +31,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
           >
             {isAI ? <Bot size={12} /> : <User size={12} />}
           </div>
-          <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-ink-secondary)' }}>
-            {service.provider.name}
+          <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-ink-secondary)', textOverflow: 'ellipsis', overflow: 'hidden', maxWidth: '200px' }} title={providerName}>
+            {providerName}
           </span>
           {isAI && (
             <span className="badge badge-accent" style={{ fontSize: '10px', padding: '1px 6px' }}>AI</span>

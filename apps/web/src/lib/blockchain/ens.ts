@@ -1,56 +1,100 @@
 /**
  * ENS integration — forward/reverse resolution, text records, subname registration.
- * Uses ethers.js v6 ENS provider.
+ * Uses ethers.js v6 ENS provider with RPC fallback.
  * Manages agent subnames under hustl3.eth.
  */
 import { ethers } from 'ethers';
 
-const ETH_RPC  = process.env.ETH_RPC_URL || 'https://eth-mainnet.g.alchemy.com/v2/demo';
 const BASE_RPC = process.env.BASE_RPC_URL || 'https://mainnet.base.org';
 
-let ethProvider:  ethers.JsonRpcProvider | null = null;
-let baseProvider: ethers.JsonRpcProvider | null = null;
+/**
+ * RPC setup with fallback system
+ */
+const RPCS = [
+  process.env.ETH_RPC_URL || 'https://ethereum.publicnode.com',
+  'https://rpc.flashbots.net',
+  'https://eth-mainnet.g.alchemy.com/v2/demo',
+];
 
-function getEthProvider(): ethers.JsonRpcProvider {
-  if (!ethProvider) {
-    ethProvider = new ethers.JsonRpcProvider(ETH_RPC);
+function createProvider(url: string): ethers.JsonRpcProvider {
+  return new ethers.JsonRpcProvider(url);
+}
+
+/**
+ * Try multiple RPCs (fallback system)
+ */
+async function withFallback<T>(
+  fn: (provider: ethers.JsonRpcProvider) => Promise<T>
+): Promise<T | null> {
+  for (const rpc of RPCS) {
+    const provider = createProvider(rpc);
+    try {
+      return await fn(provider);
+    } catch (err) {
+      console.warn(`RPC failed (${rpc}), trying next...`);
+    }
   }
-  return ethProvider;
+  return null;
+}
+
+/**
+ * Normalize ENS name
+ */
+function normalizeName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+/**
+ * Normalize Ethereum address safely (EIP-55)
+ */
+function normalizeAddress(address: string): string | null {
+  try {
+    return ethers.getAddress(address);
+  } catch {
+    return null;
+  }
 }
 
 /**
  * Resolve ENS name → address (forward resolution).
  */
 export async function resolveENS(name: string): Promise<string | null> {
-  try {
-    return await getEthProvider().resolveName(name);
-  } catch {
-    return null;
-  }
+  const normalized = normalizeName(name);
+  const result = await withFallback(async (provider) => {
+    const address = await provider.resolveName(normalized);
+    return address;
+  });
+  return result;
 }
 
 /**
  * Reverse resolve address → primary ENS name.
  */
 export async function reverseResolveENS(address: string): Promise<string | null> {
-  try {
-    return await getEthProvider().lookupAddress(address);
-  } catch {
+  const normalized = normalizeAddress(address);
+  if (!normalized) {
+    console.error('Invalid address format');
     return null;
   }
+
+  const result = await withFallback(async (provider) => {
+    const name = await provider.lookupAddress(normalized);
+    return name;
+  });
+  return result;
 }
 
 /**
  * Read an ENS text record.
  */
 export async function getENSTextRecord(name: string, key: string): Promise<string | null> {
-  try {
-    const resolver = await getEthProvider().getResolver(name);
+  const normalized = normalizeName(name);
+  const result = await withFallback(async (provider) => {
+    const resolver = await provider.getResolver(normalized);
     if (!resolver) return null;
     return await resolver.getText(key);
-  } catch {
-    return null;
-  }
+  });
+  return result;
 }
 
 /**
@@ -72,18 +116,22 @@ export async function getAgentENSRecords(ensName: string): Promise<Record<string
     'avatar',
   ];
 
-  const resolver = await getEthProvider().getResolver(ensName);
-  if (!resolver) return {};
+  const result = await withFallback(async (provider) => {
+    const resolver = await provider.getResolver(ensName);
+    if (!resolver) return {};
 
-  const results = await Promise.allSettled(keys.map(k => resolver.getText(k)));
-  const records: Record<string, string> = {};
-  for (let i = 0; i < keys.length; i++) {
-    const r = results[i];
-    if (r.status === 'fulfilled' && r.value) {
-      records[keys[i]] = r.value;
+    const results = await Promise.allSettled(keys.map(k => resolver.getText(k)));
+    const records: Record<string, string> = {};
+    for (let i = 0; i < keys.length; i++) {
+      const r = results[i];
+      if (r.status === 'fulfilled' && r.value) {
+        records[keys[i]] = r.value;
+      }
     }
-  }
-  return records;
+    return records;
+  });
+
+  return result || {};
 }
 
 /**

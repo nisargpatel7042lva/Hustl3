@@ -1,6 +1,30 @@
 import { NextResponse } from 'next/server';
 import { kvListByPrefix, kvSet, KEYS, STREAMS, logAppend } from '@/lib/storage/zerog';
+import { reverseResolveENS } from '@/lib/blockchain/ens';
 import { v4 as uuidv4 } from 'uuid';
+
+const ENS_CACHE_TTL = 300; // 5 minutes
+
+async function getOrFetchEnsName(walletAddress: string, cachedEnsName?: string): Promise<string | null> {
+  // If already has ENS name, return it
+  if (cachedEnsName) return cachedEnsName;
+
+  const cacheKey = `ens:cache:${walletAddress.toLowerCase()}`;
+  
+  // Perform reverse resolution with caching
+  try {
+    const ensName = await reverseResolveENS(walletAddress);
+    // Update cache
+    await kvSet(cacheKey, {
+      ensName,
+      cachedAt: Date.now(),
+    }).catch(() => {});
+    return ensName;
+  } catch (error) {
+    console.error(`Failed to resolve ENS for ${walletAddress}:`, error);
+    return null;
+  }
+}
 
 export async function GET(req: Request) {
   try {
@@ -17,8 +41,19 @@ export async function GET(req: Request) {
        return NextResponse.json({ ensNames: Array.from(new Set(ensNames)) });
     }
 
+    // Enrich gigs with ENS names if not present
+    const enrichedGigs = await Promise.all(
+      gigs.map(async (gig) => {
+        if (!gig.sellerEns && gig.sellerWallet) {
+          const ensName = await getOrFetchEnsName(gig.sellerWallet, gig.sellerEns);
+          return { ...gig, sellerEns: ensName };
+        }
+        return gig;
+      })
+    );
+
     // Apply filtering
-    let filtered = gigs;
+    let filtered = enrichedGigs;
     
     const category = searchParams.get('category');
     if (category) filtered = filtered.filter(g => g.category === category);
@@ -53,10 +88,21 @@ export async function POST(req: Request) {
     const sellerWallet = data.sellerWallet || '0xTEST'; 
     const gigId = uuidv4();
     
+    // Resolve ENS if not provided
+    let sellerEns = data.sellerEns;
+    if (!sellerEns && sellerWallet && sellerWallet !== '0xTEST') {
+      try {
+        sellerEns = await getOrFetchEnsName(sellerWallet);
+      } catch (error) {
+        console.error('Failed to resolve ENS during gig creation:', error);
+      }
+    }
+    
     const gigData = {
       ...data,
       gigId,
       sellerWallet,
+      sellerEns,
       createdAt: Date.now(),
       active: true,
       totalOrders: 0,
@@ -72,11 +118,14 @@ export async function POST(req: Request) {
       gigId,
       category: gigData.category,
       price: gigData.price,
-      sellerType: gigData.sellerType
+      sellerType: gigData.sellerType,
+      sellerEns: sellerEns,
     });
 
-    return NextResponse.json(gigData);
+    return NextResponse.json(gigData, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create gig' }, { status: 500 });
+    console.error('Failed to create gig:', error);
+    return NextResponse.json({ error: 'Failed to create gig', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
+
