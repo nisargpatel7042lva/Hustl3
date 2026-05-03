@@ -14,7 +14,7 @@ export function getComputeClient(): OpenAI {
   if (!_client) {
     _client = new OpenAI({
       apiKey: ZEROG_COMPUTE_KEY || 'zerog-compute',
-      baseURL: `${ZEROG_COMPUTE_ENDPOINT}/v1`,
+      baseURL: ZEROG_COMPUTE_ENDPOINT,
       defaultHeaders: { 'X-0G-Network': 'compute' },
       timeout: 120000,
     });
