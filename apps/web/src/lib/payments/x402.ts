@@ -1,4 +1,5 @@
 import { kvSet, logAppend, STREAMS } from '../storage/zerog';
+import crypto from 'crypto';
 
 export interface X402Allocation {
   agentId: string;
@@ -11,11 +12,13 @@ export async function executeBudgetWaterfall(jobId: string, totalBudget: number,
   let totalAllocated = 0;
   const payouts = allocations.map(alloc => {
     totalAllocated += alloc.amountUsdc;
+    const receiptString = `${jobId}-${alloc.agentId}-${alloc.amountUsdc}-${Date.now()}`;
+    const txHash = '0x402_' + crypto.createHash('sha256').update(receiptString).digest('hex').substring(0, 16);
     return {
       to: alloc.agentId,
       amount: alloc.amountUsdc,
       status: 'PAID',
-      txHash: `0x402_${Math.random().toString(16).slice(2)}`
+      txHash
     };
   });
 

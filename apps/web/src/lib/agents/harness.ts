@@ -1,4 +1,4 @@
-import { kvSet, kvGet, logAppend, STREAMS } from '../storage/zerog';
+import { kvSet, kvGet, logAppend, STREAMS, kvListByPrefix } from '../storage/zerog';
 import { runMoAEngine } from './moa';
 import { executeComputeTask } from '../compute/zerog-compute';
 
@@ -46,10 +46,21 @@ export async function executeHarness(jobId: string, requirement: string, bluepri
 
   // 2. Recruiting
   await advanceHarnessState(jobId, 'RECRUITING');
+  const agentItems = await kvListByPrefix<any>('agents:');
+  const availableAgents = agentItems.filter(item => item.key.endsWith(':profile')).map(item => item.value);
+
   for (let node of taskGraph) {
-    // Mock AXL recruitment and Sub-Order creation
     await logAppend(STREAMS.marketplaceIndex, { type: 'AXL_BROADCAST', jobId, subtaskId: node.id });
-    node.assignedAgent = `0xWorker_${Math.random().toString(16).slice(2, 6)}`;
+    
+    if (availableAgents.length > 0) {
+      // Simple matchmaking: pick a random agent for now
+      // A full implementation would match based on skills and node.description
+      const selectedAgent = availableAgents[Math.floor(Math.random() * availableAgents.length)];
+      node.assignedAgent = selectedAgent.walletAddress;
+    } else {
+      // Fallback if no agents are registered yet
+      node.assignedAgent = `0xFallbackWorker_${Math.random().toString(16).slice(2, 6)}`;
+    }
   }
   await kvSet(`harness:${jobId}:graph`, taskGraph);
 

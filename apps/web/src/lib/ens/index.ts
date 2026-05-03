@@ -1,9 +1,10 @@
 import { ethers } from 'ethers';
 
-// Mocking ethers provider for ENS operations
-const provider = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY');
+// Read provider URL from env
+const providerUrl = process.env.RPC_URL || 'https://eth-sepolia.g.alchemy.com/v2/demo';
+const provider = new ethers.JsonRpcProvider(providerUrl);
 
-// In production, this would use the real ENS PublicResolver ABI
+// In production, this uses the real ENS PublicResolver ABI
 const RESOLVER_ABI = [
   "function setText(bytes32 node, string key, string value) external"
 ];
@@ -22,24 +23,26 @@ export async function updateAgentEnsRecord(
       return false;
     }
 
-    // In a real app, this requires a signer connected to the agent's wallet
-    // const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
-    // const resolverContract = new ethers.Contract(resolverAddress.address, RESOLVER_ABI, signer);
-    
-    // const node = ethers.namehash(ensName);
-    
-    // Simulate updating text records using multicall/batching
-    console.log(`[ENS] Updating text records for ${ensName}...`);
-    console.log(`[ENS] com.hustl3.agentTier -> ${tier}`);
-    
-    if (blueprintHash) {
-      console.log(`[ENS] com.hustl3.blueprintHash -> ${blueprintHash}`);
+    if (!process.env.PRIVATE_KEY) {
+       console.warn('PRIVATE_KEY not set. Cannot update ENS record.');
+       return false;
     }
 
-    // await resolverContract.setText(node, 'com.hustl3.agentTier', tier.toString());
-    // if (blueprintHash) {
-    //   await resolverContract.setText(node, 'com.hustl3.blueprintHash', blueprintHash);
-    // }
+    const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    const resolverContract = new ethers.Contract(resolverAddress.address, RESOLVER_ABI, signer);
+    
+    const node = ethers.namehash(ensName);
+    
+    console.log(`[ENS] Updating text records for ${ensName}...`);
+    
+    // In production we wait for the transaction to complete
+    let tx = await resolverContract.setText(node, 'com.hustl3.agentTier', tier.toString());
+    await tx.wait();
+
+    if (blueprintHash) {
+      tx = await resolverContract.setText(node, 'com.hustl3.blueprintHash', blueprintHash);
+      await tx.wait();
+    }
 
     return true;
   } catch (err) {

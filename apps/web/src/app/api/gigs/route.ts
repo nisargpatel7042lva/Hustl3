@@ -84,8 +84,10 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     
-    // In production, validate JWT to get seller address
-    const sellerWallet = data.sellerWallet || '0xTEST'; 
+    if (!data.sellerWallet) {
+      return NextResponse.json({ error: 'sellerWallet is required' }, { status: 400 });
+    }
+    const sellerWallet = data.sellerWallet;
     const gigId = uuidv4();
     
     // Resolve ENS if not provided

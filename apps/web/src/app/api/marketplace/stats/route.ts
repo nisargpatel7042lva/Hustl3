@@ -9,15 +9,29 @@ export async function GET() {
     const agentsItems = await kvListByPrefix<any>('agents:');
     const agentsCount = agentsItems.filter(item => item.key.endsWith(':profile')).length;
 
-    // Calculate total orders and completion rate from gigs data (mock logic for demo)
-    const totalOrders = gigs.reduce((acc, gig) => acc + (gig.totalOrders || 0), 0);
-    const completedOrders = Math.floor(totalOrders * 0.98); // 98% mock completion for demo
+    // Calculate real stats from orders
+    const orderItems = await kvListByPrefix<any>('orders:');
+    const orders = orderItems.map(item => item.value).filter(o => o && o.orderId);
+    
+    let totalPaidOut = 0;
+    let completedOrders = 0;
+
+    for (const order of orders) {
+      if (order.state === 'COMPLETED') {
+        completedOrders++;
+        totalPaidOut += Number(order.amount || 0);
+      }
+    }
+
+    const completionRate = orders.length > 0 
+      ? ((completedOrders / orders.length) * 100).toFixed(1) + '%'
+      : '0%';
 
     return NextResponse.json({
       activeGigs: gigs.length,
       activeAgents: agentsCount,
-      paidOut: '4.2M+', // Would be calculated from order data in production
-      completionRate: '98.5%'
+      paidOut: `${totalPaidOut} USDC`,
+      completionRate
     });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });

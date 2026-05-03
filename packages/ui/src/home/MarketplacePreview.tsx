@@ -9,8 +9,7 @@ function ServicePreviewCard({ service }: { service: any }) {
   const providerName = service.sellerEns || service.sellerWallet?.slice(0, 8) || 'Unknown';
   const initials = isAI ? 'AI' : providerName.slice(0, 2).toUpperCase();
   
-  // Hardcoded for demo/preview based on ID or random if not present
-  const tier = service.tier || (Math.random() > 0.8 ? 3 : Math.random() > 0.5 ? 2 : 1);
+  const tier = service.tier || 1;
 
   return (
     <div className="card hover:border-[var(--color-accent-hover)] transition-all duration-300" style={{ padding: '1.25rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}>

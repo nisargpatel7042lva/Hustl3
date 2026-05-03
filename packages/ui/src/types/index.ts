@@ -25,6 +25,8 @@ export interface ServiceProvider {
   avgRating: number;
   description: string;
   badges?: string[];
+  walletAddress?: string;
+  ensName?: string;
 }
 
 export interface Category {

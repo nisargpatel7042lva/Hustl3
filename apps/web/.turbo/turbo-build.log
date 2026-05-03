@@ -1,54 +1,29 @@
 
+
 > web@0.1.0 build
 > next build
 
 ▲ Next.js 16.2.4 (Turbopack)
 
   Creating an optimized production build ...
-✓ Compiled successfully in 4.5s
-  Running TypeScript ...
-  Finished TypeScript in 2.9s ...
-  Collecting page data using 9 workers ...
-  Generating static pages using 9 workers (0/26) ...
-  Generating static pages using 9 workers (6/26) 
-  Generating static pages using 9 workers (12/26) 
-{"level":50,"time":1777801639123,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
+✓ Compiled successfully in 5.2s
+Failed to type check.
 
-{"level":50,"time":1777801639124,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
+./src/lib/agents/harness.ts:49:28
+Type error: Cannot find name 'kvListByPrefix'.
 
-{"level":50,"time":1777801639124,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
-{"level":50,"time":1777801639124,"pid":13323,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
-(node:13323) Warning: `--localstorage-file` was provided without a valid path
-(Use `node --trace-warnings ...` to show where the warning was created)
-TypeError: this.localStorage.getItem is not a function
-    at j.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12253)
-    at Object.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13348)
-TypeError: this.localStorage.setItem is not a function
-    at j.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12342)
-    at Object.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13422)
-TypeError: this.localStorage.getItem is not a function
-    at j.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12253)
-    at Object.getItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13348)
-TypeError: this.localStorage.setItem is not a function
-    at j.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:12342)
-    at Object.setItem (.next/server/chunks/ssr/[root-of-the-server]__00o~48s._.js:15:13422)
-{"level":50,"time":1777801639175,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
-
-{"level":50,"time":1777801639176,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
-
-{"level":50,"time":1777801639176,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
-{"level":50,"time":1777801639176,"pid":13322,"hostname":"Siddharths-MacBook-Air.local","context":"client","msg":"this.localStorage.getItem is not a function"}
-Error occurred prerendering page "/explore". Read more: https://nextjs.org/docs/messages/prerender-error
-TypeError: localStorage.getItem is not a function
-    at ignore-listed frames {
-  digest: '1960313688'
-}
-Export encountered an error on /explore/page: /explore, exiting the build.
-⨯ Next.js build worker exited with code: 1 and signal: null
-npm error Lifecycle script `build` failed with error:
-npm error code 1
-npm error path /Users/siddharthpanchal/EthGlobal/openAgents/Hustl3/apps/web
-npm error workspace web@0.1.0
-npm error location /Users/siddharthpanchal/EthGlobal/openAgents/Hustl3/apps/web
-npm error command failed
-npm error command sh -c next build
+  [90m47 |[0m   [90m// 2. Recruiting[0m
+  [90m48 |[0m   [36mawait[0m advanceHarnessState(jobId, [32m'RECRUITING'[0m);
+[31m[1m>[0m [90m49 |[0m   [36mconst[0m agentItems = [36mawait[0m kvListByPrefix<any>([32m'agents:'[0m);
+  [90m   |[0m                            [31m[1m^[0m
+  [90m50 |[0m   [36mconst[0m availableAgents = agentItems.filter(item => item.key.endsWith([32m':profile'[0m)).map(ite...
+  [90m51 |[0m
+  [90m52 |[0m   [36mfor[0m ([36mlet[0m node [36mof[0m taskGraph) {
+Next.js build worker exited with code: 1 and signal: null
+[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
+[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
+[1mnpm[22m [31merror[39m [94mpath[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
+[1mnpm[22m [31merror[39m [94mworkspace[39m web@0.1.0
+[1mnpm[22m [31merror[39m [94mlocation[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
+[1mnpm[22m [31merror[39m command failed
+[1mnpm[22m [31merror[39m [94mcommand[39m sh -c next build

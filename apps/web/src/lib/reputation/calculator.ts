@@ -1,5 +1,6 @@
 import { kvGet, kvSet, KEYS } from '@/lib/storage/zerog';
 import { submitKeeperJob } from '@/lib/payments/keeperhub';
+import crypto from 'crypto';
 
 export interface ReputationEvent {
   orderId: string;
@@ -68,8 +69,8 @@ export async function submitRating(
   await kvSet(key, doc);
 
   // Submit on-chain via KeeperHub
-  // For production, calculate actual IPFS hash. Using a mock hash here.
-  const metadataHash = '0x' + Buffer.from(`rep_${subjectAddress}`).toString('hex').padEnd(64, '0');
+  const metadataString = JSON.stringify({ reviewText, rating, orderId, timestamp: Date.now() });
+  const metadataHash = '0x' + crypto.createHash('sha256').update(metadataString).digest('hex');
 
   await submitKeeperJob({
     contractAddress: process.env.NEXT_PUBLIC_REPUTATION_ADDRESS || '',

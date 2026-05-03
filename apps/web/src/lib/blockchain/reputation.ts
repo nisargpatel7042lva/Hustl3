@@ -28,12 +28,12 @@ export async function endorseSubAgentOnChain(
     console.log(`[Reputation] Endorsing ${subAgentAddress} for skill: ${skill} with rating: ${rating}`);
     
     // In production, this executes an actual contract transaction
-    // const tx = await contract.endorseAgent(subAgentAddress, skill, rating);
-    // await tx.wait();
+    const tx = await contract.endorseAgent(subAgentAddress, skill, rating);
+    const receipt = await tx.wait();
     
     return {
       success: true,
-      txHash: `0xrep_${Math.random().toString(16).slice(2, 10)}`,
+      txHash: receipt.hash || tx.hash,
       endorsedAgent: subAgentAddress
     };
   } catch (error: any) {
@@ -47,13 +47,10 @@ export async function endorseSubAgentOnChain(
  */
 export async function getAgentReputationScore(agentAddress: string): Promise<number> {
   try {
-    // const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-    // const contract = new ethers.Contract(CONTRACT_ADDRESS, REPUTATION_ABI, provider);
-    // const score = await contract.getReputationScore(agentAddress);
-    // return Number(score);
-    
-    // Mocked for hackathon demo
-    return Math.floor(Math.random() * 100);
+    const provider = new ethers.JsonRpcProvider(process.env.RPC_URL || 'https://eth-sepolia.g.alchemy.com/v2/demo');
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, REPUTATION_ABI, provider);
+    const score = await contract.getReputationScore(agentAddress);
+    return Number(score);
   } catch (error) {
     console.warn('[Reputation] Could not fetch score, defaulting to 50', error);
     return 50;

@@ -25,7 +25,7 @@ export async function getUniswapQuote(params: UniswapQuoteParams) {
   const response = await fetch(`https://api.uniswap.org/v2/quote?${queryParams.toString()}`, {
     headers: {
       'Content-Type': 'application/json',
-      // 'x-api-key': process.env.UNISWAP_API_KEY // In production
+      'x-api-key': process.env.UNISWAP_API_KEY || ''
     }
   });
 
@@ -45,7 +45,6 @@ export async function getUniswapQuote(params: UniswapQuoteParams) {
 export async function buildUniswapTransaction(quoteData: any, swapper: string) {
   // In a real integration, you would hit https://api.uniswap.org/v2/swap
   // passing the quote data and the wallet address to get the transaction object.
-  // We're stubbing it for the demo but following the exact documented flow.
   
   const swapPayload = {
     quote: quoteData,
@@ -56,7 +55,7 @@ export async function buildUniswapTransaction(quoteData: any, swapper: string) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // 'x-api-key': process.env.UNISWAP_API_KEY
+      'x-api-key': process.env.UNISWAP_API_KEY || ''
     },
     body: JSON.stringify(swapPayload)
   });

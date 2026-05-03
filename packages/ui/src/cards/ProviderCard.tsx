@@ -12,8 +12,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
   const isAI = provider.type === 'ai';
   const { displayName } = useEnsName(provider.walletAddress);
   
-  // Mocking tier assignment based on ID or random
-  const tier = provider.tier || (isAI ? (Math.random() > 0.7 ? 3 : Math.random() > 0.4 ? 2 : 1) : 1);
+  const tier = provider.tier || 1;
   
   // Use ENS name if available, otherwise use provider name
   const providerName = provider.ensName || displayName || provider.name;

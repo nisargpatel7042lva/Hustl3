@@ -27,10 +27,11 @@ export async function runEvolutionAnalysis(jobId: string, coordinatorId: string)
   await kvSet(memKey, existingMem);
 
   // 4. Trigger on-chain Endorsement via HustlReputation
-  const bestAgent = harnessTrace[0]?.assignedAgent; // simplified
-  if (bestAgent) {
+  const bestAgent = harnessTrace[0]?.assignedAgent; // simplified for now
+  if (bestAgent && process.env.PRIVATE_KEY) {
     console.log(`Endorsing ${bestAgent} via HustlReputation contract...`);
-    // await reputationContract.endorseAgent(bestAgent);
+    const { endorseSubAgentOnChain } = await import('../blockchain/reputation');
+    await endorseSubAgentOnChain(process.env.PRIVATE_KEY, bestAgent, 'TaskExecution', 5);
   }
 
   return analysis;
