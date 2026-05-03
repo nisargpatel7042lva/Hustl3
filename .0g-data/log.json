@@ -459,6 +459,676 @@
       "offset": 91,
       "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"94564140-5077-4713-9113-998255c64581\",\"state\":\"COMPLETED\"}",
       "timestamp": 1777819470872
+    },
+    {
+      "offset": 92,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777819661576
+    },
+    {
+      "offset": 93,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777819661579
+    },
+    {
+      "offset": 94,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777819668600
+    },
+    {
+      "offset": 95,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777819668603
+    },
+    {
+      "offset": 96,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777819668604
+    },
+    {
+      "offset": 97,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777819670105
+    },
+    {
+      "offset": 98,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777819673031
+    },
+    {
+      "offset": 99,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777819673033
+    },
+    {
+      "offset": 100,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777819680045
+    },
+    {
+      "offset": 101,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777819680050
+    },
+    {
+      "offset": 102,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777819680051
+    },
+    {
+      "offset": 103,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777819681554
+    },
+    {
+      "offset": 104,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777819684129
+    },
+    {
+      "offset": 105,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777819684132
+    },
+    {
+      "offset": 106,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777819684133
+    },
+    {
+      "offset": 107,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777819690142
+    },
+    {
+      "offset": 108,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777819690145
+    },
+    {
+      "offset": 109,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777819695583
+    },
+    {
+      "offset": 110,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777819695586
+    },
+    {
+      "offset": 111,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777819695587
+    },
+    {
+      "offset": 112,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777819701596
+    },
+    {
+      "offset": 113,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777819701598
+    },
+    {
+      "offset": 114,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777819958804
+    },
+    {
+      "offset": 115,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777819958807
+    },
+    {
+      "offset": 116,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777819966950
+    },
+    {
+      "offset": 117,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777819966953
+    },
+    {
+      "offset": 118,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777819966954
+    },
+    {
+      "offset": 119,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777819968456
+    },
+    {
+      "offset": 120,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777819969110
+    },
+    {
+      "offset": 121,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777819969112
+    },
+    {
+      "offset": 122,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777819977107
+    },
+    {
+      "offset": 123,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777819977111
+    },
+    {
+      "offset": 124,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777819977111
+    },
+    {
+      "offset": 125,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777819978613
+    },
+    {
+      "offset": 126,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777819985490
+    },
+    {
+      "offset": 127,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777819985493
+    },
+    {
+      "offset": 128,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777819985494
+    },
+    {
+      "offset": 129,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777820012345
+    },
+    {
+      "offset": 130,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777820012349
+    },
+    {
+      "offset": 131,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777820012350
+    },
+    {
+      "offset": 132,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777820031122
+    },
+    {
+      "offset": 133,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777820031126
+    },
+    {
+      "offset": 134,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777820036757
+    },
+    {
+      "offset": 135,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777820036760
+    },
+    {
+      "offset": 136,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777820216951
+    },
+    {
+      "offset": 137,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777820216954
+    },
+    {
+      "offset": 138,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777820225021
+    },
+    {
+      "offset": 139,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777820225024
+    },
+    {
+      "offset": 140,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777820225025
+    },
+    {
+      "offset": 141,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777820226528
+    },
+    {
+      "offset": 142,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777820230853
+    },
+    {
+      "offset": 143,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777820230855
+    },
+    {
+      "offset": 144,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777820239112
+    },
+    {
+      "offset": 145,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777820239115
+    },
+    {
+      "offset": 146,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777820239116
+    },
+    {
+      "offset": 147,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777820240618
+    },
+    {
+      "offset": 148,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777820243315
+    },
+    {
+      "offset": 149,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777820243317
+    },
+    {
+      "offset": 150,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777820243318
+    },
+    {
+      "offset": 151,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777820275070
+    },
+    {
+      "offset": 152,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777820275072
+    },
+    {
+      "offset": 153,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777820275073
+    },
+    {
+      "offset": 154,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777820305346
+    },
+    {
+      "offset": 155,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777820305350
+    },
+    {
+      "offset": 156,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777820308529
+    },
+    {
+      "offset": 157,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777820308532
+    },
+    {
+      "offset": 158,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777820789561
+    },
+    {
+      "offset": 159,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777820789564
+    },
+    {
+      "offset": 160,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777820797553
+    },
+    {
+      "offset": 161,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777820797558
+    },
+    {
+      "offset": 162,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777820797558
+    },
+    {
+      "offset": 163,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777820799060
+    },
+    {
+      "offset": 164,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777820801510
+    },
+    {
+      "offset": 165,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777820801515
+    },
+    {
+      "offset": 166,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777820810036
+    },
+    {
+      "offset": 167,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777820810039
+    },
+    {
+      "offset": 168,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777820810040
+    },
+    {
+      "offset": 169,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777820811542
+    },
+    {
+      "offset": 170,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777820814989
+    },
+    {
+      "offset": 171,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777820814991
+    },
+    {
+      "offset": 172,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777820814993
+    },
+    {
+      "offset": 173,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777820821031
+    },
+    {
+      "offset": 174,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777820821034
+    },
+    {
+      "offset": 175,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777820826532
+    },
+    {
+      "offset": 176,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777820826536
+    },
+    {
+      "offset": 177,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777820826537
+    },
+    {
+      "offset": 178,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777820832638
+    },
+    {
+      "offset": 179,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777820832641
+    },
+    {
+      "offset": 180,
+      "data": "{\"type\":\"GIG_CREATED\",\"gigId\":\"349be2ed-4a42-4ce2-8c5d-36530952f623\",\"category\":\"security\",\"price\":\"50\",\"sellerType\":\"agent\",\"sellerEns\":null}",
+      "timestamp": 1777821173527
+    },
+    {
+      "offset": 181,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777821203642
+    },
+    {
+      "offset": 182,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777821203647
+    },
+    {
+      "offset": 183,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777821212221
+    },
+    {
+      "offset": 184,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777821212226
+    },
+    {
+      "offset": 185,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777821212227
+    },
+    {
+      "offset": 186,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777821213729
+    },
+    {
+      "offset": 187,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777821215487
+    },
+    {
+      "offset": 188,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777821215489
+    },
+    {
+      "offset": 189,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777821223548
+    },
+    {
+      "offset": 190,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777821223553
+    },
+    {
+      "offset": 191,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777821223553
+    },
+    {
+      "offset": 192,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777821225056
+    },
+    {
+      "offset": 193,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777821229874
+    },
+    {
+      "offset": 194,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777821229877
+    },
+    {
+      "offset": 195,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777821229878
+    },
+    {
+      "offset": 196,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777821235919
+    },
+    {
+      "offset": 197,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777821235922
+    },
+    {
+      "offset": 198,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777821240411
+    },
+    {
+      "offset": 199,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777821240413
+    },
+    {
+      "offset": 200,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777821240415
+    },
+    {
+      "offset": 201,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777821246501
+    },
+    {
+      "offset": 202,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777821246504
+    },
+    {
+      "offset": 203,
+      "data": "{\"type\":\"GIG_CREATED\",\"gigId\":\"26e4c41f-b27f-4091-b4ac-34d3e151f10c\",\"category\":\"security\",\"price\":\"55\",\"sellerType\":\"agent\",\"sellerEns\":null}",
+      "timestamp": 1777821614480
+    },
+    {
+      "offset": 204,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777821629791
+    },
+    {
+      "offset": 205,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777821629795
+    },
+    {
+      "offset": 206,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777821638061
+    },
+    {
+      "offset": 207,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777821638066
+    },
+    {
+      "offset": 208,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777821638067
+    },
+    {
+      "offset": 209,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777821639570
+    },
+    {
+      "offset": 210,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"INITIALIZING\"}",
+      "timestamp": 1777821643555
+    },
+    {
+      "offset": 211,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"DECOMPOSING\"}",
+      "timestamp": 1777821643557
+    },
+    {
+      "offset": 212,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"RECRUITING\"}",
+      "timestamp": 1777821651717
+    },
+    {
+      "offset": 213,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"subtaskId\":\"task_1\"}",
+      "timestamp": 1777821651721
+    },
+    {
+      "offset": 214,
+      "data": "{\"type\":\"AXL_BROADCAST\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"subtaskId\":\"task_2\"}",
+      "timestamp": 1777821651721
+    },
+    {
+      "offset": 215,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"EXECUTING\"}",
+      "timestamp": 1777821653224
+    },
+    {
+      "offset": 216,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777821655345
+    },
+    {
+      "offset": 217,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777821655347
+    },
+    {
+      "offset": 218,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777821655348
+    },
+    {
+      "offset": 219,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777821661392
+    },
+    {
+      "offset": 220,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777821661395
+    },
+    {
+      "offset": 221,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"AGGREGATING\"}",
+      "timestamp": 1777821668500
+    },
+    {
+      "offset": 222,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"VALIDATING\"}",
+      "timestamp": 1777821668505
+    },
+    {
+      "offset": 223,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"SYNTHESIZING\"}",
+      "timestamp": 1777821668507
+    },
+    {
+      "offset": 224,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"DELIVERING\"}",
+      "timestamp": 1777821674817
+    },
+    {
+      "offset": 225,
+      "data": "{\"type\":\"HARNESS_STATE_CHANGE\",\"jobId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"state\":\"COMPLETED\"}",
+      "timestamp": 1777821674820
     }
   ],
   "orders:04a8731a-1716-4ae7-81bb-0db2f461d9b5:events": [
@@ -533,6 +1203,78 @@
       "offset": 1,
       "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"94564140-5077-4713-9113-998255c64581\",\"txHash\":\"0x46f06d7f5295f69050ab1ca830f9e7896a7dff7984c6eb2398557d3ff2bc6dce\",\"keeperHubJobId\":\"job_eb413380e4e04f85a1e38e33f6266b59\"}",
       "timestamp": 1777819442302
+    }
+  ],
+  "orders:1bcf6696-99ae-4f60-af38-5d9c12da962d:events": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"ORDER_CREATED\",\"orderId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"tier\":3}",
+      "timestamp": 1777819661575
+    },
+    {
+      "offset": 1,
+      "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"1bcf6696-99ae-4f60-af38-5d9c12da962d\",\"txHash\":\"0xbca3ed69538febd57b7e3b8103c7f628d9d28f03544d98ee7e4416acf74b694e\",\"keeperHubJobId\":\"job_1aa41db3d57346c687fb4b105f5f6b2a\"}",
+      "timestamp": 1777819672581
+    }
+  ],
+  "orders:a10a472a-72fd-430f-b7cf-3da9c44423d5:events": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"ORDER_CREATED\",\"orderId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"tier\":3}",
+      "timestamp": 1777819958803
+    },
+    {
+      "offset": 1,
+      "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"a10a472a-72fd-430f-b7cf-3da9c44423d5\",\"txHash\":\"0x7bb348237f77e5489fbdd9c1ad3b2189cd8f962020ff6d2a05d87c0620d12aaf\",\"keeperHubJobId\":\"job_859a1047373f4938b9a14c6834352e1d\"}",
+      "timestamp": 1777819969104
+    }
+  ],
+  "orders:c836fe2a-6ad4-45a3-b4ff-2c6ca8080450:events": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"ORDER_CREATED\",\"orderId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"tier\":3}",
+      "timestamp": 1777820216951
+    },
+    {
+      "offset": 1,
+      "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"c836fe2a-6ad4-45a3-b4ff-2c6ca8080450\",\"txHash\":\"0x174944ae85f125f85c22c617dd1e3a6c429292c076d3a683d9002e24ec7cb292\",\"keeperHubJobId\":\"job_49d0c66503e74fe5b2858076da18f586\"}",
+      "timestamp": 1777820230846
+    }
+  ],
+  "orders:66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9:events": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"ORDER_CREATED\",\"orderId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"tier\":3}",
+      "timestamp": 1777820789560
+    },
+    {
+      "offset": 1,
+      "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"66d2c5c3-f4e4-49cc-b75a-e907c04f8fb9\",\"txHash\":\"0x38eb1f67e3ae538c6bbc2db5c9abb2262d7e81f885805c261abc13c79e11bb54\",\"keeperHubJobId\":\"job_44aa14b70f9d4bd5a448ca25471fe028\"}",
+      "timestamp": 1777820801489
+    }
+  ],
+  "orders:634f408d-614c-4f66-a503-89637b9d40ab:events": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"ORDER_CREATED\",\"orderId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"tier\":3}",
+      "timestamp": 1777821203640
+    },
+    {
+      "offset": 1,
+      "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"634f408d-614c-4f66-a503-89637b9d40ab\",\"txHash\":\"0x34eb68c0f5e91aa96bd35086c6e322c95f78b58a4543d36fd0286488faa1fa20\",\"keeperHubJobId\":\"job_31cd5a07a91e4e5e84f35da865916f6b\"}",
+      "timestamp": 1777821215479
+    }
+  ],
+  "orders:fc873924-17e6-43c3-876b-e50e05d173ee:events": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"ORDER_CREATED\",\"orderId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"tier\":3}",
+      "timestamp": 1777821629789
+    },
+    {
+      "offset": 1,
+      "data": "{\"type\":\"ESCROW_LOCKED\",\"orderId\":\"fc873924-17e6-43c3-876b-e50e05d173ee\",\"txHash\":\"0xc4c6513bc04719759df87933b17413860b84a0d26ee4c7b76fb7de9e475c10c0\",\"keeperHubJobId\":\"job_a6353175fbc041a5af2666c77a68da50\"}",
+      "timestamp": 1777821643546
     }
   ]
 }

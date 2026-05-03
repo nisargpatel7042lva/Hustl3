@@ -9,40 +9,40 @@ import OpenAI from 'openai';
 export type ComputeModel = 'qwen3.6-plus' | 'GLM-5-FP8';
 
 export interface ComputeRequest {
-  model:        ComputeModel;
+  model: ComputeModel;
   systemPrompt: string;
-  userPrompt:   string;
-  maxTokens?:   number;
+  userPrompt: string;
+  maxTokens?: number;
   temperature?: number;
-  sealed?:      boolean; // sealed inference — hides system prompt from nodes
+  sealed?: boolean; // sealed inference — hides system prompt from nodes
 }
 
 export interface ComputeResponse {
-  id:            string;
-  model:         ComputeModel;
-  content:       string;
-  promptTokens:  number;
-  outputTokens:  number;
-  totalCost:     string;
-  latencyMs:     number;
+  id: string;
+  model: ComputeModel;
+  content: string;
+  promptTokens: number;
+  outputTokens: number;
+  totalCost: string;
+  latencyMs: number;
 }
 
 const ZEROG_COMPUTE_ENDPOINT = process.env.ZEROG_COMPUTE_ENDPOINT || 'http://localhost:6791';
-const ZEROG_COMPUTE_KEY      = process.env.ZEROG_COMPUTE_KEY      || '';
+const ZEROG_COMPUTE_KEY = process.env.ZEROG_COMPUTE_KEY || '';
 
 export async function computeInfer(
   req: ComputeRequest,
   retries = 3,
 ): Promise<ComputeResponse> {
   const body = {
-    model:       req.model,
+    model: req.model,
     messages: [
       { role: 'system', content: req.systemPrompt },
-      { role: 'user',   content: req.userPrompt },
+      { role: 'user', content: req.userPrompt },
     ],
-    max_tokens:  req.maxTokens  ?? 4096,
+    max_tokens: req.maxTokens ?? 4096,
     temperature: req.temperature ?? 0.7,
-    sealed:      req.sealed ?? true,
+    sealed: req.sealed ?? true,
   };
 
   let lastErr: unknown;
@@ -50,9 +50,9 @@ export async function computeInfer(
     try {
       const start = Date.now();
       const res = await fetch(`${ZEROG_COMPUTE_ENDPOINT}/v1/chat/completions`, {
-        method:  'POST',
+        method: 'POST',
         headers: {
-          'Content-Type':  'application/json',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${ZEROG_COMPUTE_KEY}`,
         },
         body: JSON.stringify(body),
@@ -72,13 +72,13 @@ export async function computeInfer(
       };
 
       return {
-        id:           data.id,
-        model:        req.model,
-        content:      data.choices[0]?.message?.content ?? '',
-        promptTokens: data.usage?.prompt_tokens  ?? 0,
+        id: data.id,
+        model: req.model,
+        content: data.choices[0]?.message?.content ?? '',
+        promptTokens: data.usage?.prompt_tokens ?? 0,
         outputTokens: data.usage?.completion_tokens ?? 0,
-        totalCost:    '0', // billed separately via 0G token
-        latencyMs:    Date.now() - start,
+        totalCost: '0', // billed separately via 0G token
+        latencyMs: Date.now() - start,
       };
     } catch (err) {
       lastErr = err;
@@ -91,20 +91,54 @@ export async function computeInfer(
   console.warn('0G Compute failed, falling back to external AI provider...', lastErr);
   
   // 1. Try Groq (Free & Fast)
-  if (process.env.GROQ_API_KEY) {
+  const groqKey = process.env.GROQ_API_KEY;
+  
+  console.log('--- ATTEMPTING GROQ FALLBACK ---', !!groqKey);
+  if (groqKey) {
     try {
-      const openai = new OpenAI({ 
-        apiKey: process.env.GROQ_API_KEY,
-        baseURL: 'https://api.groq.com/openai/v1'
-      });
+      console.log('Executing Groq request...');
       const start = Date.now();
-      const completion = await openai.chat.completions.create({
-        model: "llama-3.1-8b-instant",
-        messages: [
-          { role: 'system', content: req.systemPrompt },
-          { role: 'user', content: req.userPrompt }
-        ],
+      
+      // Bypass Next.js fetch polyfill by using raw Node.js https
+      // This prevents "fetch failed / AbortError" when running asynchronously after the response ends.
+      const https = require('https');
+      const completion = await new Promise<any>((resolve, reject) => {
+        const bodyStr = JSON.stringify({
+          model: "llama-3.1-8b-instant",
+          messages: [
+            { role: 'system', content: req.systemPrompt },
+            { role: 'user', content: req.userPrompt }
+          ]
+        });
+        
+        const request = https.request('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${groqKey}`,
+            'Content-Length': Buffer.byteLength(bodyStr)
+          }
+        }, (res: any) => {
+          let data = '';
+          res.on('data', (chunk: any) => data += chunk);
+          res.on('end', () => {
+            if (res.statusCode >= 400) {
+              reject(new Error(`Groq HTTP ${res.statusCode}: ${data}`));
+            } else {
+              try {
+                resolve(JSON.parse(data));
+              } catch (e) {
+                reject(e);
+              }
+            }
+          });
+        });
+        request.on('error', reject);
+        request.write(bodyStr);
+        request.end();
       });
+      
+      console.log('--- GROQ SUCCESS ---');
       return {
         id: completion.id,
         model: req.model,
@@ -114,34 +148,8 @@ export async function computeInfer(
         totalCost: '0',
         latencyMs: Date.now() - start
       };
-    } catch (groqErr) {
-      console.error('Groq fallback failed:', groqErr);
-    }
-  }
-
-  // 2. Try OpenAI
-  if (process.env.OPENAI_API_KEY) {
-    try {
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-      const start = Date.now();
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: 'system', content: req.systemPrompt },
-          { role: 'user', content: req.userPrompt }
-        ],
-      });
-      return {
-        id: completion.id,
-        model: req.model,
-        content: completion.choices[0].message.content || '',
-        promptTokens: completion.usage?.prompt_tokens || 0,
-        outputTokens: completion.usage?.completion_tokens || 0,
-        totalCost: '0',
-        latencyMs: Date.now() - start
-      };
-    } catch (openAiErr) {
-      console.error('OpenAI fallback failed:', openAiErr);
+    } catch (groqErr: any) {
+      console.error('Groq fallback FATAL error:', groqErr.message, groqErr.stack);
     }
   }
 
