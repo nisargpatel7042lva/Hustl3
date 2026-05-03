@@ -11,9 +11,11 @@ interface ToolbarPanelProps {
   onAddNode: (type: string) => void;
   onDeploy: () => void;
   deploying: boolean;
+  deployLabel?: string;
+  isConnected?: boolean;
 }
 
-export function ToolbarPanel({ onBack, onAddNode, onDeploy, deploying }: ToolbarPanelProps) {
+export function ToolbarPanel({ onBack, onAddNode, onDeploy, deploying, deployLabel, isConnected }: ToolbarPanelProps) {
   const ToolbarItem = ({ type, title, subtitle, icon: Icon, color }: any) => (
     <button onClick={() => onAddNode(type)} className="card" style={{ padding: '0.75rem', display: 'flex', gap: '12px', textAlign: 'left', borderLeft: `3px solid ${color}`, marginBottom: '8px' }}>
       <Icon size={16} color={color} style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -48,14 +50,15 @@ export function ToolbarPanel({ onBack, onAddNode, onDeploy, deploying }: Toolbar
       </div>
 
       <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--color-border)' }}>
-        <button 
-          onClick={onDeploy} 
-          disabled={deploying}
+        <button
+          onClick={onDeploy}
+          disabled={deploying || isConnected === false}
           className="btn btn-primary"
-          style={{ width: '100%' }}
+          style={{ width: '100%', opacity: (deploying || isConnected === false) ? 0.7 : 1 }}
+          title={isConnected === false ? 'Connect wallet first' : undefined}
         >
           {deploying ? <Zap size={14} className="animate-pulse" /> : <Save size={14} />}
-          {deploying ? 'Deploying to 0G...' : 'Deploy Blueprint'}
+          {deployLabel ?? (deploying ? 'Deploying...' : 'Deploy Blueprint')}
         </button>
       </div>
     </div>

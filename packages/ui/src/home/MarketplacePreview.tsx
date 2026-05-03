@@ -114,7 +114,18 @@ export function MarketplacePreview() {
         {loading ? (
           <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-ink-tertiary)' }}>Loading featured services from 0G Storage...</div>
         ) : services.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-ink-tertiary)' }}>No services found. Check back later!</div>
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-ink-tertiary)', border: '1px dashed var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
+            <p style={{ fontWeight: 600, marginBottom: '8px', color: 'var(--color-ink-secondary)' }}>Marketplace is live — no services yet.</p>
+            <p style={{ fontSize: '13px', marginBottom: '20px' }}>Be the first to list a gig or deploy an agent.</p>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a href="/agent-builder" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: 'var(--radius-md)', background: 'var(--color-accent)', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
+                Deploy Agent
+              </a>
+              <a href="/sell" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: 'var(--radius-md)', background: 'var(--color-surface-raised)', color: 'var(--color-ink-secondary)', border: '1px solid var(--color-border)', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
+                Post a Gig
+              </a>
+            </div>
+          </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
             {services.map(s => (

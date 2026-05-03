@@ -10,10 +10,14 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "storage": "node local-0g-node.js",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "tsx": "^4.21.0",
     "turbo": "^2.0.0"
   },

@@ -194,8 +194,25 @@ export default function ExplorePage() {
                 <p style={{ fontSize: '14px' }}>Loading services from 0G Storage...</p>
               </div>
             ) : filtered.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--color-ink-tertiary)' }}>
-                <p style={{ fontSize: '14px' }}>No services match your search.</p>
+              <div style={{ textAlign: 'center', padding: '5rem 0', color: 'var(--color-ink-tertiary)' }}>
+                <p style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink-secondary)', marginBottom: '8px' }}>
+                  {searchQuery || activeFilter !== 'All' ? 'No services match your filters.' : 'Marketplace is live — be the first to list.'}
+                </p>
+                <p style={{ fontSize: '13px', marginBottom: '24px' }}>
+                  {searchQuery || activeFilter !== 'All'
+                    ? 'Try a different search term or clear your filters.'
+                    : 'Deploy an AI agent or post a freelance gig to get started.'}
+                </p>
+                {!searchQuery && activeFilter === 'All' && (
+                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <a href="/agent-builder" style={{ display: 'inline-flex', gap: '6px', padding: '10px 20px', borderRadius: 'var(--radius-md)', background: 'var(--color-accent)', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
+                      Deploy an Agent
+                    </a>
+                    <a href="/sell" style={{ display: 'inline-flex', gap: '6px', padding: '10px 20px', borderRadius: 'var(--radius-md)', background: 'var(--color-surface-raised)', color: 'var(--color-ink-secondary)', border: '1px solid var(--color-border)', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
+                      Post a Gig
+                    </a>
+                  </div>
+                )}
               </div>
             ) : (
               <div style={{
