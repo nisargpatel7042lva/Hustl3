@@ -69,7 +69,6 @@ export async function kvGet<T = unknown>(key: string): Promise<T | null> {
     return JSON.parse(body.value) as T;
   } catch (error: any) {
     if (error?.message?.includes('fetch failed') || error?.cause?.code === 'ECONNREFUSED' || error?.message?.includes('failed after retries')) {
-      console.warn(`[0G Mock Fallback] Connection refused. Returning null for key: ${key}`);
       return null;
     }
     throw error;
@@ -105,7 +104,6 @@ export async function kvListByPrefix<T = unknown>(prefix: string): Promise<Array
     }));
   } catch (error: any) {
     if (error?.message?.includes('fetch failed') || error?.cause?.code === 'ECONNREFUSED' || error?.message?.includes('failed after retries')) {
-      console.warn(`[0G Mock Fallback] Connection refused. Returning mock data for prefix: ${prefix}`);
       return getMockDataForPrefix<T>(prefix);
     }
     throw error;

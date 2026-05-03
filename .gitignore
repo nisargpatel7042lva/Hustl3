@@ -1,50 +1,75 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ==========================================
+# Hustl3 Monorepo .gitignore
+# ==========================================
 
-# dependencies
-node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# ─── Dependencies ─────────────────────────
+node_modules/
+.pnp
+.pnp.js
+.pnp.cjs
+.pnp.loader.mjs
 
-# testing
-/coverage
+# ─── Environment Variables ────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+# Do NOT ignore .env.example if you have one
 
-# next.js
-.next/
-.turbo/
-out/
-
-# production
-/build
-
-# misc
+# ─── OS & IDE ─────────────────────────────
 .DS_Store
-*.pem
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# debug
+# ─── Build & Next.js ──────────────────────
+.next/
+out/
+build/
+dist/
+.turbo/
+
+# ─── Smart Contracts (Hardhat/Foundry) ────
+# Hardhat
+packages/contracts/cache/
+packages/contracts/artifacts/
+packages/contracts/typechain/
+packages/contracts/typechain-types/
+packages/contracts/coverage/
+packages/contracts/coverage.json
+# Foundry
+cache/
+out/
+broadcast/
+.solhint.json
+
+# ─── Logs & Debugging ─────────────────────
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+pnpm-debug.log*
+lerna-debug.log*
+.nyc_output
 *.tsbuildinfo
+
+# ─── TypeScript ───────────────────────────
 next-env.d.ts
 
-# hardhat
-contracts/cache
-contracts/artifacts
-contracts/node_modules
-contracts/dist
-
-.turbo
+# ─── Hosting & CI/CD ──────────────────────
+.vercel/
+.netlify/
+.serverless/

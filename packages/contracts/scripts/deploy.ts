@@ -33,11 +33,37 @@ async function main() {
   const registryAddress = await registry.getAddress();
   console.log("HustlAgentRegistry deployed to:", registryAddress);
 
+  // ─── 0G Chain Specific Contracts ─────────────────────────────────────────
+
+  // 5. OGWrappedToken (WOGAI)
+  const OGWrappedToken = await ethers.getContractFactory("OGWrappedToken");
+  const wogai = await OGWrappedToken.deploy(deployer.address);
+  await wogai.waitForDeployment();
+  const wogaiAddress = await wogai.getAddress();
+  console.log("OGWrappedToken (WOGAI) deployed to:", wogaiAddress);
+
+  // 6. OGChainDA
+  const OGChainDA = await ethers.getContractFactory("OGChainDA");
+  const ogChainDA = await OGChainDA.deploy(deployer.address);
+  await ogChainDA.waitForDeployment();
+  const ogChainDAAddress = await ogChainDA.getAddress();
+  console.log("OGChainDA deployed to:", ogChainDAAddress);
+
+  // 7. AgenticID
+  const AgenticID = await ethers.getContractFactory("AgenticID");
+  const agenticID = await AgenticID.deploy(deployer.address);
+  await agenticID.waitForDeployment();
+  const agenticIDAddress = await agenticID.getAddress();
+  console.log("AgenticID deployed to:", agenticIDAddress);
+
   console.log("\n--- Deployment Summary ---");
   console.log("Marketplace:", marketplaceAddress);
   console.log("Escrow:", escrowAddress);
   console.log("Reputation:", reputationAddress);
   console.log("Agent Registry:", registryAddress);
+  console.log("WOGAI:", wogaiAddress);
+  console.log("OGChainDA:", ogChainDAAddress);
+  console.log("AgenticID:", agenticIDAddress);
 }
 
 main().catch((error) => {

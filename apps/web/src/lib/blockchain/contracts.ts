@@ -28,18 +28,45 @@ export const RegistryABI = [
   "function updateCapabilityHash(address agentWallet, bytes32 newHash) external"
 ];
 
+export const WOGAITokenABI = [
+  "function deposit() external payable",
+  "function depositWithDAProof(bytes anchorData) external payable returns (bytes32 commitment)",
+  "function withdraw(uint256 amount) external"
+];
+
+export const OGChainDAABI = [
+  "function submitDABlob(bytes data, string tag) external returns (bytes32 commitment)"
+];
+
+export const AgenticIDABI = [
+  "function mint(string encryptedMetaCID, bytes ownerPubKey, uint8 agentType, uint64 capabilityFlags) external returns (uint256 tokenId)",
+  "function registerPublicKey(bytes pubKey) external"
+];
+
 export function getContractInstance(address: string, abi: any[], providerOrSigner: ethers.Provider | ethers.Signer) {
   return new ethers.Contract(address, abi, providerOrSigner);
 }
 
 // Map chainId to RPC and Contract addresses
 export const CONTRACT_ADDRESSES: Record<number, Record<string, string>> = {
-  // 0G Chain
+  // 0G Chain (Galileo Testnet - 16601 / older 16600)
   16600: {
     Marketplace: process.env.NEXT_PUBLIC_0G_MARKETPLACE || "",
     Escrow: process.env.NEXT_PUBLIC_0G_ESCROW || "",
     Reputation: process.env.NEXT_PUBLIC_0G_REPUTATION || "",
-    Registry: process.env.NEXT_PUBLIC_0G_REGISTRY || ""
+    Registry: process.env.NEXT_PUBLIC_0G_REGISTRY || "",
+    WOGAI: process.env.NEXT_PUBLIC_0G_WOGAI || "",
+    OGChainDA: process.env.NEXT_PUBLIC_0G_CHAIN_DA || "",
+    AgenticID: process.env.NEXT_PUBLIC_0G_AGENTIC_ID || ""
+  },
+  16602: {
+    Marketplace: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
+    Escrow: process.env.NEXT_PUBLIC_ESCROW_ADDRESS || "",
+    Reputation: process.env.NEXT_PUBLIC_REPUTATION_ADDRESS || "",
+    Registry: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || "",
+    WOGAI: process.env.NEXT_PUBLIC_0G_WOGAI || "",
+    OGChainDA: process.env.NEXT_PUBLIC_0G_CHAIN_DA || "",
+    AgenticID: process.env.NEXT_PUBLIC_0G_AGENTIC_ID || ""
   },
   // Base Sepolia
   84532: {

@@ -3,26 +3,56 @@
 > web@0.1.0 build
 > next build
 
-[1G[0K[1m[38;2;173;127;168m▲ Next.js 16.2.4[39m[22m (Turbopack)
+▲ Next.js 16.2.4 (Turbopack)
 
-[37m[1m [22m[39m Creating an optimized production build ...
-[32m[1m✓[22m[39m Compiled successfully in 4.9s
-[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[31mFailed to type check.
-[39m
-[31m[1mType error[22m[39m: Type 'typeof import("/Users/0xkartikvyas/project/Hustl3/apps/web/src/app/api/orders/[id]/rate/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/orders/[id]/rate">'.
-  Types of property 'POST' are incompatible.
-    Type '(req: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
-      Types of parameters '__1' and 'context' are incompatible.
-        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
-          Types of property 'params' are incompatible.
-            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.7s
+  Finished TypeScript in 2.6s    ✓ Finished TypeScript in 2.6s 
+  Collecting page data using 9 workers in 295ms    ✓ Collecting page data using 9 workers in 295ms 
+✓ Generating static pages using 9 workers (26/26) in 282ms
+  Finalizing page optimization in 6ms    ✓ Finalizing page optimization in 6ms 
 
-[2K[1G[?25hNext.js build worker exited with code: 1 and signal: null
-[?25l [36m.[39m [?25h[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /Users/0xkartikvyas/project/Hustl3/apps/web
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m web@0.1.0
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /Users/0xkartikvyas/project/Hustl3/apps/web
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m command failed
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c next build
-[1G[0K⠙[1G[0K
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /agent-builder
+├ ○ /agents
+├ ƒ /api/agents
+├ ƒ /api/agents/[address]
+├ ƒ /api/agents/[address]/evolve
+├ ƒ /api/agents/[address]/skills
+├ ƒ /api/agents/blueprint
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/nonce
+├ ƒ /api/auth/refresh
+├ ƒ /api/auth/verify
+├ ƒ /api/ens/resolve
+├ ƒ /api/gigs
+├ ƒ /api/gigs/[id]
+├ ƒ /api/health
+├ ƒ /api/marketplace/featured
+├ ƒ /api/marketplace/stats
+├ ƒ /api/orders
+├ ƒ /api/orders/[id]
+├ ƒ /api/orders/[id]/approve
+├ ƒ /api/orders/[id]/deliver
+├ ƒ /api/orders/[id]/dispute
+├ ƒ /api/orders/[id]/mark-delivered
+├ ƒ /api/orders/[id]/rate
+├ ƒ /api/orders/create
+├ ƒ /api/orders/user/[wallet]
+├ ƒ /api/pay/swap-execute
+├ ƒ /api/pay/swap-quote
+├ ƒ /api/pay/x402
+├ ƒ /api/reputation/[address]
+├ ƒ /api/reputation/endorse
+├ ƒ /api/users/[address]
+├ ƒ /api/webhooks/keeperhub
+├ ○ /explore
+├ ƒ /orders/[id]
+└ ○ /swarm
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
