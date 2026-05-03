@@ -8,6 +8,8 @@ import type { GigTier } from '@repo/ui/types';
 import { useAccount, useWalletClient, useChainId, useSwitchChain } from 'wagmi';
 import { createPublicClient, http, parseEther } from 'viem';
 import { zeroGChain } from '@repo/ui/lib/wagmi';
+import { HustlEscrowABI } from '@/lib/blockchain/abis/HustlEscrow';
+import { v4 as uuidv4 } from 'uuid';
 
 const TIER_FILTERS: Array<'All' | GigTier> = ['All', 'Junior', 'Verified', 'Expert'];
 
@@ -101,47 +103,64 @@ export default function AgentsPage() {
     const id = gig.gigId;
     setHiring(id);
     setHireError(prev => ({ ...prev, [id]: '' }));
-    setHireStatus(prev => ({ ...prev, [id]: 'switching' }));
+    setHireStatus(prev => ({ ...prev, [id]: 'ordering' }));
 
     try {
-      // 1. Switch to 0G Galileo
+      // 1. Create order on backend first
+      const orderRes = await fetch('/api/orders/create', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gigId:        id,
+          buyerWallet:  address,
+          requirement:  `Standard engagement for ${gig.title}`,
+        }),
+      });
+      
+      if (!orderRes.ok) throw new Error('Failed to create order');
+      const { orderId } = await orderRes.json();
+
+      // 2. Switch to 0G Galileo
+      setHireStatus(prev => ({ ...prev, [id]: 'switching' }));
       if (chainId !== zeroGChain.id) {
         await switchChainAsync({ chainId: zeroGChain.id });
       }
 
-      // 2. Send payment directly to agent's wallet
+      // 3. Create Escrow via Smart Contract
       setHireStatus(prev => ({ ...prev, [id]: 'signing' }));
       if (!walletClient) throw new Error('Wallet not available');
 
       const priceOG = parseEther(String(Number(gig.price) / 100)); // 1 USDC ≈ 0.01 OG approx
-      const tx = await walletClient.sendTransaction({
-        to:    gig.sellerWallet as `0x${string}`,
+      const keeperHubJobId = `job_${uuidv4().replace(/-/g, '')}`;
+      
+      const escrowAddress = process.env.NEXT_PUBLIC_0G_ESCROW || process.env.NEXT_PUBLIC_ESCROW_ADDRESS;
+      if (!escrowAddress) throw new Error('Escrow contract address not configured');
+
+      const tx = await walletClient.writeContract({
+        address: escrowAddress as `0x${string}`,
+        abi: HustlEscrowABI,
+        functionName: 'createEscrowETH',
+        args: [orderId, gig.sellerWallet, keeperHubJobId],
         value: priceOG,
-        data:  ('0x' + Buffer.from(`HIRE:${gig.gigId}`).toString('hex')) as `0x${string}`,
         chain: zeroGChain,
+        account: address
       });
 
       setHireTx(prev => ({ ...prev, [id]: tx }));
       setHireStatus(prev => ({ ...prev, [id]: 'confirming' }));
 
-      // 3. Wait for confirmation
+      // 4. Wait for confirmation
       const pub = createPublicClient({ chain: zeroGChain, transport: http() });
       await pub.waitForTransactionReceipt({ hash: tx });
 
-      // 4. Create order on backend
-      setHireStatus(prev => ({ ...prev, [id]: 'ordering' }));
-      await fetch('/api/orders/create', {
+      // 5. Notify backend escrow is locked
+      await fetch('/api/orders/confirm-escrow', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          serviceId:    id,
-          serviceTitle: gig.title,
-          buyerWallet:  address,
-          sellerWallet: gig.sellerWallet,
-          amount:       Number(gig.price),
-          currency:     'USDC',
-          type:         'AI_INSTANT',
-          txHash:       tx,
+          orderId,
+          txHash: tx,
+          keeperHubJobId
         }),
       });
 

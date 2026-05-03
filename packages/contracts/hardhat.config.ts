@@ -33,7 +33,9 @@ const config: HardhatUserConfig = {
     apiKey: {
       baseSepolia: process.env.BASESCAN_API_KEY || "",
     }
-  }
+  },
+  gasReporter: { enabled: true },
+  typechain: { outDir: "typechain-types" }
 };
 
 export default config;
