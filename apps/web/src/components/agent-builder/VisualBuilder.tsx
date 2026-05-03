@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -49,6 +49,9 @@ export function VisualBuilder({ onBack }: VisualBuilderProps) {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: 'var(--color-ink-secondary)', strokeWidth: 2 } }, eds)),
@@ -160,6 +163,7 @@ export function VisualBuilder({ onBack }: VisualBuilderProps) {
   };
 
   const isDeploying = ['switching', 'signing', 'confirming', 'storing'].includes(status);
+  const walletReady = mounted && isConnected;
 
   const statusLabel: Record<DeployStatus, string> = {
     idle:       'Deploy Blueprint',
@@ -216,7 +220,7 @@ export function VisualBuilder({ onBack }: VisualBuilderProps) {
           onDeploy={deployBlueprint}
           deploying={isDeploying}
           deployLabel={statusLabel[status]}
-          isConnected={isConnected}
+          isConnected={walletReady}
         />
 
         <div style={{ flex: 1, position: 'relative' }} ref={reactFlowWrapper}>

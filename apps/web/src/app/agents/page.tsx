@@ -57,6 +57,10 @@ export default function AgentsPage() {
   const [gigs,       setGigs]       = useState<AgentGig[]>([]);
   const [loading,    setLoading]    = useState(true);
 
+  // Mounted guard — defer wagmi reads until after hydration
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   // Per-agent hiring state
   const [hiring,      setHiring]      = useState<string | null>(null);
   const [hireStatus,  setHireStatus]  = useState<Record<string, HireStatus>>({});
@@ -89,7 +93,7 @@ export default function AgentsPage() {
   });
 
   const handleHire = async (gig: AgentGig) => {
-    if (!isConnected || !address) {
+    if (!mounted || !isConnected || !address) {
       setHireError(prev => ({ ...prev, [gig.gigId]: 'Connect your wallet first.' }));
       return;
     }

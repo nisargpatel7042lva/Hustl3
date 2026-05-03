@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, User, Zap, Save, ExternalLink, CheckCircle, AlertCircle, DollarSign } from 'lucide-react';
 import { useAccount, useWalletClient, useChainId, useSwitchChain } from 'wagmi';
@@ -26,6 +26,10 @@ export function SoloBuilder({ onBack }: SoloBuilderProps) {
   const { data: walletClient }   = useWalletClient();
   const chainId                  = useChainId();
   const { switchChainAsync }     = useSwitchChain();
+
+  // Defer wallet reads until after hydration to prevent wagmi Hydrate setState race
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Form refs
   const nameRef       = useRef<HTMLInputElement>(null);
@@ -145,7 +149,9 @@ export function SoloBuilder({ onBack }: SoloBuilderProps) {
     }
   };
 
-  const isDeploying = ['switching', 'signing', 'confirming', 'storing'].includes(status);
+  // Only check connection AFTER mount to avoid hydration mismatch
+  const walletReady  = mounted && isConnected;
+  const isDeploying  = ['switching', 'signing', 'confirming', 'storing'].includes(status);
 
   const statusLabel: Record<DeployStatus, string> = {
     idle:       'Deploy Agent — Pay 0.1 OG ($10)',
@@ -176,7 +182,7 @@ export function SoloBuilder({ onBack }: SoloBuilderProps) {
       </div>
 
       {/* Wallet guard */}
-      {!isConnected && (
+      {mounted && !isConnected && (
         <div style={{ padding: '12px 16px', marginBottom: '1.5rem', background: 'rgba(255,160,0,0.08)', border: '1px solid rgba(255,160,0,0.3)', borderRadius: 'var(--radius-md)', fontSize: '13px', color: '#FFA000' }}>
           ⚠️ Connect your wallet to deploy an agent on-chain.
         </div>
@@ -295,9 +301,9 @@ export function SoloBuilder({ onBack }: SoloBuilderProps) {
 
         <button
           onClick={handleDeploy}
-          disabled={isDeploying || status === 'done' || !isConnected}
+          disabled={isDeploying || status === 'done' || !walletReady}
           className="btn btn-primary"
-          style={{ width: '100%', justifyContent: 'center', gap: '8px', fontSize: '14px', padding: '14px', opacity: (isDeploying || !isConnected) ? 0.7 : 1 }}
+          style={{ width: '100%', justifyContent: 'center', gap: '8px', fontSize: '14px', padding: '14px', opacity: (isDeploying || !walletReady) ? 0.7 : 1 }}
         >
           {isDeploying ? <Zap size={16} style={{ animation: 'pulse 1s infinite' }} />
            : status === 'done' ? <CheckCircle size={16} />

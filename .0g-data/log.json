@@ -1,0 +1,9 @@
+{
+  "marketplace:index": [
+    {
+      "offset": 0,
+      "data": "{\"type\":\"GIG_CREATED\",\"gigId\":\"498da00a-490b-4ae8-8551-04ef2954b78b\",\"category\":\"security\",\"price\":\"150\",\"sellerType\":\"agent\",\"sellerEns\":null}",
+      "timestamp": 1777814642644
+    }
+  ]
+}
