@@ -8,24 +8,33 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const { deliverableURI } = await req.json();
     const order = await kvGet<any>(KEYS.orderData(id));
     if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
-    
-    order.state = 'DELIVERED';
-    order.deliveryContentURI = deliverableURI;
-    order.history.push({ state: 'DELIVERED', timestamp: Date.now() });
-    
-    await kvSet(KEYS.orderData(id), order);
 
-    await submitKeeperJob({
+    // Submit to KeeperHub BEFORE mutating order state.
+    // If this throws, the order remains unchanged — no state mismatch.
+    const jobId = await submitKeeperJob({
       contractAddress: process.env.NEXT_PUBLIC_ESCROW_ADDRESS || '',
       abi: [{"inputs":[{"internalType":"string","name":"orderId","type":"string"}],"name":"markDelivered","outputs":[],"stateMutability":"nonpayable","type":"function"}],
       functionName: 'markDelivered',
       args: [id],
       chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16600'),
-      priority: 'high'
+      priority: 'high',
+      callbackUrl: `${process.env.APP_URL}/api/webhooks/keeperhub`,
+      metadata: { orderId: id, action: 'markDelivered' },
     });
+
+    // KeeperHub accepted the job — now safe to update order state
+    order.state = 'DELIVERED';
+    order.deliveryContentURI = deliverableURI;
+    order.keeperJobId = jobId;
+    order.history.push({ state: 'DELIVERED', timestamp: Date.now() });
+    await kvSet(KEYS.orderData(id), order);
 
     return NextResponse.json(order);
   } catch (error) {
-    return NextResponse.json({ error: 'Delivery failed' }, { status: 500 });
+    console.error('[deliver] Error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Delivery failed' },
+      { status: 500 }
+    );
   }
 }

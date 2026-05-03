@@ -78,7 +78,9 @@ export async function submitRating(
     functionName: 'recordReputation',
     args: [subjectAddress, raterAddress, orderId, rating, metadataHash],
     chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16600'),
-    priority: 'low'
+    priority: 'low',
+    callbackUrl: `${process.env.APP_URL}/api/webhooks/keeperhub`,
+    metadata: { orderId, action: 'recordReputation', subject: subjectAddress }
   });
 
   return doc;

@@ -12,7 +12,9 @@ export async function POST(req: Request) {
       functionName: 'endorseAgent',
       args: [subjectAddress, skillName, comment],
       chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16600'),
-      priority: 'low'
+      priority: 'low',
+      callbackUrl: `${process.env.APP_URL}/api/webhooks/keeperhub`,
+      metadata: { action: 'endorseAgent', subject: subjectAddress }
     });
 
     return NextResponse.json({ success: true, pending: true });

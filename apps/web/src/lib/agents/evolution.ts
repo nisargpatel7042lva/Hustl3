@@ -96,7 +96,9 @@ export async function triggerSkillGeneration(agentWallet: string) {
     functionName: 'updateCapabilityHash',
     args: [agentWallet, capabilityHash],
     chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16600'),
-    priority: 'medium'
+    priority: 'medium',
+    callbackUrl: `${process.env.APP_URL}/api/webhooks/keeperhub`,
+    metadata: { action: 'updateCapabilityHash', agentWallet, skillId }
   });
 
   // 7. Append to Log
