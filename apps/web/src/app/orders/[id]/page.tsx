@@ -5,6 +5,9 @@ import { Shield, Clock, CheckCircle, AlertTriangle, Zap, Network, Database, Brai
 import { Navbar } from '@repo/ui/layout/Navbar';
 import { Footer } from '@repo/ui/layout/Footer';
 import { useParams } from 'next/navigation';
+import { useAccount, useWalletClient } from 'wagmi';
+import { HustlEscrowABI } from '@/lib/blockchain/abis/HustlEscrow';
+import { zeroGChain } from '@repo/ui/lib/wagmi';
 
 const HARNESS_STATES = [
   'NOT_STARTED',
@@ -27,6 +30,14 @@ export default function OrderFlowPage() {
   const [taskGraph, setTaskGraph] = useState<any[]>([]);
   const [outputs, setOutputs] = useState<string[]>([]);
   const [delivery, setDelivery] = useState<any>(null);
+  const [releasing, setReleasing] = useState(false);
+  const [released, setReleased] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!orderId) return;
@@ -56,21 +67,63 @@ export default function OrderFlowPage() {
 
   const currentStateIdx = HARNESS_STATES.indexOf(currentState) === -1 ? 0 : HARNESS_STATES.indexOf(currentState);
 
+  const handleRelease = async () => {
+    if (!walletClient || !orderId) return;
+    try {
+      setReleasing(true);
+      const escrowAddress = process.env.NEXT_PUBLIC_0G_ESCROW || process.env.NEXT_PUBLIC_ESCROW_ADDRESS;
+      await walletClient.writeContract({
+        address: escrowAddress as `0x${string}`,
+        abi: HustlEscrowABI,
+        functionName: 'releaseEscrow',
+        args: [orderId],
+        chain: zeroGChain,
+        account: address
+      });
+      setReleased(true);
+    } catch (err) {
+      console.error('Release failed', err);
+    } finally {
+      setReleasing(false);
+    }
+  };
+
+  if (!mounted) return null;
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-canvas)', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
       <main style={{ paddingTop: '80px', flexGrow: 1 }} className="container-app p-8 text-white font-sans">
         
+        {/* System Activity Banner */}
+        <div className="mb-8 p-4 rounded-xl border" style={{ background: 'var(--color-accent-dim)', borderColor: 'var(--color-accent)', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <AlertTriangle color="var(--color-accent)" size={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <h3 style={{ color: '#fff', fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>System Activity: What is happening right now?</h3>
+            <p style={{ color: 'var(--color-ink-secondary)', fontSize: '14px', lineHeight: 1.5 }}>
+              The x402 payment you just signed has securely locked funds in the <strong>HustlEscrow Smart Contract</strong> on the 0G Network. 
+              The backend has detected the transaction and triggered the <strong>MoA (Mixture-of-Agents) Execution Harness</strong>. 
+              The system is now hitting the 0G Compute endpoint (or fallback) to decompose your prompt into a Directed Acyclic Graph (DAG), recruit sub-agents, execute them in parallel, and synthesize the final deliverable.
+            </p>
+          </div>
+        </div>
+
         {/* Header */}
-        <div className="flex justify-between items-center mb-8 bg-[#1a1f3a] p-6 rounded-xl border border-[#2d3561] shadow-xl">
+        <div className="flex justify-between items-center mb-8 p-6 rounded-xl border shadow-xl" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold">Harness Job Execution</h1>
-              <span className="bg-[#FF006E]/20 text-[#FF006E] border border-[#FF006E]/30 text-xs px-2 py-1 rounded-full font-bold flex items-center gap-1">
-                <Zap size={12}/> Tier 3
+              <h1 className="text-heading" style={{ fontSize: '1.75rem' }}>Harness Job Execution</h1>
+              <span className="badge" style={{ background: 'rgba(255, 0, 110, 0.1)', color: '#FF006E', borderColor: 'rgba(255, 0, 110, 0.2)' }}>
+                <Zap size={12}/> Tier 3 Intelligence
               </span>
             </div>
-            <p className="text-gray-400 text-sm font-mono">Order ID: {orderId}</p>
+            <p style={{ color: 'var(--color-ink-tertiary)', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>Order ID: {orderId}</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <p style={{ fontSize: '12px', color: 'var(--color-ink-tertiary)', marginBottom: '4px' }}>Status</p>
+            <p style={{ fontWeight: 700, color: currentState === 'COMPLETED' ? 'var(--color-green)' : 'var(--color-accent)' }}>
+              {currentState.replace('_', ' ')}
+            </p>
           </div>
         </div>
 
@@ -78,8 +131,10 @@ export default function OrderFlowPage() {
           
           {/* Left Column: Pipeline & State */}
           <div className="lg:col-span-1 flex flex-col gap-6">
-            <div className="bg-[#1a1f3a] p-6 rounded-xl border border-[#2d3561]">
-              <h2 className="text-lg font-bold mb-6 flex items-center gap-2"><Network size={18} color="#00D9FF"/> Execution Pipeline</h2>
+            <div className="p-6 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+              <h2 className="text-lg font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--color-ink-primary)' }}>
+                <Network size={18} style={{ color: 'var(--color-accent)' }}/> Execution Pipeline
+              </h2>
               
               {/* Progress Line */}
               <div className="relative pl-6 border-l-2 border-[#2d3561] ml-3 pb-4 space-y-6">
@@ -113,10 +168,12 @@ export default function OrderFlowPage() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             
             {/* Visual DAG Representation */}
-            <div className="bg-[#0d122b] p-6 rounded-xl border border-[#2d3561] min-h-[200px]">
+            <div className="p-6 rounded-xl border min-h-[200px]" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold flex items-center gap-2"><Layers size={18} color="#9D4EDD"/> Active Agent DAG</h2>
-                <span className="text-xs text-gray-500 font-mono">Syncing with 0G Storage...</span>
+                <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: 'var(--color-ink-primary)' }}>
+                  <Layers size={18} color="#9D4EDD"/> Active Agent DAG
+                </h2>
+                <span className="text-xs font-mono" style={{ color: 'var(--color-ink-tertiary)' }}>Syncing with 0G Storage & Compute...</span>
               </div>
               
               <div className="flex items-center justify-center gap-4 py-8">
@@ -160,13 +217,13 @@ export default function OrderFlowPage() {
 
             {/* Deliverables & Payment Result */}
             {outputs.length > 0 && (
-              <div className="bg-[#1a1f3a] p-6 rounded-xl border border-[#2d3561] animate-in fade-in zoom-in duration-500">
-                <h3 className="font-bold text-[#39FF14] flex items-center gap-2 mb-4">
+              <div className="p-6 rounded-xl border animate-in fade-in zoom-in duration-500" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                <h3 className="font-bold flex items-center gap-2 mb-4" style={{ color: 'var(--color-green)' }}>
                   <CheckCircle2 size={18} /> Partial 0G Storage Outputs
                 </h3>
                 <div className="space-y-2 mb-6 max-h-48 overflow-y-auto">
                   {outputs.map((out, i) => (
-                    <div key={i} className="bg-black/50 p-3 rounded text-sm font-mono text-gray-300 border border-gray-800 whitespace-pre-wrap">
+                    <div key={i} className="p-3 rounded text-sm font-mono border whitespace-pre-wrap" style={{ background: 'var(--color-canvas)', borderColor: 'var(--color-border)', color: 'var(--color-ink-secondary)' }}>
                       {out}
                     </div>
                   ))}
@@ -175,23 +232,39 @@ export default function OrderFlowPage() {
             )}
             
             {delivery && (
-              <div className="bg-[#1a1f3a] p-6 rounded-xl border border-[#2d3561] animate-in fade-in zoom-in duration-500">
-                <h3 className="font-bold text-[#FF006E] flex items-center gap-2 mb-4">
-                  <CheckCircle2 size={18} /> Final Deliverable
+              <div className="p-6 rounded-xl border animate-in fade-in zoom-in duration-500" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                <h3 className="font-bold flex items-center gap-2 mb-4" style={{ color: '#FF006E' }}>
+                  <CheckCircle2 size={18} /> Final Synthesized Deliverable
                 </h3>
-                <div className="bg-black/50 p-4 rounded text-sm font-mono text-gray-300 border border-gray-800 whitespace-pre-wrap">
+                <div className="p-4 rounded text-sm font-mono border whitespace-pre-wrap" style={{ background: 'var(--color-canvas)', borderColor: 'var(--color-border)', color: 'var(--color-ink-primary)' }}>
                   {typeof delivery === 'string' ? delivery : JSON.stringify(delivery, null, 2)}
                 </div>
               </div>
             )}
             
             {currentState === 'COMPLETED' && (
-              <div className="bg-[#1a1f3a] p-6 rounded-xl border border-[#2d3561] animate-in slide-in-from-bottom-4">
-                <h3 className="font-bold text-white mb-4 flex items-center gap-2">💸 Autonomous x402 Payouts</h3>
-                <div className="mt-4 p-3 bg-[#39FF14]/10 border border-[#39FF14]/30 rounded-lg flex items-center justify-between">
-                  <span className="text-sm font-medium text-[#39FF14]">Smart Contract Escrow</span>
-                  <span className="text-sm font-bold text-[#39FF14]">RELEASED</span>
-                </div>
+              <div className="p-6 rounded-xl border animate-in slide-in-from-bottom-4" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--color-ink-primary)' }}>💸 Autonomous x402 Payouts</h3>
+                <p style={{ fontSize: '13px', color: 'var(--color-ink-tertiary)', marginBottom: '16px' }}>
+                  The deliverables have been securely pushed to 0G Storage. You may now inspect them and release the funds held in the <strong>KeeperHub Escrow</strong> directly to the agent's wallet.
+                </p>
+                {!released ? (
+                  <button 
+                    onClick={handleRelease}
+                    disabled={releasing}
+                    className="w-full mt-2 p-3 rounded-lg flex items-center justify-center font-bold transition-all cursor-pointer"
+                    style={{ background: 'rgba(255, 0, 110, 0.1)', color: '#FF006E', border: '1px solid rgba(255, 0, 110, 0.3)' }}
+                  >
+                    {releasing ? 'Releasing Funds on-chain...' : 'Approve Deliverable & Release Escrow'}
+                  </button>
+                ) : (
+                  <div className="mt-2 p-3 rounded-lg flex items-center justify-between" style={{ background: 'rgba(0, 200, 83, 0.1)', border: '1px solid rgba(0, 200, 83, 0.3)' }}>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-green)' }}>Smart Contract Escrow</span>
+                    <span className="text-sm font-bold flex items-center gap-1" style={{ color: 'var(--color-green)' }}>
+                      <CheckCircle2 size={14} /> RELEASED
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 

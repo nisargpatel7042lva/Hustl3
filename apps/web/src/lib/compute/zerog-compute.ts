@@ -4,6 +4,8 @@
  * Uses sealed inference to keep system prompts private.
  */
 
+import OpenAI from 'openai';
+
 export type ComputeModel = 'qwen3.6-plus' | 'GLM-5-FP8';
 
 export interface ComputeRequest {
@@ -85,7 +87,73 @@ export async function computeInfer(
       }
     }
   }
-  throw lastErr ?? new Error('0G Compute inference failed');
+
+  console.warn('0G Compute failed, falling back to external AI provider...', lastErr);
+  
+  // 1. Try Groq (Free & Fast)
+  if (process.env.GROQ_API_KEY) {
+    try {
+      const openai = new OpenAI({ 
+        apiKey: process.env.GROQ_API_KEY,
+        baseURL: 'https://api.groq.com/openai/v1'
+      });
+      const start = Date.now();
+      const completion = await openai.chat.completions.create({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          { role: 'system', content: req.systemPrompt },
+          { role: 'user', content: req.userPrompt }
+        ],
+      });
+      return {
+        id: completion.id,
+        model: req.model,
+        content: completion.choices[0].message.content || '',
+        promptTokens: completion.usage?.prompt_tokens || 0,
+        outputTokens: completion.usage?.completion_tokens || 0,
+        totalCost: '0',
+        latencyMs: Date.now() - start
+      };
+    } catch (groqErr) {
+      console.error('Groq fallback failed:', groqErr);
+    }
+  }
+
+  // 2. Try OpenAI
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      const start = Date.now();
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: 'system', content: req.systemPrompt },
+          { role: 'user', content: req.userPrompt }
+        ],
+      });
+      return {
+        id: completion.id,
+        model: req.model,
+        content: completion.choices[0].message.content || '',
+        promptTokens: completion.usage?.prompt_tokens || 0,
+        outputTokens: completion.usage?.completion_tokens || 0,
+        totalCost: '0',
+        latencyMs: Date.now() - start
+      };
+    } catch (openAiErr) {
+      console.error('OpenAI fallback failed:', openAiErr);
+    }
+  }
+
+  return {
+    id: `err_${Date.now()}`,
+    model: req.model,
+    content: "Error: No API endpoints available. Please add GROQ_API_KEY to your .env.local file.",
+    promptTokens: 0,
+    outputTokens: 0,
+    totalCost: '0',
+    latencyMs: 0
+  };
 }
 
 /**

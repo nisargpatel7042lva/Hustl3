@@ -7,8 +7,11 @@ import { SiweMessage } from 'siwe';
 export function SIWEButton() {
   const [session, setSession] = useState<{ address: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
+
+  useEffect(() => setMounted(true), []);
 
   // Check existing session
   useEffect(() => {
@@ -65,7 +68,7 @@ export function SIWEButton() {
     }
   };
 
-  if (!isConnected) return null;
+  if (!mounted || !isConnected) return null;
   if (session?.address === address) {
     return (
       <div style={{

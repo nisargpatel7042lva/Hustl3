@@ -3,7 +3,7 @@
  */
 
 // Core runtime system
-export * from './core';
+// export * from './core'; // Causes duplicate export with types.ts
 
 // Existing types and utilities
 export * from './types';

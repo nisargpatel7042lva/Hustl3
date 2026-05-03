@@ -19,3 +19,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id: orderId } = await params;
+    const state = await kvGet<string>(`harness:${orderId}:state`) || 'NOT_STARTED';
+    const graph = await kvGet<any[]>(`harness:${orderId}:graph`) || [];
+    const delivery = await kvGet<any>(`harness:${orderId}:delivery`) || null;
+
+    return NextResponse.json({ success: true, state, graph, delivery });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}

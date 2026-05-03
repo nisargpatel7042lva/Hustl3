@@ -7,25 +7,62 @@
 - Environments: .env.local
 
 [37m[1m [22m[39m Creating an optimized production build ...
-[32m[1m✓[22m[39m Compiled successfully in 5.7s
-[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[31mFailed to type check.
-[39m
-[36m./src/app/agents/page.tsx[39m:[33m143[39m:[33m25[39m
-[31m[1mType error[22m[39m: Type 'string' is not assignable to type '`0x${string}`'.
+[32m[1m✓[22m[39m Compiled successfully in 6.6s
+[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m..[39m[2K[1G[37m[1m [22m[39m Running TypeScript  [36m...[39m[2K[1G[?25h[?25l[37m[1m [22m[39m Finished TypeScript in 3.5s  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finished TypeScript in 3.5s    [32m[1m✓[22m[39m Finished TypeScript in 3.5s 
+[?25l[37m[1m [22m[39m Collecting page data using 9 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 9 workers  [36m..[39m[2K[1G[?25h[37m[1m [22m[39m Collecting page data using 9 workers in 368ms    [32m[1m✓[22m[39m Collecting page data using 9 workers in 368ms 
+[?25l[37m[1m [22m[39m Generating static pages using 9 workers (0/31)  [36m[    ][39m[2K[1G[37m[1m [22m[39m Generating static pages using 9 workers (15/31)  [36m[=   ][39m[2K[1G[37m[1m [22m[39m Generating static pages using 9 workers (28/31)  [36m[==  ][39m[2K[1G[?25h[32m[1m✓[22m[39m Generating static pages using 9 workers (31/31) in 402ms
+[?25l[37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finalizing page optimization in 9ms    [32m[1m✓[22m[39m Finalizing page optimization in 9ms 
 
-  [90m141 |[0m         abi: [33mHustlEscrowABI[0m,
-  [90m142 |[0m         functionName: [32m'createEscrowETH'[0m,
-[31m[1m>[0m [90m143 |[0m         args: [orderId, gig.sellerWallet, keeperHubJobId],
-  [90m    |[0m                         [31m[1m^[0m
-  [90m144 |[0m         value: priceOG,
-  [90m145 |[0m         chain: zeroGChain,
-  [90m146 |[0m         account: address
-[2K[1G[?25hNext.js build worker exited with code: 1 and signal: null
-[?25l [36m.[39m [?25h[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m web@0.1.0
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /Users/0xkartikvyas/project/openagent/Hustl3/apps/web
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m command failed
-[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c next build
-[1G[0K⠙[1G[0K
+[4mRoute (app)[24m
+┌ ○ /
+├ ○ /_not-found
+├ ○ /agent-builder
+├ ○ /agents
+├ ƒ /api/agents
+├ ƒ /api/agents/[address]
+├ ƒ /api/agents/[address]/evolve
+├ ƒ /api/agents/[address]/skills
+├ ƒ /api/agents/blueprint
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/me
+├ ƒ /api/auth/nonce
+├ ƒ /api/auth/refresh
+├ ƒ /api/auth/verify
+├ ƒ /api/ens/bulk
+├ ƒ /api/ens/resolve
+├ ƒ /api/ens/reverse
+├ ƒ /api/gigs
+├ ƒ /api/gigs/[id]
+├ ƒ /api/health
+├ ƒ /api/marketplace/featured
+├ ƒ /api/marketplace/stats
+├ ƒ /api/orders
+├ ƒ /api/orders/[id]
+├ ƒ /api/orders/[id]/accept
+├ ƒ /api/orders/[id]/approve
+├ ƒ /api/orders/[id]/deliver
+├ ƒ /api/orders/[id]/dispute
+├ ƒ /api/orders/[id]/harness
+├ ƒ /api/orders/[id]/mark-delivered
+├ ƒ /api/orders/[id]/moa
+├ ƒ /api/orders/[id]/rate
+├ ƒ /api/orders/confirm-escrow
+├ ƒ /api/orders/create
+├ ƒ /api/orders/user/[wallet]
+├ ƒ /api/pay/swap-execute
+├ ƒ /api/pay/swap-quote
+├ ƒ /api/pay/x402
+├ ƒ /api/reputation/[address]
+├ ƒ /api/reputation/endorse
+├ ƒ /api/uniswap/quote
+├ ƒ /api/users/[address]
+├ ƒ /api/webhooks/keeperhub
+├ ○ /explore
+├ ƒ /orders/[id]
+└ ○ /swarm
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[?25h[1G[0K⠙[1G[0K

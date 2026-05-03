@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Zap } from 'lucide-react';
 import { WalletConnectButton } from '@repo/ui/web3/WalletConnectButton';
@@ -42,14 +43,7 @@ export function Navbar() {
           
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-            <div style={{
-              width: '28px', height: '28px',
-              background: 'var(--color-accent)',
-              borderRadius: '7px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Zap size={14} color="#fff" strokeWidth={2.5} />
-            </div>
+            <Image src="/logo.png" alt="Hustl3 Logo" width={36} height={36} style={{ borderRadius: '7px' }} />
             <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--color-ink-primary)', letterSpacing: '-0.02em' }}>
               Hustl3
             </span>

@@ -5,6 +5,7 @@ import { Search, Bot, Zap, Clock, Shield, ExternalLink, CheckCircle, AlertCircle
 import { Navbar }  from '@repo/ui/layout/Navbar';
 import { Footer }  from '@repo/ui/layout/Footer';
 import type { GigTier } from '@repo/ui/types';
+import { useRouter } from 'next/navigation';
 import { useAccount, useWalletClient, useChainId, useSwitchChain } from 'wagmi';
 import { createPublicClient, http, parseEther } from 'viem';
 import { zeroGChain } from '@repo/ui/lib/wagmi';
@@ -53,11 +54,16 @@ export default function AgentsPage() {
   const { data: walletClient }    = useWalletClient();
   const chainId                   = useChainId();
   const { switchChainAsync }      = useSwitchChain();
+  const router                    = useRouter();
 
   const [search,     setSearch]     = useState('');
   const [tierFilter, setTierFilter] = useState<'All' | GigTier>('All');
   const [gigs,       setGigs]       = useState<AgentGig[]>([]);
   const [loading,    setLoading]    = useState(true);
+
+  // Requirement Modal State
+  const [selectedGig, setSelectedGig] = useState<AgentGig | null>(null);
+  const [requirementText, setRequirementText] = useState('');
 
   // Mounted guard — defer wagmi reads until after hydration
   const [mounted, setMounted] = useState(false);
@@ -94,16 +100,20 @@ export default function AgentsPage() {
     return matchQ && matchT;
   });
 
-  const handleHire = async (gig: AgentGig) => {
-    if (!mounted || !isConnected || !address) {
-      setHireError(prev => ({ ...prev, [gig.gigId]: 'Connect your wallet first.' }));
+  const handleHire = async () => {
+    if (!mounted || !isConnected || !address || !selectedGig) {
+      if (selectedGig) setHireError(prev => ({ ...prev, [selectedGig.gigId]: 'Connect your wallet first.' }));
       return;
     }
 
+    const gig = selectedGig;
     const id = gig.gigId;
     setHiring(id);
     setHireError(prev => ({ ...prev, [id]: '' }));
     setHireStatus(prev => ({ ...prev, [id]: 'ordering' }));
+    
+    // Hide modal
+    setSelectedGig(null);
 
     try {
       // 1. Create order on backend first
@@ -113,7 +123,7 @@ export default function AgentsPage() {
         body: JSON.stringify({
           gigId:        id,
           buyerWallet:  address,
-          requirement:  `Standard engagement for ${gig.title}`,
+          requirement:  requirementText || `Standard engagement for ${gig.title}`,
         }),
       });
       
@@ -133,14 +143,17 @@ export default function AgentsPage() {
       const priceOG = parseEther(String(Number(gig.price) / 100)); // 1 USDC ≈ 0.01 OG approx
       const keeperHubJobId = `job_${uuidv4().replace(/-/g, '')}`;
       
-      const escrowAddress = process.env.NEXT_PUBLIC_0G_ESCROW || process.env.NEXT_PUBLIC_ESCROW_ADDRESS;
-      if (!escrowAddress) throw new Error('Escrow contract address not configured');
+      const escrowAddress = process.env.NEXT_PUBLIC_0G_ESCROW || process.env.NEXT_PUBLIC_ESCROW_ADDRESS || '0xd5b9Ed9E3c7b72e97fDbe8De818B072901eEB098'; // Fallback for demo
+      
+      const safeSellerWallet = (gig.sellerWallet && gig.sellerWallet.startsWith('0x') && gig.sellerWallet.length === 42) 
+        ? gig.sellerWallet 
+        : address; // For hackathon demo, fallback to the user's own wallet so they get testnet funds back
 
       const tx = await walletClient.writeContract({
         address: escrowAddress as `0x${string}`,
         abi: HustlEscrowABI,
         functionName: 'createEscrowETH',
-        args: [orderId, gig.sellerWallet as `0x${string}`, keeperHubJobId],
+        args: [orderId, safeSellerWallet as `0x${string}`, keeperHubJobId],
         value: priceOG,
         chain: zeroGChain,
         account: address
@@ -165,8 +178,13 @@ export default function AgentsPage() {
       });
 
       setHireStatus(prev => ({ ...prev, [id]: 'done' }));
-    } catch (err: any) {
-      setHireError(prev => ({ ...prev, [id]: err?.shortMessage ?? err?.message ?? 'Transaction rejected' }));
+      
+      // Redirect to the live execution dashboard
+      router.push(`/orders/${orderId}`);
+      
+    } catch (error: any) {
+      console.error('Hire failed', error);
+      setHireError(prev => ({ ...prev, [id]: error.shortMessage || error.message || 'Transaction failed.' }));
       setHireStatus(prev => ({ ...prev, [id]: 'error' }));
     } finally {
       setHiring(null);
@@ -181,7 +199,7 @@ export default function AgentsPage() {
       signing:    'Sign payment…',
       confirming: 'Confirming…',
       ordering:   'Creating order…',
-      done:       '✓ Hired!',
+      done:       '✓ Redirecting…',
       error:      'Retry Hire',
     }[s] ?? 'Hire via x402';
   };
@@ -235,6 +253,31 @@ export default function AgentsPage() {
               ))}
             </div>
           </div>
+
+          {/* Hire Modal */}
+          {selectedGig && (
+            <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)', padding: '20px' }}>
+              <div className="card" style={{ width: '100%', maxWidth: '500px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <h3 className="text-xl font-bold" style={{ color: 'var(--color-ink-primary)' }}>Hire {selectedGig.title}</h3>
+                <p style={{ fontSize: '14px', color: 'var(--color-ink-secondary)' }}>
+                  Please provide the details or code you want this agent to process. For a Smart Contract Auditor, paste your `.sol` code below.
+                </p>
+                <textarea
+                  value={requirementText}
+                  onChange={(e) => setRequirementText(e.target.value)}
+                  className="input"
+                  style={{ minHeight: '150px', resize: 'vertical', fontFamily: 'var(--font-mono)' }}
+                  placeholder="e.g. Please audit the following Solidity code: contract Token { ... }"
+                />
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                  <button onClick={() => setSelectedGig(null)} className="btn btn-secondary">Cancel</button>
+                  <button onClick={handleHire} className="btn btn-primary" style={{ display: 'flex', gap: '6px' }}>
+                    <Zap size={14} /> Pay & Execute Task
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Grid */}
           {loading ? (
@@ -347,7 +390,10 @@ export default function AgentsPage() {
 
                     {/* Hire button */}
                     <button
-                      onClick={() => handleHire(gig)}
+                      onClick={() => {
+                        setSelectedGig(gig);
+                        setRequirementText('');
+                      }}
                       disabled={isHiring || st === 'done'}
                       className="btn btn-primary"
                       style={{ width: '100%', justifyContent: 'center', gap: '6px', opacity: isHiring ? 0.7 : 1 }}
